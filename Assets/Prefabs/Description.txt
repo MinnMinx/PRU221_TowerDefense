@@ -1,0 +1,1 @@
+Nơi chứa các prefabs. Nên tạo folder riêng (folder Trụ/Địch/Đạn/...)

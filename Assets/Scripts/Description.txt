@@ -1,0 +1,1 @@
+Chứa các c# script mình tạo ra, mỗi namespace nên có folder riêng.

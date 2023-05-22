@@ -1,0 +1,1 @@
+Chứa các file animation trong game, khi tạo AnimationClip nên lưu vào đây (trong folder riêng nếu cần)
