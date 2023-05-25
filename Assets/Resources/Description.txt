@@ -1,0 +1,6 @@
+Folder Resources chứa các prefab, dùng để Load các prefab lên trong trường hợp không thể kéo thả bằng Inspector.
+
+Cách dùng: 
+	string path = "đường dẫn của prefab"; (Nhớ bỏ .prefab ở đuôi khi copy path)
+	GameObject prefab = Resources.Load<GameObject>(path);
+
