@@ -44,6 +44,15 @@ public class Enemy01_Base : MonoBehaviour
         set { money = value; }
     }
 
+    public Enemy01_Base(decimal hp, decimal atk, float speed, decimal money)
+    {
+        this.hp = hp;
+        this.atk = atk;
+        this.speed = speed;
+        this.money = money;
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -53,10 +62,10 @@ public class Enemy01_Base : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (hp <= 0)
-        {
-            OnDespawn();
-        }
+        //if (hp <= 0)
+        //{
+        //    OnDespawn();
+        //}
     }
 
     /// <summary>

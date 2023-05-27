@@ -61,7 +61,7 @@ public class EnemySpawner01 : MonoBehaviour
         enemy.Speed = 3f;
         enemy.Money = 2;
         GameObject monster = Instantiate(enemySpawn);
-        monster.transform.position = position;
+        monster.transform.position = new Vector3(0, 0, 0);
         spawned.Add(monster);
     }
 
