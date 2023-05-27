@@ -47,7 +47,7 @@ public class Enemy01_Base : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Debug.Log(atk);
     }
 
     // Update is called once per frame
