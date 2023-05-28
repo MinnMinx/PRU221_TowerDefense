@@ -55,13 +55,13 @@ public class EnemySpawner01 : MonoBehaviour
     {
         System.Random rnd = new System.Random();
         var enemySpawn = enemies[rnd.Next(enemies.Count)];
-        var enemy = enemySpawn.GetComponent<Enemy01_Base>();
+        GameObject monster = Instantiate(enemySpawn);
+        var enemy = monster.GetComponent<Enemy01_Base>();
         enemy.Atk = 2;
         enemy.Hp = 10;
         enemy.Speed = 3f;
         enemy.Money = 2;
-        GameObject monster = Instantiate(enemySpawn);
-        monster.transform.position = position;
+        monster.transform.position = new Vector3(0, 0, 0);
         spawned.Add(monster);
     }
 
