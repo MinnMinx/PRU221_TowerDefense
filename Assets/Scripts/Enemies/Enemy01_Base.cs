@@ -98,12 +98,12 @@ public class Enemy01_Base : MonoBehaviour
     /// deal damage to enemy.
     /// </summary>
     /// <param name="damage"></param>
-    private void TakeDamage(decimal damage)
+    public void TakeDamage(decimal damage)
     {
         hp = hp - damage;
     }
 
-    private void DealDamage()
+    public void DealDamage()
     {
 
     }
