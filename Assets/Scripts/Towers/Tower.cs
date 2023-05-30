@@ -10,6 +10,13 @@ public class Tower : MonoBehaviour
     [SerializeField]
     protected GameObject bulletPrefab; // bullet prefab
 
+    // list of enemies in range
+    private List<GameObject> targetInRange;
+    
+    // support shooting
+    private float nextFireTime;
+
+
 
     #region Properties
 
@@ -59,13 +66,6 @@ public class Tower : MonoBehaviour
 
     #region Methods
 
-    virtual protected void Start()
-    {
-       
-    }
-    // function sum two number
-
-
     /// <summary>
     /// Run when tower is spawned.
     /// </summary>
@@ -103,21 +103,81 @@ public class Tower : MonoBehaviour
         fireRate += 0.1f;
     }
 
+    /// <summary>
+    /// Run when enemy enter tower range.
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            // Define direction
-            Vector2 direction = collision.transform.position - transform.position;
-
-            // Instantiate bullet follow direction
-            GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-            bullet.transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-
-            // Add force to bullet
-            bullet.GetComponent<Rigidbody2D>().AddForce((collision.transform.position - transform.position).normalized * 1000);
+            // Add enemy to list
+            targetInRange.Add(collision.gameObject);
         }
     }
+
+    private void FireAt(Vector2 targetPosition)
+    {
+        // Define direction
+        Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
+
+        // Instantiate bullet follow direction
+        GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        bullet.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
+        // Add force to bullet
+        bullet.GetComponent<Rigidbody2D>().AddForce((targetPosition - (Vector2)transform.position).normalized * 1000);
+    }
+
+    /// <summary>
+    /// Run when enemy exit tower range.
+    /// </summary>
+    /// <param name="collision"></param>
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Enemy")
+        {
+            // Remove enemy from list
+            targetInRange.Remove(collision.gameObject);
+        }
+    }
+
+    /// <summary>
+    ///  
+    /// </summary>
+    virtual protected void Start()
+    {
+        // Initialize list of enemies in range
+        targetInRange = new List<GameObject>();
+
+        // Initialize next fire time
+        nextFireTime = 0;
+
+        // get components collider of game object
+        CircleCollider2D circleCollider2D = gameObject.GetComponent<CircleCollider2D>();
+        
+        // set radius of collider
+        circleCollider2D.radius = range;
+    }
+
+    /// <summary>
+    /// Update is called once per frame
+    /// </summary>
+    private void Update()
+    {
+        if (targetInRange.Count > 0 && Time.time >= nextFireTime)
+        {
+            GameObject target = targetInRange[0];
+            if (target != null)
+            {
+                FireAt(target.transform.position);
+            }
+            nextFireTime = Time.time + fireRate;
+        }
+    }
+
+
 
     #endregion
 }
