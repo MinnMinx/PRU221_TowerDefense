@@ -67,10 +67,15 @@ public class Enemy01_Base : MonoBehaviour
         }
     }
 
+    public virtual bool OnUpdate()
+    {
+        return hp >= 0;
+    }
+
     /// <summary>
     /// Destroy enemy.
     /// </summary>
-    private void OnDespawn()
+    public virtual void OnDespawn()
     {
         Destroy(this.gameObject);
     }
@@ -98,12 +103,12 @@ public class Enemy01_Base : MonoBehaviour
     /// deal damage to enemy.
     /// </summary>
     /// <param name="damage"></param>
-    public void TakeDamage(decimal damage)
+    public virtual void TakeDamage(decimal damage)
     {
         hp = hp - damage;
     }
 
-    public void DealDamage()
+    public virtual void DealDamage()
     {
 
     }
