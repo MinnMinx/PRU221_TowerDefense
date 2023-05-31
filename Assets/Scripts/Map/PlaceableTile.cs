@@ -11,13 +11,13 @@ public class PlaceableTile : TileBase
     public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
     {
         // base.GetTileData(position, tilemap, ref tileData);
-        tileData.color = new Color
-        {
-            r = 1,
-            b = 1,
-            g = 1,
-            a = 0.5f,
-        };
+        //tileData.color = new Color
+        //{
+        //    r = 1,
+        //    b = 1,
+        //    g = 1,
+        //    a = 0.5f,
+        //};
         tileData.sprite = _displaySprite;
     }
 }

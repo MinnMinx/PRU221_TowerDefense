@@ -1,3 +1,4 @@
+using Pathfinding;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,24 +8,54 @@ public class MapController : MonoBehaviour
 {
     [SerializeField]
     private Tilemap placeableMap;
+    [SerializeField]
+    private AstarPath enemyPath;
 
     private MapPreviewer previewer;
-    private Camera mainCam;
 
     private void Awake()
     {
         previewer = new MapPreviewer(placeableMap);
-        mainCam = Camera.main;
     }
 
     private void Update()
     {
-        Vector3Int? hoverGrid = null;
-        if (Input.mousePresent)
+#if UNITY_EDITOR
+        PreviewTile(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+#endif
+    }
+
+    /// <summary>
+    /// Check if the world position is a placeable tile in map.
+    /// If it is, return true and output that tile's position
+    /// </summary>
+    /// <param name="worldPos">Input world position</param>
+    /// <param name="tilePos">Output tile's world position</param>
+    /// <param name="tilePos">Output tile's cell position in grid</param>
+    /// <returns>Whether tile in the position is placeable or not</returns>
+    public bool IsPlaceableTile(Vector3 worldPos, out Vector3 tilePos, out Vector3Int tileCell)
+    {
+        tilePos = Vector3.zero;
+        tileCell = Vector3Int.zero;
+        try
         {
-            hoverGrid = placeableMap.WorldToCell(mainCam.ScreenToWorldPoint(Input.mousePosition));
+            tileCell = placeableMap.WorldToCell(worldPos);
+            PlaceableTile tile = placeableMap.GetTile<PlaceableTile>(tileCell);
+            if (tile != null) {
+                tilePos = placeableMap.CellToWorld(tileCell);
+                return true;
+            }
+        } catch (System.NullReferenceException)
+        {
+            Debug.LogError("Placeable map is null, no tower will be placed!");
         }
-        previewer.Update(hoverGrid);
+        return false;
+    }
+
+    public void PreviewTile(Vector3 mouseWorldPos)
+    {
+        previewer.Update(
+            placeableMap.WorldToCell(mouseWorldPos));
     }
 
 
@@ -43,17 +74,25 @@ public class MapController : MonoBehaviour
 
         public void Update(Vector3Int? input)
         {
-            // If previous hovering grid is still active
-            if (_prevGrid.HasValue && input != _prevGrid)
+            try
             {
-                _placeableMap.SetColor(_prevGrid.Value, DEACTIVE_COLOR);
-                _prevGrid = null;
+                // If previous hovering grid is still active
+                if (_prevGrid.HasValue && input != _prevGrid)
+                {
+                    _placeableMap.SetColor(_prevGrid.Value, DEACTIVE_COLOR);
+                    _prevGrid = null;
+                }
+                // if there's tile need to be preview
+                if (input.HasValue && input != _prevGrid)
+                {
+                    _prevGrid = input;
+                    _placeableMap.SetColor(_prevGrid.Value, ACTIVE_COLOR);
+                }
             }
-            // if there's tile need to be preview
-            if (input.HasValue && input != _prevGrid)
+            catch (System.NullReferenceException)
             {
-                _prevGrid = input;
-                _placeableMap.SetColor(_prevGrid.Value, ACTIVE_COLOR);
+                Debug.LogError("Placeale map is null!");
+                _prevGrid = null;
             }
         }
     }
