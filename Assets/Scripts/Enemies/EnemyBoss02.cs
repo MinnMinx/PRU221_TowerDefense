@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class EnemyBoss02 : Enemy01_Base
 {
+    SheldEnemy sheldEnemy;
     public EnemyBoss02(decimal hp, decimal atk, float speed, decimal money) : base(hp, atk, speed, money)
     {
+        sheldEnemy = gameObject.AddComponent<SheldEnemy>();
     }
 
     public override bool OnUpdate()
@@ -17,7 +19,18 @@ public class EnemyBoss02 : Enemy01_Base
             // nên tạo lớp sheld
             // check sheld đã active chưa
             // actived -> ..
+            if (sheldEnemy != null && !sheldEnemy.IsActive)
+            {
+                sheldEnemy.ActivateShield(3f);
+                // nhận dame thì bullet sẽ check xem active hay không
+            }
         }
         return base.OnUpdate();
+    }
+
+    public override void TakeDamage(decimal damage)
+    {
+        if (!sheldEnemy.IsActive)
+            base.TakeDamage(damage);
     }
 }
