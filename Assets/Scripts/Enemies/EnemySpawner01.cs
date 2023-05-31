@@ -1,85 +1,142 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
+using UnityEditor.Search;
 using UnityEngine;
 
-public class EnemySpawner01 : MonoBehaviour
+namespace Enemy
 {
-    /// <summary>
-    /// List of enemy.
-    /// </summary>
-    [SerializeField]
-    private List<GameObject> enemies = new List<GameObject>();
-
-    /// <summary>
-    /// Spawned enemies.
-    /// </summary>
-    public static List<GameObject> spawned = new List<GameObject>();
-
-    /// <summary>
-    /// screen size.
-    /// </summary>
-    float screenLeft;
-    float screenRight;
-    float screenTop;
-    float screenBottom;
-
-    // Start is called before the first frame update
-    void Start()
+    public class EnemySpawner01 : MonoBehaviour
     {
-        
-    }
+        /// <summary>
+        /// List of enemy.
+        /// </summary>
+        [SerializeField]
+        private List<GameObject> enemies = new List<GameObject>();
 
-    // Update is called once per frame
-    void Update()
-    {
-        SaveScreenSize();
+        /// <summary>
+        /// List of boss.
+        /// </summary>
+        [SerializeField]
+        private List<GameObject> bosses = new List<GameObject>();
 
-        if (spawned.Count == 0)
+        /// <summary>
+        /// Spawned enemies.
+        /// </summary>
+        public static List<GameObject> spawned = new List<GameObject>();
+
+        private Timer timeSpawn = new Timer();
+        private float time = 0;
+        private bool checkTime = true;
+        private int numberEnemy = 5;
+        private int numberWave = 1;
+
+        Queue<SmallWave> largeWave = new Queue<SmallWave>();
+
+        SmallWave wave = new SmallWave()
+        {
+            smallWave = new Queue<GameObject>(),
+        };
+
+        // Start is called before the first frame update
+        void Start()
+        {
+            timeSpawn = gameObject.AddComponent<Timer>();
+            timeSpawn.Duration = 1f;
+            timeSpawn.Run();
+            SpawnWave();
+            wave = largeWave.Dequeue();
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            // set time nghỉ.
+            if (spawned.Count == 0 && wave.smallWave.Count == 0)
+            {
+                time += Time.deltaTime;
+                if (time <= 5)
+                {
+                    checkTime = false;
+                }
+                else
+                {
+                    checkTime = true;
+                    time = 0;
+                    wave = largeWave.Dequeue();
+                }
+            }
+
+            // Create wave mới
+            if (largeWave.Count == 0)
+            {
+                SpawnWave();
+                // tăng số lượng enemy mỗi wave?
+            }
+
+            // Check và xóa quái có máu = 0.
+            for (int i = 0; i < spawned.Count; i++)
+            {
+                var enemy = spawned[i].GetComponent<Enemy01_Base>();
+                if (enemy.isDead)
+                {
+                    spawned.Remove(spawned[i]);
+                    enemy.OnDespawn();
+                }
+            }
+
+            // 
+            if (timeSpawn.Finished && checkTime)
+            {
+                Spawn();
+                timeSpawn.Run();
+            }
+        }
+
+        private void Spawn()
+        {
+            if (wave.smallWave.Count > 0)
+            {
+                GameObject enemySpawn = wave.smallWave.Dequeue();
+                GameObject enemy = Instantiate(enemySpawn, Vector3.zero, Quaternion.identity);
+                var enemyStat = enemy.GetComponent<Enemy01_Base>();
+                enemyStat.Hp = 10;
+                spawned.Add(enemy);
+            }
+        }
+
+        private void SpawnWave()
         {
             System.Random rnd = new System.Random();
-            List<float> x = new List<float>();
-            x.Add(UnityEngine.Random.Range(screenLeft - 1, screenLeft));
-            x.Add(UnityEngine.Random.Range(screenRight, screenLeft + 1));
+            for (int i = 0; i < 5; i++)
+            {
+                var enemyType = enemies[rnd.Next(enemies.Count)];
+                SmallWave smallWave = new SmallWave()
+                {
+                    smallWave = new Queue<GameObject>(),
+                };
 
-            List<float> y = new List<float>();
-            y.Add(UnityEngine.Random.Range(screenBottom - 1, screenBottom));
-            y.Add(UnityEngine.Random.Range(screenTop, screenTop + 1));
+                for (int j = 0; j < numberEnemy; j++)
+                {
+                    smallWave.smallWave.Enqueue(enemyType);
+                }
 
-            Vector3 pos = new Vector3(x[rnd.Next(x.Count)], y[rnd.Next(y.Count)], 0);
-            Spawn(pos);
+                this.largeWave.Enqueue(smallWave);
+            };
+
+            var boss = bosses[rnd.Next(bosses.Count)];
+            SmallWave bossWave = new SmallWave()
+            {
+                smallWave = new Queue<GameObject>(),
+            };
+            bossWave.smallWave.Enqueue(boss);
+            this.largeWave.Enqueue(bossWave);
         }
-    }
 
-    private void Spawn(Vector3 position)
-    {
-        System.Random rnd = new System.Random();
-        var enemySpawn = enemies[rnd.Next(enemies.Count)];
-        GameObject monster = Instantiate(enemySpawn);
-        var enemy = monster.GetComponent<Enemy01_Base>();
-        enemy.Atk = 2;
-        enemy.Hp = 10;
-        enemy.Speed = 3f;
-        enemy.Money = 2;
-        monster.transform.position = new Vector3(0, 0, 0);
-        spawned.Add(monster);
-    }
-
-    /// <summary>
-    /// function to take screen size.
-    /// </summary>
-    private void SaveScreenSize()
-    {
-        float screenWidth = Screen.width;
-        float screenHeight = Screen.height;
-        float screenZ = -Camera.main.transform.position.z;
-        Vector3 lowerLeftCornerScreen = new Vector3(0, 0, screenZ);
-        Vector3 upperRightCornerScreen = new Vector3(screenWidth, screenHeight, screenZ);
-        Vector3 lowerLeftCornerWorld = Camera.main.ScreenToWorldPoint(lowerLeftCornerScreen);
-        Vector3 upperRightCornerWorld = Camera.main.ScreenToWorldPoint(upperRightCornerScreen);
-        screenLeft = lowerLeftCornerWorld.x;
-        screenRight = upperRightCornerWorld.x;
-        screenTop = upperRightCornerWorld.y;
-        screenBottom = lowerLeftCornerWorld.y;
+        private class SmallWave
+        {
+            public Queue<GameObject> smallWave { get; set; }
+        }
     }
 }
