@@ -7,16 +7,19 @@ using UnityEngine;
 /// </summary>
 public class Tower : MonoBehaviour
 {
+    #region Fields
     [SerializeField]
     protected GameObject bulletPrefab; // bullet prefab
 
     // list of enemies in range
     private List<GameObject> targetInRange;
-    
+
     // support shooting
     private float nextFireTime;
-
-
+    private Animator animIdle;
+    public GameObject effectLevel2;
+    public GameObject effectLevel3;
+    #endregion
 
     #region Properties
 
@@ -97,10 +100,52 @@ public class Tower : MonoBehaviour
     /// </summary>
     public void OnLevelUp()
     {
-        level++;
-        damage += 10;
-        range += 0.5f;
-        fireRate += 0.1f;
+        // check if game object was clicked, then upgrade tower
+        if (Input.GetMouseButtonDown(0))
+        {
+            // get mouse position
+            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            // get collider of game object
+            CircleCollider2D circleCollider2D = gameObject.GetComponent<CircleCollider2D>();
+
+            // check if mouse position is in range of tower
+            if (circleCollider2D.OverlapPoint(mousePosition))
+            {
+                // check if tower is not max level
+                if (level < 3)
+                {
+                    // upgrade tower
+                    level++;
+                    cost += 100;
+                    damage += 10;
+                    range += 0.5f;
+                    fireRate += 0.5f;
+                    coolDownTime += 0.5f;
+
+                }
+                GameObject effectObject1 = null,effectObject2 =null;
+                // add effect to tower after upgrade
+                if (level == 2)
+                {
+                    // get position of tower
+                    Vector3 position = transform.position;
+
+                    // start effect level 2 at position of tower
+                    effectObject1 = Instantiate(effectLevel2.gameObject, position, Quaternion.identity);
+
+                }
+                else if (level == 3)
+                {
+                    DestroyImmediate(effectObject1);
+                    // get position of tower
+                    Vector3 position = transform.position;
+
+                    // instantiate effect at position of tower
+                    effectObject2 = Instantiate(effectLevel3.gameObject, position, Quaternion.identity);
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -154,9 +199,16 @@ public class Tower : MonoBehaviour
         // Initialize next fire time
         nextFireTime = 0;
 
+        // get Animator of effects on folder Resources/Prefabs/Effects
+        //effectLevel2 = Resources.Load<GameObject>("Resources/Prefabs/Effects/EffectLevel2");
+        //effectLevel3 = Resources.Load<GameObject>("Resources/Prefabs/Effects/EffectLevel3");
+
+        // get components animation of game object
+        animIdle = gameObject.GetComponent<Animator>();
+
         // get components collider of game object
         CircleCollider2D circleCollider2D = gameObject.GetComponent<CircleCollider2D>();
-        
+
         // set radius of collider
         circleCollider2D.radius = range;
     }
@@ -168,16 +220,25 @@ public class Tower : MonoBehaviour
     {
         if (targetInRange.Count > 0 && Time.time >= nextFireTime)
         {
+            // get first enemy in range
             GameObject target = targetInRange[0];
             if (target != null)
             {
+                // stop animation
+                animIdle.Play("Idle", 0, 0);
                 FireAt(target.transform.position);
             }
             nextFireTime = Time.time + fireRate;
         }
+        else
+        {
+            // start animation 
+            animIdle.enabled = true;
+        }
+
+        // check if game object was clicked, then upgrade tower
+        OnLevelUp();
     }
-
-
 
     #endregion
 }
