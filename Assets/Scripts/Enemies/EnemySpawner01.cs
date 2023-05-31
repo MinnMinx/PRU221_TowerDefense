@@ -65,6 +65,7 @@ namespace Enemy
                     checkTime = true;
                     time = 0;
                     wave = largeWave.Dequeue();
+                    numberWave++;
                 }
             }
 

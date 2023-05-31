@@ -48,17 +48,9 @@ namespace Enemy
 
         public bool isDead = false;
 
-        public Enemy01_Base(decimal hp, decimal atk, float speed, decimal money)
-        {
-            this.hp = hp;
-            this.atk = atk;
-            this.speed = speed;
-            this.money = money;
-        }
-
 
         // Start is called before the first frame update
-        void Start()
+        public virtual void Start()
         {
         }
 
@@ -112,9 +104,9 @@ namespace Enemy
             hp = hp - damage;
         }
 
-        public virtual void DealDamage()
+        public bool DealDamage()
         {
-
+            return true;
         }
     }
 }

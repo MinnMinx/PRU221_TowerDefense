@@ -7,7 +7,8 @@ namespace Enemy
     public class EnemyBoss02 : Enemy01_Base
     {
         ShieldEnemy sheldEnemy;
-        public EnemyBoss02(decimal hp, decimal atk, float speed, decimal money) : base(hp, atk, speed, money)
+
+        public override void Start()
         {
             sheldEnemy = gameObject.AddComponent<ShieldEnemy>();
         }
