@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class EnemyBoss03 : Enemy01_Base
 {
-    SheldEnemy sheldEnemy;
+    ShieldEnemy sheldEnemy;
     public EnemyBoss03(decimal hp, decimal atk, float speed, decimal money) : base(hp, atk, speed, money)
     {
-        sheldEnemy = gameObject.AddComponent<SheldEnemy>();
+        sheldEnemy = gameObject.AddComponent<ShieldEnemy>();
     }
 
     public override bool OnUpdate()
