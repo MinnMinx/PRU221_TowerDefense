@@ -9,7 +9,7 @@ public class Enemy05 : Enemy01_Base
     {
         Hp = 15;
         Atk = 5;
-        Speed = 1f;
+        Speed = 0.2f;
         Money = 5;
         base.Awake();
     }

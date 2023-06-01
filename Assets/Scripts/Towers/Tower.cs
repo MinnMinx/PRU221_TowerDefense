@@ -7,23 +7,35 @@ using UnityEngine;
 /// </summary>
 public class Tower : MonoBehaviour
 {
+    #region Fields
     [SerializeField]
     protected GameObject bulletPrefab; // bullet prefab
 
     // list of enemies in range
     private List<GameObject> targetInRange;
-    
+
     // support shooting
-    private float nextFireTime;
+    private Timer cooldownTimer;
+    private Animator animIdle;
+    private bool canShoot = true;
 
-
+    public GameObject effectLevel2;
+    public GameObject effectLevel3;
+    #endregion
 
     #region Properties
+    protected int id;
+    public int Id
+    {
+        get { return id; }
+        set { id = value; }
+    }
 
     protected int level; // current level of tower
     public int Level
     {
         get { return level; }
+        set { level = value; }
     }
 
     protected int cost; // cost of tower
@@ -47,14 +59,15 @@ public class Tower : MonoBehaviour
         set { range = value; }
     }
 
-    protected float fireRate; // fire rate of tower
-    public float FireRate
+    protected float muzzleSpeed; // muzzle speed of tower
+    public float MuzzleSpeed
     {
-        get { return fireRate; }
-        set { fireRate = value; }
+        get { return muzzleSpeed; }
+        set { muzzleSpeed = value; }
     }
 
-    protected float coolDownTime; // time to allow choose another tower
+    protected float coolDownTime; // cool down time of tower
+
     public float CoolDownTime
     {
         get { return coolDownTime; }
@@ -97,10 +110,48 @@ public class Tower : MonoBehaviour
     /// </summary>
     public void OnLevelUp()
     {
-        level++;
-        damage += 10;
-        range += 0.5f;
-        fireRate += 0.1f;
+        // check if game object was clicked, then upgrade tower
+        if (Input.GetMouseButtonDown(0))
+        {
+            // get mouse position
+            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            // get collider of game object
+            CircleCollider2D circleCollider2D = gameObject.GetComponent<CircleCollider2D>();
+
+            // check if mouse position is in range of tower
+            if (circleCollider2D.OverlapPoint(mousePosition) && Vector2.Distance(mousePosition, transform.position) < 0.5f)
+            {
+                // check if tower is not max level
+                if (level < 3)
+                {
+                    // upgrade tower
+                    level++;
+                    cost += 100;
+                    damage += 10;
+                    range += 0.5f;
+                    muzzleSpeed += 500f;
+                    coolDownTime += 10f;
+                    // add effect to tower after upgrade
+                    if (level == 2)
+                    {
+                        // get position of spawn effect higher than tower 0.5f
+                        Vector3 position = (Vector3)transform.position + new Vector3(0,0.1f,0);
+                        
+                        // start effect level 2 at position of tower
+                        Destroy(Instantiate(effectLevel2.gameObject, position, Quaternion.identity),5);
+                    }
+                    else if (level == 3)
+                    {
+                        // get position of tower
+                        Vector3 position = (Vector3)transform.position;
+
+                        // instantiate effect at position of tower
+                        Destroy(Instantiate(effectLevel3.gameObject, position, Quaternion.identity),5);
+                    }
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -116,6 +167,10 @@ public class Tower : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Fire at enemy.
+    /// </summary>
+    /// <param name="targetPosition"></param>
     private void FireAt(Vector2 targetPosition)
     {
         // Define direction
@@ -123,11 +178,22 @@ public class Tower : MonoBehaviour
 
         // Instantiate bullet follow direction
         GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         bullet.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-        // Add force to bullet
-        bullet.GetComponent<Rigidbody2D>().AddForce((targetPosition - (Vector2)transform.position).normalized * 1000);
+        // rotate the tower to the left if the enemy is on the left if there is an enemy, otherwise keep the tower facing the right
+        if (targetPosition.x < transform.position.x)
+        {
+            gameObject.transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else
+        {
+            gameObject.transform.localScale = new Vector3(1, 1, 1);
+        }
+
+        //// Add force to bullet
+        bullet.GetComponent<Rigidbody2D>().AddForce((targetPosition - (Vector2)transform.position).normalized * muzzleSpeed);
     }
 
     /// <summary>
@@ -151,12 +217,17 @@ public class Tower : MonoBehaviour
         // Initialize list of enemies in range
         targetInRange = new List<GameObject>();
 
-        // Initialize next fire time
-        nextFireTime = 0;
+        // Initialize cooldown Timer
+        cooldownTimer = gameObject.AddComponent<Timer>();
+        cooldownTimer.Duration = coolDownTime;
+        //cooldownTimer.Duration = 1f;
+
+        // get components animation of game object
+        animIdle = gameObject.GetComponent<Animator>();
 
         // get components collider of game object
         CircleCollider2D circleCollider2D = gameObject.GetComponent<CircleCollider2D>();
-        
+
         // set radius of collider
         circleCollider2D.radius = range;
     }
@@ -166,18 +237,37 @@ public class Tower : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        if (targetInRange.Count > 0 && Time.time >= nextFireTime)
+        // Print all of properties of tower
+        Debug.Log(gameObject.name+ "Level: " + level + " Cost: " + cost + " Damage: " + damage + " Range: " + range + " MuzzleSpeed: " + muzzleSpeed + " CoolDownTime: " + coolDownTime);
+        if (!canShoot && cooldownTimer.Finished)
         {
+            canShoot = true;
+        }
+        
+        if (targetInRange.Count > 0 && canShoot)
+        {
+            // start cooldown timer
+            canShoot = false;
+            cooldownTimer.Run();
+
+            // get first enemy in range
             GameObject target = targetInRange[0];
             if (target != null)
             {
+                // stop animation
+                animIdle.Play("Idle", 0, 0);
                 FireAt(target.transform.position);
             }
-            nextFireTime = Time.time + fireRate;
         }
+        else
+        {
+            // start animation 
+            animIdle.enabled = true;
+        }
+
+        // check if game object was clicked, then upgrade tower
+        OnLevelUp();
     }
-
-
 
     #endregion
 }

@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
+using UnityEditor.SceneManagement;
 using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Newtonsoft.Json;
 
 namespace Enemy
 {
@@ -15,6 +18,12 @@ namespace Enemy
         /// </summary>
         [SerializeField]
         private List<GameObject> enemies = new List<GameObject>();
+
+        /// <summary>
+        /// List of special.
+        /// </summary>
+        [SerializeField]
+        private List<GameObject> special = new List<GameObject>();
 
         /// <summary>
         /// List of boss.
@@ -38,7 +47,7 @@ namespace Enemy
         // hard-code spawn position
         private Vector3 v3;
 
-        private Timer timeSpawn = new Timer();
+        private Timer timeSpawn;
         private float time = 0;
         private bool checkTime = true;
         private int numberEnemy = 5;
@@ -47,6 +56,8 @@ namespace Enemy
         private double heso = 0.9;
 
         Queue<SmallWave> largeWave = new Queue<SmallWave>();
+
+        Queue<SmallWave> largeWaveData = new Queue<SmallWave>();
 
         SmallWave wave = new SmallWave()
         {
@@ -65,10 +76,9 @@ namespace Enemy
         // Update is called once per frame
         void Update()
         {
-            // test
-            if (Input.anyKeyDown)
+            if (Input.GetMouseButtonDown(0))
             {
-                spawned.Clear();
+                SaveEnemyData();
             }
 
             // set time nghỉ.
@@ -98,15 +108,21 @@ namespace Enemy
             for (int i = 0; i < spawned.Count; i++)
             {
                 var enemy = spawned[i].GetComponent<Enemy01_Base>();
+                enemy.OnUpdate();
+                // địch chết do trụ bắn.
                 if (enemy.isDead)
                 {
                     spawned.Remove(spawned[i]);
-                    enemy.OnDespawn();
+                    GameManager.instance.GainMoney(enemy.Money);
+                    GameManager.instance.GainScore(1); // hard-code
+                    enemy.OnDespawn();                    
                 }
-                else if (enemy.DealDamage(basePositon.position)) // hardd-code
+                // địch chạm base
+                else if (enemy.DealDamage(basePositon.position))
                 {
                     // tru` mau cua player
                     spawned.Remove(spawned[i]);
+                    GameManager.instance.TakeDamage(enemy.Atk);
                     enemy.OnDespawn();
                 }
             }
@@ -142,10 +158,26 @@ namespace Enemy
                     smallWave = new Queue<GameObject>(),
                 };
 
-                for (int j = 0; j < numberEnemy; j++)
+                // wave nhỏ hơn 6 chỉ sinh quái thường.
+                if (numberWave < 6)
                 {
-                    smallWave.smallWave.Enqueue(enemyType);
+                    for (int j = 0; j < numberEnemy; j++)
+                    {
+                        smallWave.smallWave.Enqueue(enemyType);
+                    }
                 }
+                // wave lớn hơn sáu mỗi wave sẽ có 1 quái special.
+                else
+                {
+                    for (int j = 0; j < numberEnemy - 1; j++)
+                    {
+                        smallWave.smallWave.Enqueue(enemyType);
+                    }
+
+                    var specialType = special[rnd.Next(special.Count)];
+                    smallWave.smallWave.Enqueue(specialType);
+                }
+                
 
                 this.largeWave.Enqueue(smallWave);
             };
@@ -157,11 +189,47 @@ namespace Enemy
             };
             bossWave.smallWave.Enqueue(boss);
             this.largeWave.Enqueue(bossWave);
+
+            // lưu data wave.
+            largeWaveData = largeWave;
+        }
+
+        private void SaveEnemyData()
+        {
+            EnemyData data = new EnemyData()
+            {
+                numberEnemy = this.numberEnemy,
+                numberWave = this.numberWave,
+                largeWave = new List<List<string>>(),
+            };
+
+            foreach (var item in largeWaveData)
+            {
+                List<GameObject> list = new List<GameObject>();
+                list = item.smallWave.ToList();
+                data.largeWave.Add(list.Select(enemy => enemy.name).ToList());
+            }
+
+            string filePath = "Assets/Resources/EnemyData.json";
+            string jsonData = JsonConvert.SerializeObject(data); // JsonUtility.ToJson(data);
+
+            // Ghi dữ liệu vào tệp tin
+            StreamWriter sw = new StreamWriter(filePath);
+            sw.Write(jsonData);
+            sw.Close();
         }
 
         private class SmallWave
         {
             public Queue<GameObject> smallWave { get; set; }
+        }
+
+        [System.Serializable]
+        public class EnemyData
+        {
+            public int numberEnemy { get; set; }
+            public int numberWave { get; set; }
+            public List<List<string>> largeWave { get; set;}
         }
     }
 }
