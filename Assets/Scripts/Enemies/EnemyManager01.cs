@@ -8,13 +8,21 @@ using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Newtonsoft.Json;
+using System.Xml.Linq;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace Enemy
 {
     public class EnemyManager01 : MonoBehaviour
     {
         /// <summary>
-        /// List of enemy.
+        /// List of all enemy.
+        /// </summary>
+        [SerializeField]
+        private List<GameObject> allEnemy = new List<GameObject>();
+
+        /// <summary>
+        /// List of normal enemy.
         /// </summary>
         [SerializeField]
         private List<GameObject> enemies = new List<GameObject>();
@@ -52,24 +60,24 @@ namespace Enemy
         private bool checkTime = true;
         private int numberEnemy = 5;
         private int numberWave = 1;
-
+        private bool loadFromFile = false;
         private double heso = 0.9;
 
         Queue<SmallWave> largeWave = new Queue<SmallWave>();
 
         Queue<SmallWave> largeWaveData = new Queue<SmallWave>();
 
-        SmallWave wave = new SmallWave()
-        {
-            smallWave = new Queue<GameObject>(),
-        };
+        SmallWave wave = new SmallWave();
         // Start is called before the first frame update
         void Start()
         {
             timeSpawn = gameObject.AddComponent<Timer>();
             timeSpawn.Duration = 1f;
             timeSpawn.Run();
-            SpawnWave();
+            if (!loadFromFile)
+            {
+                SpawnWave();
+            }            
             wave = largeWave.Dequeue();
         }
 
@@ -78,7 +86,7 @@ namespace Enemy
         {
             if (Input.GetMouseButtonDown(0))
             {
-                SaveEnemyData();
+                LoadEnemyData();
             }
 
             // set time nghỉ.
@@ -187,6 +195,7 @@ namespace Enemy
             {
                 smallWave = new Queue<GameObject>(),
             };
+
             bossWave.smallWave.Enqueue(boss);
             this.largeWave.Enqueue(bossWave);
 
@@ -194,7 +203,7 @@ namespace Enemy
             largeWaveData = largeWave;
         }
 
-        private void SaveEnemyData()
+        public void SaveEnemyData()
         {
             EnemyData data = new EnemyData()
             {
@@ -211,12 +220,40 @@ namespace Enemy
             }
 
             string filePath = "Assets/Resources/EnemyData.json";
-            string jsonData = JsonConvert.SerializeObject(data); // JsonUtility.ToJson(data);
+            string jsonData = JsonConvert.SerializeObject(data);
 
             // Ghi dữ liệu vào tệp tin
             StreamWriter sw = new StreamWriter(filePath);
             sw.Write(jsonData);
             sw.Close();
+        }
+
+        public void LoadEnemyData()
+        {
+            allEnemy.AddRange(enemies);
+            allEnemy.AddRange(special);
+            allEnemy.AddRange(bosses);
+
+            string filePath = "Assets/Resources/EnemyData.json";
+            string jsonContent = File.ReadAllText(filePath);
+
+            EnemyData data = JsonConvert.DeserializeObject<EnemyData>(jsonContent);
+            this.numberEnemy = data.numberEnemy;
+            this.numberWave = data.numberWave;
+            foreach (var wave in data.largeWave)
+            {
+                SmallWave smWave = new SmallWave()
+                {
+                    smallWave = new Queue<GameObject>(),
+                };
+
+                foreach(var enemy in wave)
+                {
+                    var enemyInWave = allEnemy.FirstOrDefault(gameobject => gameobject.name.Equals(enemy));
+                    smWave.smallWave.Enqueue(enemyInWave);
+                }
+                largeWave.Enqueue(smWave);
+            }
         }
 
         private class SmallWave
