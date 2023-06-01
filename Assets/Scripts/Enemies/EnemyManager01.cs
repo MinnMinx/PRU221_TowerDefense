@@ -49,7 +49,6 @@ namespace Enemy
         private bool checkTime = true;
         private int numberEnemy = 5;
         private int numberWave = 1;
-        private int nummberSpecial = 1;
 
         private double heso = 0.9;
 
@@ -100,7 +99,6 @@ namespace Enemy
             {
                 var enemy = spawned[i].GetComponent<Enemy01_Base>();
                 enemy.OnUpdate();
-
                 // địch chết do trụ bắn.
                 if (enemy.isDead)
                 {
