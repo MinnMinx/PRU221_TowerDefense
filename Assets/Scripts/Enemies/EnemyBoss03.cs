@@ -10,7 +10,7 @@ namespace Enemy
         protected override void Awake()
         {
             Hp = 300;
-            Speed = 2.5f;
+            Speed = 0.35f;
             Atk = 30;
             Money = 150;
 
@@ -22,7 +22,7 @@ namespace Enemy
         {
             if (Hp >= Hp / 2)
             {
-                Speed = 3.5f;
+                Speed = 0.75f;
             }
             else
             {

@@ -10,16 +10,15 @@ namespace Enemy
         {
             Hp = 100;
             Atk = 20;
-            Speed = 2.5f;
+            Speed = 0.35f;
             Money = 50;
             base.Awake();
         }
         public override bool OnUpdate()
         {
-            Debug.Log("avxc");
             if (Hp < Hp / 2)
             {
-                Speed = 3.5f;
+                Speed = 0.75f;
             }
             return base.OnUpdate();
         }
