@@ -1,0 +1,85 @@
+{
+  "listTower": [
+    {
+      "id": 1,
+      "level": 1,
+      "cost": 50,
+      "damage": 10,
+      "range": 5.0,
+      "muzzleSpeed": 20.0,
+      "coolDownTime": 2.0
+    },
+    {
+      "id": 2,
+      "level": 1,
+      "cost": 75,
+      "damage": 15,
+      "range": 6.0,
+      "muzzleSpeed": 25.0,
+      "coolDownTime": 3.0
+    },
+    {
+      "id": 3,
+      "level": 1,
+      "cost": 100,
+      "damage": 20,
+      "range": 7.0,
+      "muzzleSpeed": 30.0,
+      "coolDownTime": 4.0
+    },
+    {
+      "id": 4,
+      "level": 1,
+      "cost": 100,
+      "damage": 20,
+      "range": 7.0,
+      "muzzleSpeed": 30.0,
+      "coolDownTime": 4.0
+    },
+    {
+      "id": 5,
+      "level": 1,
+      "cost": 100,
+      "damage": 20,
+      "range": 7.0,
+      "muzzleSpeed": 30.0,
+      "coolDownTime": 4.0
+    },
+    {
+      "id": 6,
+      "level": 1,
+      "cost": 100,
+      "damage": 20,
+      "range": 7.0,
+      "muzzleSpeed": 30.0,
+      "coolDownTime": 4.0
+    },
+    {
+      "id": 7,
+      "level": 1,
+      "cost": 100,
+      "damage": 20,
+      "range": 7.0,
+      "muzzleSpeed": 30.0,
+      "coolDownTime": 4.0
+    },
+    {
+      "id": 8,
+      "level": 1,
+      "cost": 100,
+      "damage": 20,
+      "range": 7.0,
+      "muzzleSpeed": 30.0,
+      "coolDownTime": 4.0
+    },
+    {
+      "id": 9,
+      "level": 1,
+      "cost": 100,
+      "damage": 20,
+      "range": 7.0,
+      "muzzleSpeed": 30.0,
+      "coolDownTime": 4.0
+    }
+  ]
+}

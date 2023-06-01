@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
+  spritePixelsToUnits: 40
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -7395,8 +7395,8 @@ TextureImporter:
       Green Effect and Bullet 16x16_133: -597882776
       Green Effect and Bullet 16x16_258: 1434161575
       Green Effect and Bullet 16x16_53: 531231884
-      Green Effect and Bullet 16x16_83: -683162841
       Green Effect and Bullet 16x16_282: -991901921
+      Green Effect and Bullet 16x16_83: -683162841
       Green Effect and Bullet 16x16_76: 165476566
       Green Effect and Bullet 16x16_326: -1556426761
       Green Effect and Bullet 16x16_361: -2041317147
@@ -7442,9 +7442,9 @@ TextureImporter:
       Green Effect and Bullet 16x16_212: -379382917
       Green Effect and Bullet 16x16_21: -1654599727
       Green Effect and Bullet 16x16_63: 569066323
-      Green Effect and Bullet 16x16_81: -958018837
-      Green Effect and Bullet 16x16_229: -104478791
       Green Effect and Bullet 16x16_368: -684405107
+      Green Effect and Bullet 16x16_229: -104478791
+      Green Effect and Bullet 16x16_81: -958018837
       Green Effect and Bullet 16x16_33: -1475737180
       Green Effect and Bullet 16x16_170: 133785688
       Green Effect and Bullet 16x16_73: 1583394856
@@ -7541,17 +7541,17 @@ TextureImporter:
       Green Effect and Bullet 16x16_139: 1717094058
       Green Effect and Bullet 16x16_321: -792747610
       Green Effect and Bullet 16x16_142: -722319039
-      Green Effect and Bullet 16x16_262: 930384419
       Green Effect and Bullet 16x16_298: -1738684607
+      Green Effect and Bullet 16x16_262: 930384419
       Green Effect and Bullet 16x16_74: 1229793633
       Green Effect and Bullet 16x16_366: -2066074179
       Green Effect and Bullet 16x16_64: 1909839760
       Green Effect and Bullet 16x16_96: 504949418
       Green Effect and Bullet 16x16_290: -1940398160
       Green Effect and Bullet 16x16_106: 1383730339
+      Green Effect and Bullet 16x16_270: -64389236
       Green Effect and Bullet 16x16_0: 686755106
       Green Effect and Bullet 16x16_66: 1094686106
-      Green Effect and Bullet 16x16_270: -64389236
       Green Effect and Bullet 16x16_118: -204096416
       Green Effect and Bullet 16x16_285: -762607742
       Green Effect and Bullet 16x16_283: -1522101869
