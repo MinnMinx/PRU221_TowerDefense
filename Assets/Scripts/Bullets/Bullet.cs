@@ -1,3 +1,4 @@
+using Enemy;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -69,6 +70,14 @@ public class Bullet : MonoBehaviour
         }
 
         // destroy bullet
+        Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// Destroy bullet when it is out of camera
+    /// </summary>
+    void OnBecameInvisible()
+    {
         Destroy(gameObject);
     }
 }

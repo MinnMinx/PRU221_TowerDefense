@@ -1,0 +1,22 @@
+{
+  "_listTower": [
+    {
+      "id": 1,
+      "level": 1,
+      "cost": 100,
+      "damage": 100,
+      "range": 5.0,
+      "muzzleSpeed": 100.0,
+      "coolDownTime": 0.1
+    },
+    {
+      "id": 2,
+      "level": 1,
+      "cost": 100,
+      "damage": 100,
+      "range": 5.0,
+      "muzzleSpeed": 1000.0,
+      "coolDownTime": 0.1
+    }
+  ]
+}
