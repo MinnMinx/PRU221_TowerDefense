@@ -47,7 +47,7 @@ namespace Enemy
         // hard-code spawn position
         private Vector3 v3;
 
-        private Timer timeSpawn = new Timer();
+        private Timer timeSpawn;
         private float time = 0;
         private bool checkTime = true;
         private int numberEnemy = 5;
