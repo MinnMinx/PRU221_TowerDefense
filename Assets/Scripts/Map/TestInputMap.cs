@@ -1,3 +1,4 @@
+using Pathfinding;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,36 +6,17 @@ using UnityEngine.Tilemaps;
 
 public class TestInputMap : MonoBehaviour
 {
-    public Tilemap selector;
-    private Vector3Int? prevGrid;
+    public Transform start, end;
+    public Grid grid;
+    public AstarPath path;
+    public GridGraph graph;
 
-    private void Update()
+    private void Start()
     {
-        if (selector != null && Input.mousePresent)
-        {
-            var clickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            var gridPos = selector.WorldToCell(clickPos);
-            if (prevGrid.HasValue && prevGrid.Value != gridPos)
-            {
-                selector.SetColor(prevGrid.Value, new Color
-                {
-                    r = 1,
-                    g = 1,
-                    b = 1,
-                    a = 0.3f
-                });
-                prevGrid = null;
-            }
+        var topLeft = grid.WorldToCell(Camera.main.ViewportToWorldPoint(Vector2.one));
+        var bottomRight = grid.WorldToCell(Camera.main.ViewportToWorldPoint(Vector2.zero));
 
-            var tile = selector.GetTile<PlaceableTile>(gridPos);
-            if (tile != null)
-            {
-                prevGrid = gridPos;
-                selector.SetColor(prevGrid.Value, new Color
-                {
-                    r = 1, g = 1, b = 1, a = 1
-                });
-            }
-        }
+        Debug.Log("Length X: " + Mathf.Abs(topLeft.x - bottomRight.x));
+        Debug.Log("Length Y: " + Mathf.Abs(topLeft.y - bottomRight.y));
     }
 }

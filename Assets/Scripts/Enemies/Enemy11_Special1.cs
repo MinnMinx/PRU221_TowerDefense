@@ -10,12 +10,13 @@ namespace Enemy
         {
         }
 
-        public void Awake()
+        protected override void Awake()
         {
             Hp = 10;
             Atk = 3;
-            Speed = 4f;
+            Speed = 2f;
             Money = 5;
+            base.Awake();
         }
     }
 }

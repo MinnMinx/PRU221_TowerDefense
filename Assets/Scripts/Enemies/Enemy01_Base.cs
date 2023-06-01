@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pathfinding;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,13 @@ namespace Enemy
         {
             get { return hp; }
             set { hp = value; }
+        }
+
+        private decimal maxHp;
+        public decimal MaxHp
+        {
+            get { return maxHp; }
+            set { maxHp = value; }
         }
 
         /// <summary>
@@ -56,10 +64,20 @@ namespace Enemy
 
         public List<Modifier> modifiers = new List<Modifier>();
 
+        HealthBarBehaviour healthBar;
+
+        AILerp lerper;
+
+        protected virtual void Awake()
+        {
+            maxHp = hp;
+            healthBar = GetComponentInChildren<HealthBarBehaviour>();
+            lerper = GetComponent<AILerp>();
+            lerper.speed = speed;
+        }
 
         // Start is called before the first frame 
-
-        // Update is called once per frame
+         // Update is called once per frame
         void Update()
         {
             // giảm time modifier.
@@ -118,13 +136,16 @@ namespace Enemy
         /// <param name="damage"></param>
         public virtual void TakeDamage(decimal damage)
         {
+            
             hp = hp - damage;
+            healthBar.SetHealth(Convert.ToSingle(hp), Convert.ToSingle(maxHp));
         }
 
         public bool DealDamage(Vector3 vector3)
         {
             float distance = Vector3.Distance(gameObject.transform.position, vector3);
-            if (distance <= 0) return true;
+            if (distance <= 0.1f) 
+                return true;
             return false;
         }
 
@@ -132,8 +153,10 @@ namespace Enemy
         public decimal SetHp(int wave, double heso)
         {
             decimal a = (decimal)Math.Pow(wave, heso);
-            hp = hp * a;
-            return hp;
+            maxHp = maxHp * a;
+            hp = maxHp;
+            healthBar.SetHealth(Convert.ToSingle(hp), Convert.ToSingle(maxHp));
+            return maxHp;
         }
 
         // add thêm modifier
