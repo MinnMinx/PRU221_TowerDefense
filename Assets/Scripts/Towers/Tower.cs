@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -170,20 +170,26 @@ public class Tower : MonoBehaviour
     /// <summary>
     /// Fire at enemy.
     /// </summary>
-    /// <param name="targetPosition"></param>
-    private void FireAt(Vector2 targetPosition)
+    /// <param name="target"></param>
+    private void FireAt(Transform target)
     {
         // Define direction
-        Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
+        // Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
 
         // Instantiate bullet follow direction
         GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+        var bulletBehavior = bullet.GetComponent<Bullet>();
+        if (bulletBehavior != null)
+        {
+            bulletBehavior.SetProperties(damage, muzzleSpeed, target);
+        }
 
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        bullet.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        // Bullet tự tính dir nên không cần gán trước
+            //float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            //bullet.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
         // rotate the tower to the left if the enemy is on the left if there is an enemy, otherwise keep the tower facing the right
-        if (targetPosition.x < transform.position.x)
+        if (target.position.x < transform.position.x)
         {
             gameObject.transform.localScale = new Vector3(-1, 1, 1);
         }
@@ -192,8 +198,9 @@ public class Tower : MonoBehaviour
             gameObject.transform.localScale = new Vector3(1, 1, 1);
         }
 
-        //// Add force to bullet
-        bullet.GetComponent<Rigidbody2D>().AddForce((targetPosition - (Vector2)transform.position).normalized * muzzleSpeed);
+        // Bullet tự di chuyển nên ko cần add force
+            //// Add force to bullet
+            //bullet.GetComponent<Rigidbody2D>().AddForce((targetPosition - (Vector2)transform.position).normalized * muzzleSpeed);
     }
 
     /// <summary>
@@ -202,7 +209,9 @@ public class Tower : MonoBehaviour
     /// <param name="collision"></param>
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Enemy")
+        // Có thể check luôn nếu List contain gameObject
+            // if (collision.gameObject.tag == "Enemy")
+        if (targetInRange.Contains(collision.gameObject))
         {
             // Remove enemy from list
             targetInRange.Remove(collision.gameObject);
@@ -256,7 +265,7 @@ public class Tower : MonoBehaviour
             {
                 // stop animation
                 animIdle.Play("Idle", 0, 0);
-                FireAt(target.transform.position);
+                FireAt(target.transform);
             }
         }
         else
