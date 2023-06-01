@@ -106,7 +106,8 @@ namespace Enemy
         public bool DealDamage(Vector3 vector3)
         {
             float distance = Vector3.Distance(gameObject.transform.position, vector3);
-            if (distance <= 0) return true;
+            if (distance <= 0.1f) 
+                return true;
             return false;
         }
 

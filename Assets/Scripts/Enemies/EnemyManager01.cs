@@ -36,7 +36,7 @@ namespace Enemy
         private Transform basePositon;
 
         // hard-code spawn position
-        private Vector3 v3 = new Vector3(-8.5f, 3.5f, 0);
+        private Vector3 v3;
 
         private Timer timeSpawn = new Timer();
         private float time = 0;
@@ -105,7 +105,7 @@ namespace Enemy
                     spawned.Remove(spawned[i]);
                     enemy.OnDespawn();
                 }
-                else if (enemy.DealDamage(Vector3.zero)) // hardd-code
+                else if (enemy.DealDamage(basePositon.position)) // hardd-code
                 {
                     // tru` mau cua player
                     spawned.Remove(spawned[i]);
@@ -126,7 +126,7 @@ namespace Enemy
             if (wave.smallWave.Count > 0)
             {
                 GameObject enemySpawn = wave.smallWave.Dequeue();
-                GameObject enemy = Instantiate(enemySpawn, v3, Quaternion.identity); // hard-code
+                GameObject enemy = Instantiate(enemySpawn, spawnPositon.position, Quaternion.identity); // hard-code
                 var enemyStat = enemy.GetComponent<Enemy01_Base>();
                 enemyStat.SetHp(numberWave, heso);
                 spawned.Add(enemy);
