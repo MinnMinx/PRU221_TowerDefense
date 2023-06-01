@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Enemy05 : Enemy01_Base
 {
-    private void Awake()
+    public void Awake()
     {
         Hp = 15;
         Atk = 5;

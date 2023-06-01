@@ -1,8 +1,10 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.UI;
+using static Enemy.Modifier;
 
 namespace Enemy
 {
@@ -50,12 +52,29 @@ namespace Enemy
 
         public bool isDead = false;
 
+        public bool isSpeed = false;
+
+        public List<Modifier> modifiers = new List<Modifier>();
+
 
         // Start is called before the first frame 
 
         // Update is called once per frame
         void Update()
         {
+            // giảm time modifier.
+            if (modifiers.Count > 0)
+            {
+                foreach (var item in modifiers)
+                {
+                    item.timeLeft -= Time.deltaTime;
+                }
+            }
+
+            Debug.Log("" + hp);
+            // xóa modifier
+            RemoveExpiredModifiers();
+
             if (hp <= 0)
             {
                 isDead = true;
@@ -117,6 +136,53 @@ namespace Enemy
             decimal a = (decimal)Math.Pow(wave, heso);
             hp = hp * a;
             return hp;
+        }
+
+        // add thêm modifier
+        public void AddModifier(Modifier modifier)
+        {
+            modifiers.Add(modifier);
+        }
+
+        // xóa modifier có timeleft <= 0.
+        public void RemoveExpiredModifiers()
+        {
+            // set lại speed.
+            foreach (var item in modifiers)
+            {
+                if (item.timeLeft <= 0)
+                {
+                    switch (item.type)
+                    {
+                        case ModifierType.Spd:
+                            {
+                                // set spped.
+                                break;
+                            };
+                        case ModifierType.Heal:
+                            {
+                                // set heal.
+                                break;
+                            };
+                        case ModifierType.Dmg_Multipler:
+                            {
+                                // set dmg.
+                                break;
+                            }
+                    }
+                }
+            }
+
+            // xóa modifer có timeleft <= 0.
+            modifiers.RemoveAll(modifier => modifier.timeLeft <= 0);
+        }
+
+        public void CalculatorModifier()
+        {
+            // modifier speed.
+            var a = modifiers.Where(modifier => modifier.type == ModifierType.Spd)
+                .Max(modifier => modifier.multipler);
+            speed = speed * (1 - a);
         }
     }
 }
