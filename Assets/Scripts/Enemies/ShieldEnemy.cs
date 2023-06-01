@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SheldEnemy : MonoBehaviour
+public class ShieldEnemy : MonoBehaviour
 {
     public bool IsActive { get; private set; }
 
