@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class CameraMovement : MonoBehaviour
@@ -29,12 +30,12 @@ public class CameraMovement : MonoBehaviour
 
     private void Update()
     {
-#if UNITY_EDITOR
-        if (Input.GetMouseButtonDown(0))
-        {
-            SetScrolling(!_allowScroll);
-        }
-#endif
+//#if UNITY_EDITOR
+//        if (Input.GetMouseButtonDown(0))
+//        {
+//            SetScrolling(!_allowScroll);
+//        }
+//#endif
 
         if (_allowScroll)
         {
@@ -48,7 +49,6 @@ public class CameraMovement : MonoBehaviour
             };
             transform.position = Vector3.Lerp(transform.position, originalPos + distance, Time.deltaTime * moveSpeed);
         }
-
     }
 
     public void SetScrolling(bool scrolling = true)
@@ -59,6 +59,11 @@ public class CameraMovement : MonoBehaviour
             mouseStartPos = mainCam.ScreenToWorldPoint(mouseStartPos);
             centerScreenPos = mainCam.ViewportToWorldPoint(CENTER_VIEWPORT_POS);
         }
+    }
+
+    public void InvertScrolling()
+    {
+        SetScrolling(!_allowScroll);
     }
 
     void SetMovementEvent(string evt, params object[] args)

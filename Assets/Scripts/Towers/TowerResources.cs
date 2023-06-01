@@ -21,4 +21,5 @@ public class TowerResources : ScriptableObject
     }
 
     public TowerPreviewerAsset PreviewAsset;
+    public TowerPrefabAsset PrefabList;
 }

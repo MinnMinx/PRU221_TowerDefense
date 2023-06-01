@@ -7,20 +7,28 @@ using UnityEngine;
 public class ConfigurationData
 {
     // List of towers
-    private static List<Towers> towersList = new List<Towers>();
+    private static List<Towers> towersList;
 
+    /// <summary>
+    /// If the inner list isn't load, load data
+    /// </summary>
     public static List<Towers> ListTower
     {
-        get { return towersList; }
+        get
+        {
+            if (towersList == null)
+                LoadData();
+            return towersList;
+        }
     }
 
     /// <summary>
     /// Load the configuration tower data to the list
     /// </summary>
-    public static void Initialize()
-    {
-        LoadData();
-    }
+    //public static void Initialize()
+    //{
+    //    LoadData();
+    //}
 
     /// <summary>
     /// Load the configuration tower data from the json file
