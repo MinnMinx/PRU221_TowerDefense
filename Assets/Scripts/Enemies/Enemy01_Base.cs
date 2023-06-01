@@ -71,7 +71,6 @@ namespace Enemy
                 }
             }
 
-            Debug.Log("" + hp);
             // xóa modifier
             RemoveExpiredModifiers();
 
@@ -155,7 +154,7 @@ namespace Enemy
                     {
                         case ModifierType.Spd:
                             {
-                                // set spped.
+                                // set speed.
                                 break;
                             };
                         case ModifierType.Heal:
@@ -179,9 +178,12 @@ namespace Enemy
         public void CalculatorModifier()
         {
             // modifier speed.
-            var a = modifiers.Where(modifier => modifier.type == ModifierType.Spd)
-                .Max(modifier => modifier.multipler);
-            speed = speed * (1 - a);
+            var spdModifiers = modifiers.Where(modifier => modifier.type == ModifierType.Spd).ToList();
+
+            if (spdModifiers.Count > 0)
+            {
+                float spdMulti = spdModifiers.Max(moddifier => moddifier.multipler);
+            }          
         }
     }
 }
