@@ -7,12 +7,13 @@ namespace Enemy
 {
     public class Enemy04 : Enemy01_Base
     {
-        public void Awake()
+        protected override void Awake()
         {
             Hp = 10;
             Atk = 2;
-            Speed = 5;
+            Speed = 2;
             Money = 2;
+            base.Awake();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pathfinding;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,11 +66,14 @@ namespace Enemy
 
         HealthBarBehaviour healthBar;
 
+        AILerp lerper;
+
         protected virtual void Awake()
         {
             maxHp = hp;
             healthBar = GetComponentInChildren<HealthBarBehaviour>();
-            
+            lerper = GetComponent<AILerp>();
+            lerper.speed = speed;
         }
 
         // Start is called before the first frame 

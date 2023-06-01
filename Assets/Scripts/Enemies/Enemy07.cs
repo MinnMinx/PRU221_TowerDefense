@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class Enemy07 : Enemy01_Base
 {
-    private void Awake()
+    protected override void Awake()
     {
         Hp = 10;
         Atk = 2;
-        Speed = 5;
+        Speed = 0.5f;
         Money = 2;
+        base.Awake();
     }
 }
