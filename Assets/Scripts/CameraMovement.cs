@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class CameraMovement : MonoBehaviour
@@ -17,21 +18,24 @@ public class CameraMovement : MonoBehaviour
     private Vector2 mouseStartPos;
     private bool _allowScroll = false;
 
+    public static string CAMERA_SET_MOVEMENT = "CAMERA_SET_MOVEMENT";
+
     private void Start()
     {
         mainCam = Camera.main;
         originalPos = transform.position;
         _allowScroll = false;
+        GameUiEventManager.Instance.RegisterEvent(CAMERA_SET_MOVEMENT, SetMovementEvent);
     }
 
     private void Update()
     {
-#if UNITY_EDITOR
-        if (Input.GetMouseButtonDown(0))
-        {
-            SetScrolling(!_allowScroll);
-        }
-#endif
+//#if UNITY_EDITOR
+//        if (Input.GetMouseButtonDown(0))
+//        {
+//            SetScrolling(!_allowScroll);
+//        }
+//#endif
 
         if (_allowScroll)
         {
@@ -45,7 +49,6 @@ public class CameraMovement : MonoBehaviour
             };
             transform.position = Vector3.Lerp(transform.position, originalPos + distance, Time.deltaTime * moveSpeed);
         }
-
     }
 
     public void SetScrolling(bool scrolling = true)
@@ -56,5 +59,19 @@ public class CameraMovement : MonoBehaviour
             mouseStartPos = mainCam.ScreenToWorldPoint(mouseStartPos);
             centerScreenPos = mainCam.ViewportToWorldPoint(CENTER_VIEWPORT_POS);
         }
+    }
+
+    public void InvertScrolling()
+    {
+        SetScrolling(!_allowScroll);
+    }
+
+    void SetMovementEvent(string evt, params object[] args)
+    {
+        if (string.IsNullOrEmpty(evt) || args == null || args.Length < 1)
+            return;
+
+        bool allowScroll = (bool)args[0];
+        SetScrolling(allowScroll);
     }
 }
