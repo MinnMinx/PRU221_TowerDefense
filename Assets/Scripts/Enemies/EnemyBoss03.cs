@@ -7,7 +7,7 @@ namespace Enemy
     public class EnemyBoss03 : Enemy01_Base
     {
         ShieldEnemy sheldEnemy;
-        public override void Start()
+        override protected void Start()
         {
             sheldEnemy = gameObject.AddComponent<ShieldEnemy>();
         }
