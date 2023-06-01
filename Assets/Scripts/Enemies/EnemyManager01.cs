@@ -17,6 +17,12 @@ namespace Enemy
         private List<GameObject> enemies = new List<GameObject>();
 
         /// <summary>
+        /// List of special.
+        /// </summary>
+        [SerializeField]
+        private List<GameObject> special = new List<GameObject>();
+
+        /// <summary>
         /// List of boss.
         /// </summary>
         [SerializeField]
@@ -43,6 +49,7 @@ namespace Enemy
         private bool checkTime = true;
         private int numberEnemy = 5;
         private int numberWave = 1;
+        private int nummberSpecial = 1;
 
         private double heso = 0.9;
 
@@ -65,12 +72,6 @@ namespace Enemy
         // Update is called once per frame
         void Update()
         {
-            // test
-            if (Input.anyKeyDown)
-            {
-                spawned.Clear();
-            }
-
             // set time nghỉ.
             if (spawned.Count == 0 && wave.smallWave.Count == 0)
             {
@@ -98,15 +99,22 @@ namespace Enemy
             for (int i = 0; i < spawned.Count; i++)
             {
                 var enemy = spawned[i].GetComponent<Enemy01_Base>();
+                enemy.OnUpdate();
+
+                // địch chết do trụ bắn.
                 if (enemy.isDead)
                 {
                     spawned.Remove(spawned[i]);
-                    enemy.OnDespawn();
+                    GameManager.instance.GainMoney(enemy.Money);
+                    GameManager.instance.GainScore(1); // hard-code
+                    enemy.OnDespawn();                    
                 }
-                else if (enemy.DealDamage(basePositon.position)) // hardd-code
+                // địch chạm base
+                else if (enemy.DealDamage(basePositon.position))
                 {
                     // tru` mau cua player
                     spawned.Remove(spawned[i]);
+                    GameManager.instance.TakeDamage(enemy.Atk);
                     enemy.OnDespawn();
                 }
             }
@@ -142,10 +150,26 @@ namespace Enemy
                     smallWave = new Queue<GameObject>(),
                 };
 
-                for (int j = 0; j < numberEnemy; j++)
+                // wave nhỏ hơn 6 chỉ sinh quái thường.
+                if (numberWave < 6)
                 {
-                    smallWave.smallWave.Enqueue(enemyType);
+                    for (int j = 0; j < numberEnemy; j++)
+                    {
+                        smallWave.smallWave.Enqueue(enemyType);
+                    }
                 }
+                // wave lớn hơn sáu mỗi wave sẽ có 1 quái special.
+                else
+                {
+                    for (int j = 0; j < numberEnemy - 1; j++)
+                    {
+                        smallWave.smallWave.Enqueue(enemyType);
+                    }
+
+                    var specialType = special[rnd.Next(special.Count)];
+                    smallWave.smallWave.Enqueue(specialType);
+                }
+                
 
                 this.largeWave.Enqueue(smallWave);
             };

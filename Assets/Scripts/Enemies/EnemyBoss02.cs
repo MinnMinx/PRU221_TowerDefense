@@ -8,9 +8,15 @@ namespace Enemy
     {
         ShieldEnemy sheldEnemy;
 
-        public void Start()
+        protected override void Awake()
         {
+            Hp = 200;
+            Speed = 0.35f;
+            Atk = 25;
+            Money = 100;
+
             sheldEnemy = gameObject.AddComponent<ShieldEnemy>();
+            base.Awake();
         }
 
         public override bool OnUpdate()
@@ -25,7 +31,6 @@ namespace Enemy
                 if (sheldEnemy != null && !sheldEnemy.IsActive)
                 {
                     sheldEnemy.ActivateShield(3f);
-                    // nhận dame thì bullet sẽ check xem active hay không
                 }
             }
             return base.OnUpdate();

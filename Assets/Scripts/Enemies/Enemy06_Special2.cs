@@ -11,7 +11,7 @@ public class Enemy06_Special2 : Enemy01_Base
     {
         Hp = 20;
         Atk = 3;
-        Speed = 1.5f;
+        Speed = 0.75f;
         Money = 2;
         base.Awake();
     }
