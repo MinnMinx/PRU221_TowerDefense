@@ -7,9 +7,15 @@ namespace Enemy
     public class EnemyBoss03 : Enemy01_Base
     {
         ShieldEnemy sheldEnemy;
-        public void Start()
+        protected override void Awake()
         {
+            Hp = 300;
+            Speed = 2.5f;
+            Atk = 30;
+            Money = 150;
+
             sheldEnemy = gameObject.AddComponent<ShieldEnemy>();
+            base.Awake();
         }
 
         public override bool OnUpdate()
