@@ -2,35 +2,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShieldEnemy : MonoBehaviour
+namespace Enemy
 {
-    public bool IsActive { get; private set; }
-
-    private float duration;
-
-    public void ActivateShield(float duration)
+    public class ShieldEnemy : MonoBehaviour
     {
-        IsActive = true;
-        this.duration = duration;
-        // Các thao tác để kích hoạt Shield
-    }
+        public bool IsActive { get; private set; }
 
-    private void Update()
-    {
-        if (IsActive)
+        private float duration;
+
+        public void ActivateShield(float duration)
         {
-            duration -= Time.deltaTime;
-            if (duration <= 0f)
+            IsActive = true;
+            this.duration = duration;
+            // Các thao tác để kích hoạt Shield
+        }
+
+        private void Update()
+        {
+            if (IsActive)
             {
-                DeactivateShield();
+                duration -= Time.deltaTime;
+                if (duration <= 0f)
+                {
+                    DeactivateShield();
+                }
             }
         }
-    }
 
-    private void DeactivateShield()
-    {
-        IsActive = false;
-        duration = 0f;
-        // Các thao tác để huỷ kích hoạt Shield
+        private void DeactivateShield()
+        {
+            IsActive = false;
+            duration = 0f;
+            // Các thao tác để huỷ kích hoạt Shield
+        }
     }
 }
+
