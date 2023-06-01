@@ -45,7 +45,11 @@ namespace Enemy
         public float Speed
         {
             get { return speed; }
-            set { speed = value; }
+            set
+            {
+                speed = value;
+                isSpeed = false;
+            }
         }
 
         /// <summary>
@@ -58,10 +62,16 @@ namespace Enemy
             set { money = value; }
         }
 
+        // check theo máu quái
         public bool isDead = false;
 
+        // check xem quái đã bị làm chậm chưa
         public bool isSpeed = false;
 
+        // check xem quái có miễn làm trận.
+        public bool canSpeed = false;
+
+        // List buff/debuff của quái
         public List<Modifier> modifiers = new List<Modifier>();
 
         HealthBarBehaviour healthBar;
@@ -91,6 +101,9 @@ namespace Enemy
 
             // xóa modifier
             RemoveExpiredModifiers();
+
+            // tính lại stat
+            CalculatorModifier();
 
             if (hp <= 0)
             {
@@ -168,30 +181,13 @@ namespace Enemy
         // xóa modifier có timeleft <= 0.
         public void RemoveExpiredModifiers()
         {
-            // set lại speed.
-            foreach (var item in modifiers)
+            // speed
+            var spdModifiers = modifiers.Where(modifier => modifier.type == ModifierType.Spd).OrderByDescending(modifier => modifier.multipler).FirstOrDefault();
+
+            if (spdModifiers != null && spdModifiers.timeLeft <= 0)
             {
-                if (item.timeLeft <= 0)
-                {
-                    switch (item.type)
-                    {
-                        case ModifierType.Spd:
-                            {
-                                // set speed.
-                                break;
-                            };
-                        case ModifierType.Heal:
-                            {
-                                // set heal.
-                                break;
-                            };
-                        case ModifierType.Dmg_Multipler:
-                            {
-                                // set dmg.
-                                break;
-                            }
-                    }
-                }
+                //set lại speed.
+                speed = speed / (1 - spdModifiers.multipler);
             }
 
             // xóa modifer có timeleft <= 0.
@@ -201,11 +197,12 @@ namespace Enemy
         public void CalculatorModifier()
         {
             // modifier speed.
-            var spdModifiers = modifiers.Where(modifier => modifier.type == ModifierType.Spd).ToList();
+            var spdModifiers = modifiers.Where(modifier => modifier.type == ModifierType.Spd).OrderByDescending(modifier => modifier.multipler).FirstOrDefault();
 
-            if (spdModifiers.Count > 0)
+            if (spdModifiers != null && !isSpeed && !canSpeed)
             {
-                float spdMulti = spdModifiers.Max(moddifier => moddifier.multipler);
+                speed = speed * (1 - spdModifiers.multipler);
+                isSpeed = true;
             }          
         }
     }

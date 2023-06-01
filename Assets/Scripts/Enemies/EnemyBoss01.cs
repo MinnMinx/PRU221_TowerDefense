@@ -8,9 +8,10 @@ namespace Enemy
     {
         public override bool OnUpdate()
         {
+            Debug.Log("avxc");
             if (Hp < Hp / 2)
             {
-                Speed += 3.5f;
+                Speed = 3.5f;
             }
             return base.OnUpdate();
         }

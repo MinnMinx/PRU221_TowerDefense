@@ -16,7 +16,7 @@ namespace Enemy
         {
             if (Hp >= Hp / 2)
             {
-                Speed += 3.5f;
+                Speed = 3.5f;
             }
             else
             {

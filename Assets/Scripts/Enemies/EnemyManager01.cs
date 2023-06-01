@@ -98,12 +98,13 @@ namespace Enemy
             for (int i = 0; i < spawned.Count; i++)
             {
                 var enemy = spawned[i].GetComponent<Enemy01_Base>();
+                enemy.OnUpdate();
                 if (enemy.isDead)
                 {
                     spawned.Remove(spawned[i]);
                     enemy.OnDespawn();
                 }
-                else if (enemy.DealDamage(basePositon.position)) // hardd-code
+                else if (enemy.DealDamage(basePositon.position))
                 {
                     // tru` mau cua player
                     spawned.Remove(spawned[i]);
