@@ -26,11 +26,16 @@ namespace Enemy
         /// </summary>
         public static List<GameObject> spawned = new List<GameObject>();
 
+        // vi tri spawn.
+        private Vector3 spawnPositon = Vector3.zero;
+
         private Timer timeSpawn = new Timer();
         private float time = 0;
         private bool checkTime = true;
         private int numberEnemy = 5;
         private int numberWave = 1;
+
+        private double heso = 0.9;
 
         Queue<SmallWave> largeWave = new Queue<SmallWave>();
 
@@ -52,6 +57,12 @@ namespace Enemy
         // Update is called once per frame
         void Update()
         {
+            // test
+            if (Input.anyKeyDown)
+            {
+                spawned.Clear();
+            }
+
             // set time nghỉ.
             if (spawned.Count == 0 && wave.smallWave.Count == 0)
             {
@@ -85,6 +96,12 @@ namespace Enemy
                     spawned.Remove(spawned[i]);
                     enemy.OnDespawn();
                 }
+                else if (enemy.DealDamage(spawnPositon))
+                {
+                    // tru` mau cua player
+                    spawned.Remove(spawned[i]);
+                    enemy.OnDespawn();
+                }
             }
 
             // 
@@ -102,7 +119,7 @@ namespace Enemy
                 GameObject enemySpawn = wave.smallWave.Dequeue();
                 GameObject enemy = Instantiate(enemySpawn, Vector3.zero, Quaternion.identity);
                 var enemyStat = enemy.GetComponent<Enemy01_Base>();
-                enemyStat.Hp = 10;
+                enemyStat.SetHp(numberWave, heso);
                 spawned.Add(enemy);
             }
         }

@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.UI;
 
 namespace Enemy
 {
@@ -48,15 +50,10 @@ namespace Enemy
 
         public bool isDead = false;
 
-
-        // Start is called before the first frame update
-        public virtual void Start()
-        {
-        }
-
         // Update is called once per frame
         void Update()
         {
+            Debug.Log("" + hp);
             if (hp <= 0)
             {
                 isDead = true;
@@ -104,9 +101,19 @@ namespace Enemy
             hp = hp - damage;
         }
 
-        public bool DealDamage()
+        public bool DealDamage(Vector3 vector3)
         {
-            return true;
+            float distance = Vector3.Distance(gameObject.transform.position, vector3);
+            if (distance <= 0) return true;
+            return false;
+        }
+
+        // set hp theo wave cho enemy
+        public decimal SetHp(int wave, double heso)
+        {
+            decimal a = (decimal)Math.Pow(wave, heso);
+            hp = hp * a;
+            return hp;
         }
     }
 }

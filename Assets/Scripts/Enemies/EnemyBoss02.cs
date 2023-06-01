@@ -8,7 +8,7 @@ namespace Enemy
     {
         ShieldEnemy sheldEnemy;
 
-        public override void Start()
+        public void Start()
         {
             sheldEnemy = gameObject.AddComponent<ShieldEnemy>();
         }
