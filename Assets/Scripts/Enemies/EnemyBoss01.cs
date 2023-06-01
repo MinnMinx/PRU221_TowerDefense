@@ -2,18 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBoss01 : Enemy01_Base
+namespace Enemy
 {
-    public EnemyBoss01(decimal hp, decimal atk, float speed, decimal money) : base(hp, atk, speed, money)
+    public class EnemyBoss01 : Enemy01_Base
     {
-    }
-
-    public override bool OnUpdate()
-    {
-        if(Hp < Hp / 2)
+        public override bool OnUpdate()
         {
-            Speed += 3.5f;
+            if (Hp < Hp / 2)
+            {
+                Speed += 3.5f;
+            }
+            return base.OnUpdate();
         }
-        return base.OnUpdate();
     }
 }
+

@@ -2,35 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBoss02 : Enemy01_Base
+namespace Enemy
 {
-    ShieldEnemy sheldEnemy;
-    public EnemyBoss02(decimal hp, decimal atk, float speed, decimal money) : base(hp, atk, speed, money)
+    public class EnemyBoss02 : Enemy01_Base
     {
-        sheldEnemy = gameObject.AddComponent<ShieldEnemy>();
-    }
+        ShieldEnemy sheldEnemy;
 
-    public override bool OnUpdate()
-    {
-        if (Hp < Hp / 2)
+        public void Start()
         {
-            Atk += 40;
-            // miễn sát thương 3s
-            // nên tạo lớp sheld
-            // check sheld đã active chưa
-            // actived -> ..
-            if (sheldEnemy != null && !sheldEnemy.IsActive)
-            {
-                sheldEnemy.ActivateShield(3f);
-                // nhận dame thì bullet sẽ check xem active hay không
-            }
+            sheldEnemy = gameObject.AddComponent<ShieldEnemy>();
         }
-        return base.OnUpdate();
-    }
 
-    public override void TakeDamage(decimal damage)
-    {
-        if (!sheldEnemy.IsActive)
-            base.TakeDamage(damage);
+        public override bool OnUpdate()
+        {
+            if (Hp < Hp / 2)
+            {
+                Atk += 40;
+                // miễn sát thương 3s
+                // nên tạo lớp sheld
+                // check sheld đã active chưa
+                // actived -> ..
+                if (sheldEnemy != null && !sheldEnemy.IsActive)
+                {
+                    sheldEnemy.ActivateShield(3f);
+                    // nhận dame thì bullet sẽ check xem active hay không
+                }
+            }
+            return base.OnUpdate();
+        }
+
+        public override void TakeDamage(decimal damage)
+        {
+            if (!sheldEnemy.IsActive)
+                base.TakeDamage(damage);
+        }
     }
 }
+
