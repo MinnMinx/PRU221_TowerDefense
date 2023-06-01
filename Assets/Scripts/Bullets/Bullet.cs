@@ -46,27 +46,11 @@ public class Bullet : MonoBehaviour
     {
         // get components of target
         Enemy01_Base enemy = target.GetComponent<Enemy01_Base>();
-        Animator anim = target.GetComponent<Animator>();
 
-        // if target is enemy
+        // if target is enemy, damage enemy
         if (enemy != null)
         {
-            // if enemy is not dead
-            //if (!enemy.isDead)
-            //{
-                //// if enemy is not in fire effect
-                //if (!enemy.isFire)
-                //{
-                //    // set enemy in fire effect
-                //    enemy.isFire = true;
-
-                //    // set enemy's animation in fire effect
-                //    anim.SetBool("isFire", true);
-
-                //    // set enemy's health
-                //    enemy.health -= 10;
-                //}
-            //}
+            enemy.TakeDamage(10);
         }
 
         // destroy bullet

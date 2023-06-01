@@ -6,11 +6,12 @@ using UnityEngine;
 
 public class ConfigurationData
 {
-    public static List<Tower> listTower = new List<Tower>();
+    // List of towers
+    private static List<Towers> towersList = new List<Towers>();
 
-    public static List<Tower> ListTower
+    public static List<Towers> ListTower
     {
-        get { return listTower; }
+        get { return towersList; }
     }
 
     /// <summary>
@@ -31,10 +32,7 @@ public class ConfigurationData
 
         try
         {
-            Towers towers = JsonUtility.FromJson<Towers>(json);
-            listTower = towers._listTower;
-            Debug.Log("Load data successfully");
-            Debug.Log("List tower: " + listTower.Count);
+            towersList = JsonUtility.FromJson<Serialization<Towers>>(json).ToList();
         }
         catch (Exception e)
         {
@@ -42,35 +40,48 @@ public class ConfigurationData
         }
     }
 
-    private static void SaveData()
+    // A generic wrapper class to help with JSON serialization
+    [System.Serializable]
+    private class Serialization<T>
     {
-        // save all tower data to ConfigurationData.json
-        Tower tower = new Tower
+        public List<T> listTower;
+
+        public Serialization()
         {
-            Id = 1,
-            Level = 1,
-            Cost = 100,
-            Damage = 10,
-            Range = 10,
-            MuzzleSpeed = 10,
-            CoolDownTime = 10
-        };
-        listTower.Add(tower);
-        string json = JsonUtility.ToJson(new Towers(listTower));
-        File.WriteAllText(Application.dataPath + "/Scripts/ConfigurationData1.json", json);
+            listTower = new List<T>();
+        }
+
+        public Serialization(List<T> list)
+        {
+            this.listTower = list;
+        }
+
+        public List<T> ToList()
+        {
+            return listTower;
+        }
     }
 
-    /// <summary>
-    /// The class that holds the configuration data
-    /// </summary>
     [Serializable]
     public class Towers
     {
-        public List<Tower> _listTower;
+        public int id;
+        public int level;
+        public int cost;
+        public int damage;
+        public float range;
+        public float muzzleSpeed;
+        public float coolDownTime;
 
-        public Towers(List<Tower> listTower)
+        public Towers(int id, int level, int cost, int damage, float range, float muzzleSpeed, float coolDownTime)
         {
-            this._listTower = listTower;
+            this.id = id;
+            this.level = level;
+            this.cost = cost;
+            this.damage = damage;
+            this.range = range;
+            this.muzzleSpeed = muzzleSpeed;
+            this.coolDownTime = coolDownTime;
         }
     }
 }

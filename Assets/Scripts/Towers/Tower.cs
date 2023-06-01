@@ -178,6 +178,7 @@ public class Tower : MonoBehaviour
 
         // Instantiate bullet follow direction
         GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         bullet.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
@@ -191,7 +192,7 @@ public class Tower : MonoBehaviour
             gameObject.transform.localScale = new Vector3(1, 1, 1);
         }
 
-        // Add force to bullet
+        //// Add force to bullet
         bullet.GetComponent<Rigidbody2D>().AddForce((targetPosition - (Vector2)transform.position).normalized * muzzleSpeed);
     }
 
@@ -218,8 +219,8 @@ public class Tower : MonoBehaviour
 
         // Initialize cooldown Timer
         cooldownTimer = gameObject.AddComponent<Timer>();
-        //cooldownTimer.Duration = coolDownTime;
-        cooldownTimer.Duration = 1f;
+        cooldownTimer.Duration = coolDownTime;
+        //cooldownTimer.Duration = 1f;
 
         // get components animation of game object
         animIdle = gameObject.GetComponent<Animator>();
@@ -237,7 +238,7 @@ public class Tower : MonoBehaviour
     private void Update()
     {
         // Print all of properties of tower
-        //Debug.Log(gameObject.name+ "Level: " + level + " Cost: " + cost + " Damage: " + damage + " Range: " + range + " MuzzleSpeed: " + muzzleSpeed + " CoolDownTime: " + coolDownTime);
+        Debug.Log(gameObject.name+ "Level: " + level + " Cost: " + cost + " Damage: " + damage + " Range: " + range + " MuzzleSpeed: " + muzzleSpeed + " CoolDownTime: " + coolDownTime);
         if (!canShoot && cooldownTimer.Finished)
         {
             canShoot = true;
