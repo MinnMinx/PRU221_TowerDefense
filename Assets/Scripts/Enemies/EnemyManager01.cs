@@ -98,6 +98,7 @@ namespace Enemy
             for (int i = 0; i < spawned.Count; i++)
             {
                 var enemy = spawned[i].GetComponent<Enemy01_Base>();
+                enemy.OnUpdate();
                 if (enemy.isDead)
                 {
                     spawned.Remove(spawned[i]);
