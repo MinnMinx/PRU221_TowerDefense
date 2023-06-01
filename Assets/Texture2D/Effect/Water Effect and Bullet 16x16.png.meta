@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
+  spritePixelsToUnits: 40
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -7276,10 +7276,10 @@ TextureImporter:
       Water Effect and Bullet 16x16_290: -598837577
       Water Effect and Bullet 16x16_54: -543681998
       Water Effect and Bullet 16x16_30: -701626165
-      Water Effect and Bullet 16x16_119: -1782548640
-      Water Effect and Bullet 16x16_287: 1895519416
-      Water Effect and Bullet 16x16_295: 2089417599
       Water Effect and Bullet 16x16_301: 1195598873
+      Water Effect and Bullet 16x16_287: 1895519416
+      Water Effect and Bullet 16x16_119: -1782548640
+      Water Effect and Bullet 16x16_295: 2089417599
       Water Effect and Bullet 16x16_55: 2088441339
       Water Effect and Bullet 16x16_131: -603024256
       Water Effect and Bullet 16x16_166: -1299602178
@@ -7343,8 +7343,8 @@ TextureImporter:
       Water Effect and Bullet 16x16_98: 1544714051
       Water Effect and Bullet 16x16_225: -1264238281
       Water Effect and Bullet 16x16_18: 755544562
-      Water Effect and Bullet 16x16_89: 2042591158
       Water Effect and Bullet 16x16_181: -943187427
+      Water Effect and Bullet 16x16_89: 2042591158
       Water Effect and Bullet 16x16_275: 1624272050
       Water Effect and Bullet 16x16_84: -859873392
       Water Effect and Bullet 16x16_251: -1463258678
@@ -7394,8 +7394,8 @@ TextureImporter:
       Water Effect and Bullet 16x16_365: 279846199
       Water Effect and Bullet 16x16_43: 135669295
       Water Effect and Bullet 16x16_267: -1022105580
-      Water Effect and Bullet 16x16_11: -1230931389
       Water Effect and Bullet 16x16_364: 425969362
+      Water Effect and Bullet 16x16_11: -1230931389
       Water Effect and Bullet 16x16_269: -1548868809
       Water Effect and Bullet 16x16_300: -842017845
       Water Effect and Bullet 16x16_236: 2020751651
