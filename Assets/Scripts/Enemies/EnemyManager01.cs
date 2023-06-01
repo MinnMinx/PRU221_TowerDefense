@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading;
 using UnityEditor.Search;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Enemy
 {
-    public class EnemySpawner01 : MonoBehaviour
+    public class EnemyManager01 : MonoBehaviour
     {
         /// <summary>
         /// List of enemy.
@@ -27,7 +28,15 @@ namespace Enemy
         public static List<GameObject> spawned = new List<GameObject>();
 
         // vi tri spawn.
-        private Vector3 spawnPositon = Vector3.zero;
+        [SerializeField]
+        private Transform spawnPositon;
+
+        // vi tri base.
+        [SerializeField]
+        private Transform basePositon;
+
+        // hard-code spawn position
+        private Vector3 v3 = new Vector3(-8.5f, 3.5f, 0);
 
         private Timer timeSpawn = new Timer();
         private float time = 0;
@@ -96,7 +105,7 @@ namespace Enemy
                     spawned.Remove(spawned[i]);
                     enemy.OnDespawn();
                 }
-                else if (enemy.DealDamage(spawnPositon))
+                else if (enemy.DealDamage(Vector3.zero)) // hardd-code
                 {
                     // tru` mau cua player
                     spawned.Remove(spawned[i]);
@@ -104,7 +113,7 @@ namespace Enemy
                 }
             }
 
-            // 
+            // thoi` gian spawn moi~ con quai.
             if (timeSpawn.Finished && checkTime)
             {
                 Spawn();
@@ -117,7 +126,7 @@ namespace Enemy
             if (wave.smallWave.Count > 0)
             {
                 GameObject enemySpawn = wave.smallWave.Dequeue();
-                GameObject enemy = Instantiate(enemySpawn, Vector3.zero, Quaternion.identity);
+                GameObject enemy = Instantiate(enemySpawn, v3, Quaternion.identity); // hard-code
                 var enemyStat = enemy.GetComponent<Enemy01_Base>();
                 enemyStat.SetHp(numberWave, heso);
                 spawned.Add(enemy);

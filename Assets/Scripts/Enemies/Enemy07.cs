@@ -5,12 +5,6 @@ using UnityEngine;
 
 public class Enemy07 : Enemy01_Base
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     private void Awake()
     {
         Hp = 10;

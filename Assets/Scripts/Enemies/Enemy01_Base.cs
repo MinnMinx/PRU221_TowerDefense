@@ -8,15 +8,6 @@ namespace Enemy
 {
     public class Enemy01_Base : MonoBehaviour
     {
-        virtual protected void Start()
-        {
-            
-        }
-
-        virtual public void Awake()
-        {
-            
-        }
         /// <summary>
         /// Health of enemy.
         /// </summary>
@@ -65,7 +56,6 @@ namespace Enemy
         // Update is called once per frame
         void Update()
         {
-            Debug.Log("" + hp);
             if (hp <= 0)
             {
                 isDead = true;

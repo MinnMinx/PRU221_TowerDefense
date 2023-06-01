@@ -7,11 +7,6 @@ namespace Enemy
 {
     public class Enemy04 : Enemy01_Base
     {
-        // Start is called before the first frame update
-        public void Start()
-        {    
-        }
-
         public void Awake()
         {
             Hp = 10;
