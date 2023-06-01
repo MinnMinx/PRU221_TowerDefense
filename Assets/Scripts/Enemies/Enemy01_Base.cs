@@ -20,6 +20,13 @@ namespace Enemy
             set { hp = value; }
         }
 
+        private decimal maxHp;
+        public decimal MaxHp
+        {
+            get { return maxHp; }
+            set { maxHp = value; }
+        }
+
         /// <summary>
         /// Atk of enemy.
         /// </summary>
@@ -56,10 +63,17 @@ namespace Enemy
 
         public List<Modifier> modifiers = new List<Modifier>();
 
+        HealthBarBehaviour healthBar;
+
+        protected virtual void Awake()
+        {
+            maxHp = hp;
+            healthBar = GetComponentInChildren<HealthBarBehaviour>();
+            
+        }
 
         // Start is called before the first frame 
-
-        // Update is called once per frame
+         // Update is called once per frame
         void Update()
         {
             // giảm time modifier.
@@ -119,7 +133,9 @@ namespace Enemy
         /// <param name="damage"></param>
         public virtual void TakeDamage(decimal damage)
         {
+            
             hp = hp - damage;
+            healthBar.SetHealth(Convert.ToSingle(hp), Convert.ToSingle(maxHp));
         }
 
         public bool DealDamage(Vector3 vector3)
@@ -134,8 +150,10 @@ namespace Enemy
         public decimal SetHp(int wave, double heso)
         {
             decimal a = (decimal)Math.Pow(wave, heso);
-            hp = hp * a;
-            return hp;
+            maxHp = maxHp * a;
+            hp = maxHp;
+            healthBar.SetHealth(Convert.ToSingle(hp), Convert.ToSingle(maxHp));
+            return maxHp;
         }
 
         // add thêm modifier

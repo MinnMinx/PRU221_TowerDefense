@@ -52,7 +52,6 @@ namespace Enemy
         {
             smallWave = new Queue<GameObject>(),
         };
-
         // Start is called before the first frame update
         void Start()
         {
@@ -95,7 +94,6 @@ namespace Enemy
                 SpawnWave();
                 // tăng số lượng enemy mỗi wave?
             }
-
             // Check và xóa quái có máu = 0.
             for (int i = 0; i < spawned.Count; i++)
             {
