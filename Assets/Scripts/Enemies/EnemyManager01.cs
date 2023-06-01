@@ -7,7 +7,7 @@ using UnityEditor.SceneManagement;
 using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static UnityEngine.Rendering.DebugUI;
+using Newtonsoft.Json;
 
 namespace Enemy
 {
@@ -76,7 +76,7 @@ namespace Enemy
         // Update is called once per frame
         void Update()
         {
-            if (Input.anyKeyDown)
+            if (Input.GetMouseButtonDown(0))
             {
                 SaveEnemyData();
             }
@@ -211,7 +211,7 @@ namespace Enemy
             }
 
             string filePath = "Assets/Resources/EnemyData.json";
-            string jsonData = JsonUtility.ToJson(data);
+            string jsonData = JsonConvert.SerializeObject(data); // JsonUtility.ToJson(data);
 
             // Ghi dữ liệu vào tệp tin
             StreamWriter sw = new StreamWriter(filePath);
