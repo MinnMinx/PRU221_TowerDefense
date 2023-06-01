@@ -7,12 +7,13 @@ public class Enemy06_Special2 : Enemy01_Base
 {
     //
     private float timerEachShield = 5f;
-    private void Awake()
+    protected override void Awake()
     {
         Hp = 20;
         Atk = 3;
-        Speed = 2;
+        Speed = 1.5f;
         Money = 2;
+        base.Awake();
     }
 
     // shield will enable each 5s
