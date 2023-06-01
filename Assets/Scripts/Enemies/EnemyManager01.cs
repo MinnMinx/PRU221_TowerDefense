@@ -104,7 +104,7 @@ namespace Enemy
                     spawned.Remove(spawned[i]);
                     enemy.OnDespawn();
                 }
-                else if (enemy.DealDamage(basePositon.position)) // hardd-code
+                else if (enemy.DealDamage(basePositon.position))
                 {
                     // tru` mau cua player
                     spawned.Remove(spawned[i]);
