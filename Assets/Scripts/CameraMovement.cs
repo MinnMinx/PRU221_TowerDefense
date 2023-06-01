@@ -17,11 +17,14 @@ public class CameraMovement : MonoBehaviour
     private Vector2 mouseStartPos;
     private bool _allowScroll = false;
 
+    public static string CAMERA_SET_MOVEMENT = "CAMERA_SET_MOVEMENT";
+
     private void Start()
     {
         mainCam = Camera.main;
         originalPos = transform.position;
         _allowScroll = false;
+        GameUiEventManager.Instance.RegisterEvent(CAMERA_SET_MOVEMENT, SetMovementEvent);
     }
 
     private void Update()
@@ -56,5 +59,14 @@ public class CameraMovement : MonoBehaviour
             mouseStartPos = mainCam.ScreenToWorldPoint(mouseStartPos);
             centerScreenPos = mainCam.ViewportToWorldPoint(CENTER_VIEWPORT_POS);
         }
+    }
+
+    void SetMovementEvent(string evt, params object[] args)
+    {
+        if (string.IsNullOrEmpty(evt) || args == null || args.Length < 1)
+            return;
+
+        bool allowScroll = (bool)args[0];
+        SetScrolling(allowScroll);
     }
 }

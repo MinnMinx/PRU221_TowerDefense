@@ -7,24 +7,23 @@ using UnityEngine.UI;
 
 public class SlotData : MonoBehaviour, IPointerClickHandler
 {
-    [SerializeField]
+    private int towerId;
     private Sprite previewSpr;
-    [SerializeField]
     private int cost;
-    [SerializeField]
-    private GameObject prefab;
 
     [SerializeField]
     private Image prevImage;
     [SerializeField]
     private TextMeshProUGUI costLbl;
 
-    public static string SPAWN_EVENT_NAME = "SLOT_SPAWN";
     public static string SLOT_CLICK_EVT = "SLOT_CLICK_EVT";
 
     // Start is called before the first frame update
-    void Start()
+    public void Init(int towerId, Sprite previewSpr, int cost)
     {
+        this.towerId = towerId;
+        this.previewSpr = previewSpr;
+        this.cost = cost;
         try
         {
             prevImage.sprite = previewSpr;
@@ -38,6 +37,6 @@ public class SlotData : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        GameUiEventManager.Instance.Notify(SLOT_CLICK_EVT, prefab, eventData, cost, previewSpr);
+        GameUiEventManager.Instance.Notify(SLOT_CLICK_EVT, towerId, cost, previewSpr, eventData);
     }
 }

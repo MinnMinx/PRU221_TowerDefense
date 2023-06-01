@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class SlotChooserManager : MonoBehaviour
 {
     [SerializeField]
-    private CameraMovement test;
+    private GameObject slotChooserPrefab;
+    [SerializeField]
+    private Transform slotChooserParent;
     [SerializeField]
     private Image previewImage;
     [SerializeField]
@@ -21,6 +19,7 @@ public class SlotChooserManager : MonoBehaviour
         GameUiEventManager.Instance.RegisterEvent(SlotData.SLOT_CLICK_EVT,
                     new System.Action<string, object[]>(OnSlotClick));
         isPreviewingTower = false;
+        SpawnSlots();
     }
 
     private void Update()
@@ -40,6 +39,22 @@ public class SlotChooserManager : MonoBehaviour
         }
     }
 
+    void SpawnSlots()
+    {
+        var towerPrevData = TowerResources.Instance.PreviewAsset;
+        for (int i = 0; i < towerPrevData.Count; i++)
+        {
+            var go = Instantiate(slotChooserPrefab, slotChooserParent);
+            var slotData = go.GetComponent<SlotData>();
+            if (slotData != null)
+            {
+                slotData.Init(towerPrevData[i].towerId,
+                                towerPrevData[i].prevSprite,
+                                Random.Range(0, 101));
+            }
+        }
+    }
+
     void OnSlotClick(string evt, params object[] args)
     {
         if (!evt.Equals(SlotData.SLOT_CLICK_EVT) || args == null || args.Length < 4)
@@ -51,19 +66,11 @@ public class SlotChooserManager : MonoBehaviour
             return;
         }
 
-        GameObject prefabs = (GameObject)args[0];
-        PointerEventData clickData = (PointerEventData)args[1];
-        int cost = (int)args[2];
-        Sprite prevImg = (Sprite)args[3];
+        int towerId = (int)args[0];
+        int cost = (int)args[1];
+        Sprite prevImg = (Sprite)args[2];
 
-        Debug.Log("Prefabs is null: " + prefabs == null);
-        Debug.Log("clickData is null: " + clickData == null);
-        Debug.Log("cost is 0: " + (cost == 0));
-        Debug.Log("prevImg is null: " + prevImg == null);
-        Debug.Log("WOOOOOO");
-
-        if (test != null)
-            test.SetScrolling(false);
+        GameUiEventManager.Instance.Notify(CameraMovement.CAMERA_SET_MOVEMENT, false);
         isPreviewingTower = true;
         previewImage.sprite = prevImg;
         previewImage.preserveAspect = true;
