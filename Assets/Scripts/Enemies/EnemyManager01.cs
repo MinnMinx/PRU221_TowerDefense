@@ -77,7 +77,7 @@ namespace Enemy
             if (!loadFromFile)
             {
                 SpawnWave();
-            }            
+            }
             wave = largeWave.Dequeue();
         }
 
@@ -230,30 +230,38 @@ namespace Enemy
 
         public void LoadEnemyData()
         {
-            allEnemy.AddRange(enemies);
-            allEnemy.AddRange(special);
-            allEnemy.AddRange(bosses);
-
-            string filePath = "Assets/Resources/EnemyData.json";
-            string jsonContent = File.ReadAllText(filePath);
-
-            EnemyData data = JsonConvert.DeserializeObject<EnemyData>(jsonContent);
-            this.numberEnemy = data.numberEnemy;
-            this.numberWave = data.numberWave;
-            foreach (var wave in data.largeWave)
+            try
             {
-                SmallWave smWave = new SmallWave()
-                {
-                    smallWave = new Queue<GameObject>(),
-                };
+                allEnemy.AddRange(enemies);
+                allEnemy.AddRange(special);
+                allEnemy.AddRange(bosses);
 
-                foreach(var enemy in wave)
+                string filePath = "Assets/Resources/EnemyData.json";
+                string jsonContent = File.ReadAllText(filePath);
+
+                EnemyData data = JsonConvert.DeserializeObject<EnemyData>(jsonContent);
+                this.numberEnemy = data.numberEnemy;
+                this.numberWave = data.numberWave;
+                foreach (var wave in data.largeWave)
                 {
-                    var enemyInWave = allEnemy.FirstOrDefault(gameobject => gameobject.name.Equals(enemy));
-                    smWave.smallWave.Enqueue(enemyInWave);
+                    SmallWave smWave = new SmallWave()
+                    {
+                        smallWave = new Queue<GameObject>(),
+                    };
+
+                    foreach (var enemy in wave)
+                    {
+                        var enemyInWave = allEnemy.FirstOrDefault(gameobject => gameobject.name.Equals(enemy));
+                        smWave.smallWave.Enqueue(enemyInWave);
+                    }
+                    largeWave.Enqueue(smWave);
                 }
-                largeWave.Enqueue(smWave);
             }
+            catch
+            {
+                SpawnWave();
+            }
+            
         }
 
         private class SmallWave
