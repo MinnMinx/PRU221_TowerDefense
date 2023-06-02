@@ -86,9 +86,7 @@ namespace Enemy
             lerper.speed = speed;
         }
 
-        // Start is called before the first frame 
-         // Update is called once per frame
-        void Update()
+        public virtual bool OnUpdate()
         {
             // giảm time modifier.
             if (modifiers.Count > 0)
@@ -109,10 +107,6 @@ namespace Enemy
             {
                 isDead = true;
             }
-        }
-
-        public virtual bool OnUpdate()
-        {
             return hp >= 0;
         }
 
