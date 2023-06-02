@@ -208,7 +208,7 @@ namespace Enemy
             //1 7 13 19 
             EnemyData data = new EnemyData()
             {
-                numberWave = ((this.numberWave)/6) * 6 + 1,
+                numberWave = (this.numberWave % 6 != 0) ? ((this.numberWave)/6) * 6 + 1 : ((this.numberWave - 5)),
                 largeWave = new List<List<string>>(),
             };
 
