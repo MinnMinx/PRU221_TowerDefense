@@ -90,18 +90,18 @@ namespace Enemy
             }
 
             // only use in editor
-#if UNITY_EDITOR
-            if (Input.GetMouseButtonDown(0))
-            {
-                SaveEnemyData();
-            }
-#endif
+//#if UNITY_EDITOR
+//            if (Input.GetMouseButtonDown(0))
+//            {
+//                SaveEnemyData();
+//            }
+//#endif
 
             // set time nghỉ.
             if (spawned.Count == 0 && wave.smallWave.Count == 0)
             {
                 time += Time.deltaTime;
-                if (time <= 5)
+                if (time <= 1)
                 {
                     checkTime = false;
                 }
@@ -118,6 +118,7 @@ namespace Enemy
             if (largeWave.Count == 0)
             {
                 SpawnWave();
+                SaveEnemyData();
                 // tăng số lượng enemy mỗi wave?
             }
 
