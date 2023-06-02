@@ -201,7 +201,6 @@ namespace Enemy
             //1 7 13 19 
             EnemyData data = new EnemyData()
             {
-                numberEnemy = this.numberEnemy,
                 numberWave = ((this.numberWave)/6) * 6 + 1,
                 largeWave = new List<List<string>>(),
             };
@@ -234,7 +233,6 @@ namespace Enemy
                 string jsonContent = File.ReadAllText(filePath);
 
                 EnemyData data = JsonConvert.DeserializeObject<EnemyData>(jsonContent);
-                this.numberEnemy = data.numberEnemy;
                 this.numberWave = data.numberWave;
                 foreach (var wave in data.largeWave)
                 {
@@ -268,7 +266,6 @@ namespace Enemy
         [System.Serializable]
         public class EnemyData
         {
-            public int numberEnemy { get; set; }
             public int numberWave { get; set; }
             public List<List<string>> largeWave { get; set;}
         }
