@@ -10,7 +10,11 @@ public class Tower : MonoBehaviour
 {
     #region Fields
     [SerializeField]
-    protected GameObject bulletPrefab; // bullet prefab
+    protected GameObject bulletLevel1; // bullet prefab
+    [SerializeField]
+    protected GameObject bulletLevel2; // bullet prefab
+    [SerializeField]
+    protected GameObject bulletLevel3; // bullet prefab
 
     // list of enemies in range
     private List<GameObject> targetInRange;
@@ -161,8 +165,6 @@ public class Tower : MonoBehaviour
     /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Change to check for enemy base class
-        // if (collision.gameObject.tag == "Enemy")
         if (collision.GetComponent<Enemy01_Base>() != null)
         {
             // Add enemy to list
@@ -176,20 +178,26 @@ public class Tower : MonoBehaviour
     /// <param name="target"></param>
     private void FireAt(Transform target)
     {
-        // Define direction
-        // Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
+        // Instantiate bullet base on each level and follow direction
+        GameObject bullet;
+        if (level == 2)
+        {
+            bullet = Instantiate(bulletLevel2, transform.position, Quaternion.identity);
+        }
+        else if (level == 3)
+        {
+            bullet = Instantiate(bulletLevel3, transform.position, Quaternion.identity);
+        }
+        else
+        {
+            bullet = Instantiate(bulletLevel1, transform.position, Quaternion.identity);
+        }
 
-        // Instantiate bullet follow direction
-        GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
         var bulletBehavior = bullet.GetComponent<Bullet>();
         if (bulletBehavior != null)
         {
             bulletBehavior.SetProperties(damage, muzzleSpeed, target);
         }
-
-        // Bullet tự tính dir nên không cần gán trước
-            //float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            //bullet.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
         // rotate the tower to the left if the enemy is on the left if there is an enemy, otherwise keep the tower facing the right
         if (target.position.x < transform.position.x)
@@ -200,10 +208,6 @@ public class Tower : MonoBehaviour
         {
             gameObject.transform.localScale = new Vector3(1, 1, 1);
         }
-
-        // Bullet tự di chuyển nên ko cần add force
-            //// Add force to bullet
-            //bullet.GetComponent<Rigidbody2D>().AddForce((targetPosition - (Vector2)transform.position).normalized * muzzleSpeed);
     }
 
     /// <summary>
@@ -212,8 +216,6 @@ public class Tower : MonoBehaviour
     /// <param name="collision"></param>
     private void OnTriggerExit2D(Collider2D collision)
     {
-        // Có thể check luôn nếu List contain gameObject
-            // if (collision.gameObject.tag == "Enemy")
         if (targetInRange.Contains(collision.gameObject))
         {
             // Remove enemy from list
@@ -232,7 +234,6 @@ public class Tower : MonoBehaviour
         // Initialize cooldown Timer
         cooldownTimer = gameObject.AddComponent<Timer>();
         cooldownTimer.Duration = coolDownTime;
-        //cooldownTimer.Duration = 1f;
 
         // get components animation of game object
         animIdle = gameObject.GetComponent<Animator>();
