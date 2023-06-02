@@ -6,7 +6,7 @@
       "cost": 50,
       "damage": 10,
       "range": 5.0,
-      "muzzleSpeed": 20.0,
+      "muzzleSpeed": 4.0,
       "coolDownTime": 2.0
     },
     {
@@ -15,7 +15,7 @@
       "cost": 75,
       "damage": 15,
       "range": 6.0,
-      "muzzleSpeed": 25.0,
+      "muzzleSpeed": 5.0,
       "coolDownTime": 3.0
     },
     {
@@ -24,7 +24,7 @@
       "cost": 100,
       "damage": 20,
       "range": 7.0,
-      "muzzleSpeed": 30.0,
+      "muzzleSpeed": 6.0,
       "coolDownTime": 4.0
     },
     {
@@ -33,7 +33,7 @@
       "cost": 100,
       "damage": 20,
       "range": 7.0,
-      "muzzleSpeed": 30.0,
+      "muzzleSpeed": 6.0,
       "coolDownTime": 4.0
     },
     {
@@ -42,7 +42,7 @@
       "cost": 100,
       "damage": 20,
       "range": 7.0,
-      "muzzleSpeed": 30.0,
+      "muzzleSpeed": 6.0,
       "coolDownTime": 4.0
     },
     {
@@ -51,7 +51,7 @@
       "cost": 100,
       "damage": 20,
       "range": 7.0,
-      "muzzleSpeed": 30.0,
+      "muzzleSpeed": 6.0,
       "coolDownTime": 4.0
     },
     {
@@ -60,7 +60,7 @@
       "cost": 100,
       "damage": 20,
       "range": 7.0,
-      "muzzleSpeed": 30.0,
+      "muzzleSpeed": 6.0,
       "coolDownTime": 4.0
     },
     {
@@ -69,7 +69,7 @@
       "cost": 100,
       "damage": 20,
       "range": 7.0,
-      "muzzleSpeed": 30.0,
+      "muzzleSpeed": 6.0,
       "coolDownTime": 4.0
     },
     {
@@ -78,7 +78,7 @@
       "cost": 100,
       "damage": 20,
       "range": 7.0,
-      "muzzleSpeed": 30.0,
+      "muzzleSpeed": 6.0,
       "coolDownTime": 4.0
     }
   ]
