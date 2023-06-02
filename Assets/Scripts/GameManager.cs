@@ -5,11 +5,16 @@ using UnityEngine.Rendering.UI;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField]
+    private SlotChooserManager slotChoseMng;
+
     public decimal money;
     public decimal score;
     public decimal playerHp = 100;
 
     private static GameManager _instance;
+
+    public bool IsPlacingTower => slotChoseMng.isPlacingTower;
 
     public static GameManager instance
     {

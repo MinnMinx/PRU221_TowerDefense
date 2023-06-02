@@ -30,15 +30,13 @@ public class CameraMovement : MonoBehaviour
 
     private void Update()
     {
-//#if UNITY_EDITOR
-//        if (Input.GetMouseButtonDown(0))
-//        {
-//            SetScrolling(!_allowScroll);
-//        }
-//#endif
-
         if (_allowScroll)
         {
+            if (GameManager.instance.IsPlacingTower)
+            {
+                _allowScroll = false;
+                return;
+            }
             Vector3 mouseWorldPos = mainCam.ScreenToWorldPoint(Input.mousePosition);
             Vector3 distance = mouseWorldPos - centerScreenPos;
             distance = new Vector3
