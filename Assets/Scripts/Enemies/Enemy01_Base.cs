@@ -76,14 +76,14 @@ namespace Enemy
 
         HealthBarBehaviour healthBar;
 
-        AILerp lerper;
+        AIPath followPathAI;
 
         protected virtual void Awake()
         {
             maxHp = hp;
             healthBar = GetComponentInChildren<HealthBarBehaviour>();
-            lerper = GetComponent<AILerp>();
-            lerper.speed = speed;
+            followPathAI = GetComponent<AIPath>();
+            followPathAI.maxSpeed = speed;
         }
 
         public virtual bool OnUpdate(float deltaTime)
