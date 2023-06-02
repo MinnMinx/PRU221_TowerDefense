@@ -57,7 +57,7 @@ namespace Enemy
         private Timer timeSpawn;
         private float time = 0;
         private bool checkTime = true;
-        private int numberEnemy = 5;
+        private int numberEnemy = 3;
         private int numberWave = 1;
         private bool loadFromFile = false;
         private double heso = 0.9;
@@ -83,6 +83,12 @@ namespace Enemy
         // Update is called once per frame
         void Update()
         {
+            // từ wave 7 có 5 quái.
+            if (numberWave >= 7)
+            {
+                numberEnemy = 5;
+            }
+
             if (Input.GetMouseButtonDown(0))
             {
                 SaveEnemyData();
@@ -158,8 +164,7 @@ namespace Enemy
         {
             System.Random rnd = new System.Random();
             for (int i = 0; i < 5; i++)
-            {
-                var enemyType = enemies[rnd.Next(enemies.Count)];
+            {                
                 SmallWave smallWave = new SmallWave();
 
                 // wave nhỏ hơn 6 chỉ sinh quái thường.
@@ -167,6 +172,7 @@ namespace Enemy
                 {
                     for (int j = 0; j < numberEnemy; j++)
                     {
+                        var enemyType = enemies[rnd.Next(enemies.Count)];
                         smallWave.smallWave.Enqueue(enemyType);
                     }
                 }
@@ -175,6 +181,7 @@ namespace Enemy
                 {
                     for (int j = 0; j < numberEnemy - 1; j++)
                     {
+                        var enemyType = enemies[rnd.Next(enemies.Count)];
                         smallWave.smallWave.Enqueue(enemyType);
                     }
 
