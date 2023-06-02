@@ -137,7 +137,7 @@ public class Tower : MonoBehaviour
                     if (level == 2)
                     {
                         // get position of spawn effect higher than tower 0.5f
-                        Vector3 position = (Vector3)transform.position + new Vector3(0,0.1f,0);
+                        Vector3 position = (Vector3)transform.position + new Vector3(-0.04f,0.15f,0);
                         
                         // start effect level 2 at position of tower
                         Destroy(Instantiate(effectLevel2.gameObject, position, Quaternion.identity),5);
@@ -145,7 +145,7 @@ public class Tower : MonoBehaviour
                     else if (level == 3)
                     {
                         // get position of tower
-                        Vector3 position = (Vector3)transform.position;
+                        Vector3 position = (Vector3)transform.position + new Vector3(-0.01f, 0.1f, 0);
 
                         // instantiate effect at position of tower
                         Destroy(Instantiate(effectLevel3.gameObject, position, Quaternion.identity),5);
@@ -250,7 +250,6 @@ public class Tower : MonoBehaviour
     private void Update()
     {
         // Print all of properties of tower
-        Debug.Log(gameObject.name+ "Level: " + level + " Cost: " + cost + " Damage: " + damage + " Range: " + range + " MuzzleSpeed: " + muzzleSpeed + " CoolDownTime: " + coolDownTime);
         if (!canShoot && cooldownTimer.Finished)
         {
             canShoot = true;
