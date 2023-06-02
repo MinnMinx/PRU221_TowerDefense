@@ -10,6 +10,7 @@ public class Bullet : MonoBehaviour
     private float speed;
     private float atk;
     private Transform target;
+    private const float HIT_DISTANCE = 0.1f;
 
     // bullet's effect
     public void SetProperties(float atk, float speed, Transform target)
@@ -30,21 +31,20 @@ public class Bullet : MonoBehaviour
         }
 
         // move bullet to target
-        Vector2 dir = target.position - transform.position;
+        Vector3 dir = target.position - transform.position;
         float distanceThisFrame = speed * Time.deltaTime;
 
-        // rotate toward direction
-        transform.rotation = Quaternion.Euler(0, 0, Quaternion.LookRotation(Vector3.forward, dir).eulerAngles.z + 90);
-
         // if bullet reach target, destroy bullet
-        if (dir.magnitude <= distanceThisFrame)
+        if (dir.magnitude <= HIT_DISTANCE)
         {
             HitTarget();
             return;
         }
 
         // move bullet
-        transform.Translate(dir.normalized * distanceThisFrame, Space.World);
+        transform.position = Vector3.MoveTowards(transform.position, target.position, distanceThisFrame);
+        // rotate toward direction
+        transform.rotation = Quaternion.Euler(0, 0, Quaternion.LookRotation(Vector3.forward, dir).eulerAngles.z + 90);
     }
 
     private void HitTarget()

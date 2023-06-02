@@ -32,7 +32,7 @@ public class CameraMovement : MonoBehaviour
     {
         if (_allowScroll)
         {
-            if (GameManager.instance.IsPlacingTower)
+            if (GameManager.instance.IsPlacingTower || GameManager.instance.IsRemovingTower)
             {
                 _allowScroll = false;
                 return;

@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private SlotChooserManager slotChoseMng;
+    [SerializeField]
+    private TowerManager towerMng;
 
     public decimal money;
     public decimal score;
@@ -15,6 +17,7 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
 
     public bool IsPlacingTower => slotChoseMng.isPlacingTower;
+    public bool IsRemovingTower => towerMng.IsRemovingTower;
 
     public static GameManager instance
     {
@@ -63,5 +66,10 @@ public class GameManager : MonoBehaviour
     public void GainScore(decimal score)
     {
         this.score += score;
+    }
+
+    private void OnDestroy()
+    {
+        GameUiEventManager.Instance.Clear();
     }
 }

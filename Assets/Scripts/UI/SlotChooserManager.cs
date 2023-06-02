@@ -30,12 +30,11 @@ public class SlotChooserManager : MonoBehaviour
     {
         if (prevTowerId.HasValue)
         {
-            previewImage.enabled = true;
             if (RectTransformUtility.ScreenPointToWorldPointInRectangle(parentCanvas.transform as RectTransform,
                     Input.mousePosition, parentCanvas.worldCamera, out Vector3 mousePos))
             {
                 previewImage.transform.position = mousePos;
-                bool canPlace = mapController.IsPlaceableTile(Camera.main.ScreenToWorldPoint(Input.mousePosition), out Vector3 tilePos, out Vector3Int tileCell);
+                bool canPlace = mapController.IsPlaceableTile(mousePos, out Vector3 tilePos, out Vector3Int tileCell);
                 Color prevColor = canPlace ? Color.white : Color.red;
                 prevColor.a = canPlace ? PREVIEW_ALPHA : PREVIEW_ALPHA / 2;
                 previewImage.color = prevColor;
@@ -43,8 +42,7 @@ public class SlotChooserManager : MonoBehaviour
                 {
                     if (canPlace)
                     {
-                        Instantiate(TowerResources.Instance.PrefabList.GetTowerPrefab(prevTowerId.Value), tilePos, Quaternion.identity);
-                        Debug.Log("Spawned at cell:" + tileCell.ToString());
+                        GameUiEventManager.Instance.Notify(TowerManager.SPAWN_TOWER_EVT, prevTowerId.Value, tilePos, tileCell);
                     }
                     DisablePreviewTower();
                 }
@@ -86,6 +84,7 @@ public class SlotChooserManager : MonoBehaviour
 
         GameUiEventManager.Instance.Notify(CameraMovement.CAMERA_SET_MOVEMENT, false);
         prevTowerId = towerId;
+        previewImage.enabled = true;
         previewImage.sprite = prevImg;
         previewImage.preserveAspect = true;
     }
