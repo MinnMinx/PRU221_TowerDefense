@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -60,9 +61,10 @@ public class SlotChooserManager : MonoBehaviour
             var slotData = go.GetComponent<SlotData>();
             if (slotData != null)
             {
+                var tower = ConfigurationData.ListTower.FirstOrDefault(tower => tower.id == towerPrevData[i].towerId);
                 slotData.Init(towerPrevData[i].towerId,
                                 towerPrevData[i].prevSprite,
-                                Random.Range(0, 101));
+                                tower == null ? 0 : tower.cost);
             }
         }
     }
@@ -93,4 +95,6 @@ public class SlotChooserManager : MonoBehaviour
         previewImage.enabled = false;
         prevTowerId = null;
     }
+
+    public bool isPlacingTower => prevTowerId.HasValue;
 }
