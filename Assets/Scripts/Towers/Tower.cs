@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Enemy;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -160,7 +161,9 @@ public class Tower : MonoBehaviour
     /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Enemy")
+        // Change to check for enemy base class
+        // if (collision.gameObject.tag == "Enemy")
+        if (collision.GetComponent<Enemy01_Base>() != null)
         {
             // Add enemy to list
             targetInRange.Add(collision.gameObject);

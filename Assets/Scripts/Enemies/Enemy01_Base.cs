@@ -63,7 +63,7 @@ namespace Enemy
         }
 
         // check theo máu quái
-        public bool isDead = false;
+        public bool isDead => hp <= 0;
 
         // check xem quái đã bị làm chậm chưa
         public bool isSpeed = false;
@@ -86,16 +86,14 @@ namespace Enemy
             lerper.speed = speed;
         }
 
-        // Start is called before the first frame 
-         // Update is called once per frame
-        void Update()
+        public virtual bool OnUpdate(float deltaTime)
         {
             // giảm time modifier.
             if (modifiers.Count > 0)
             {
                 foreach (var item in modifiers)
                 {
-                    item.timeLeft -= Time.deltaTime;
+                    item.timeLeft -= deltaTime;
                 }
             }
 
@@ -104,16 +102,7 @@ namespace Enemy
 
             // tính lại stat
             CalculatorModifier();
-
-            if (hp <= 0)
-            {
-                isDead = true;
-            }
-        }
-
-        public virtual bool OnUpdate()
-        {
-            return hp >= 0;
+            return isDead;
         }
 
         /// <summary>
@@ -125,31 +114,11 @@ namespace Enemy
         }
 
         /// <summary>
-        /// check hit the bullet.
-        /// </summary>
-        /// <param name="collision"></param>
-        private void OnCollisionEnter2D(Collision2D collision)
-        {
-            //var a = collision.gameObject.GetComponent<Bullet>();
-            //if (a != null)
-            //{
-            //    TakeDamage(a.Atk);
-            //}
-
-            //var b = collision.gameObject.GetComponent<Base>();
-            //if (b != null)
-            //{
-            //    DealDamage();
-            //}
-        }
-
-        /// <summary>
         /// deal damage to enemy.
         /// </summary>
         /// <param name="damage"></param>
         public virtual void TakeDamage(decimal damage)
         {
-            
             hp = hp - damage;
             healthBar.SetHealth(Convert.ToSingle(hp), Convert.ToSingle(maxHp));
         }
