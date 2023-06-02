@@ -18,7 +18,6 @@ namespace Enemy
         /// <summary>
         /// List of all enemy.
         /// </summary>
-        [SerializeField]
         private List<GameObject> allEnemy = new List<GameObject>();
 
         /// <summary>
@@ -77,7 +76,7 @@ namespace Enemy
             if (!loadFromFile)
             {
                 SpawnWave();
-            }            
+            }
             wave = largeWave.Dequeue();
         }
 
@@ -86,7 +85,7 @@ namespace Enemy
         {
             if (Input.GetMouseButtonDown(0))
             {
-                LoadEnemyData();
+                SaveEnemyData();
             }
 
             // set time nghỉ.
@@ -161,10 +160,7 @@ namespace Enemy
             for (int i = 0; i < 5; i++)
             {
                 var enemyType = enemies[rnd.Next(enemies.Count)];
-                SmallWave smallWave = new SmallWave()
-                {
-                    smallWave = new Queue<GameObject>(),
-                };
+                SmallWave smallWave = new SmallWave();
 
                 // wave nhỏ hơn 6 chỉ sinh quái thường.
                 if (numberWave < 6)
@@ -191,10 +187,7 @@ namespace Enemy
             };
 
             var boss = bosses[rnd.Next(bosses.Count)];
-            SmallWave bossWave = new SmallWave()
-            {
-                smallWave = new Queue<GameObject>(),
-            };
+            SmallWave bossWave = new SmallWave();
 
             bossWave.smallWave.Enqueue(boss);
             this.largeWave.Enqueue(bossWave);
@@ -205,10 +198,10 @@ namespace Enemy
 
         public void SaveEnemyData()
         {
+            //1 7 13 19 
             EnemyData data = new EnemyData()
             {
-                numberEnemy = this.numberEnemy,
-                numberWave = this.numberWave,
+                numberWave = ((this.numberWave)/6) * 6 + 1,
                 largeWave = new List<List<string>>(),
             };
 
@@ -230,41 +223,49 @@ namespace Enemy
 
         public void LoadEnemyData()
         {
-            allEnemy.AddRange(enemies);
-            allEnemy.AddRange(special);
-            allEnemy.AddRange(bosses);
-
-            string filePath = "Assets/Resources/EnemyData.json";
-            string jsonContent = File.ReadAllText(filePath);
-
-            EnemyData data = JsonConvert.DeserializeObject<EnemyData>(jsonContent);
-            this.numberEnemy = data.numberEnemy;
-            this.numberWave = data.numberWave;
-            foreach (var wave in data.largeWave)
+            try
             {
-                SmallWave smWave = new SmallWave()
-                {
-                    smallWave = new Queue<GameObject>(),
-                };
+                allEnemy.AddRange(enemies);
+                allEnemy.AddRange(special);
+                allEnemy.AddRange(bosses);
 
-                foreach(var enemy in wave)
+                string filePath = "Assets/Resources/EnemyData.json";
+                string jsonContent = File.ReadAllText(filePath);
+
+                EnemyData data = JsonConvert.DeserializeObject<EnemyData>(jsonContent);
+                this.numberWave = data.numberWave;
+                foreach (var wave in data.largeWave)
                 {
-                    var enemyInWave = allEnemy.FirstOrDefault(gameobject => gameobject.name.Equals(enemy));
-                    smWave.smallWave.Enqueue(enemyInWave);
+                    SmallWave smWave = new SmallWave();
+
+                    foreach (var enemy in wave)
+                    {
+                        var enemyInWave = allEnemy.FirstOrDefault(gameobject => gameobject.name.Equals(enemy));
+                        smWave.smallWave.Enqueue(enemyInWave);
+                    }
+                    largeWave.Enqueue(smWave);
                 }
-                largeWave.Enqueue(smWave);
+                largeWaveData = largeWave;
             }
+            catch
+            {
+                SpawnWave();
+            }
+            
         }
 
         private class SmallWave
         {
+            public SmallWave()
+            {
+                smallWave = new Queue<GameObject>();
+            }
             public Queue<GameObject> smallWave { get; set; }
         }
 
         [System.Serializable]
         public class EnemyData
         {
-            public int numberEnemy { get; set; }
             public int numberWave { get; set; }
             public List<List<string>> largeWave { get; set;}
         }
