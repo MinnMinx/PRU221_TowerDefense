@@ -89,10 +89,13 @@ namespace Enemy
                 numberEnemy = 5;
             }
 
+            // only use in editor
+#if UNITY_EDITOR
             if (Input.GetMouseButtonDown(0))
             {
                 SaveEnemyData();
             }
+#endif
 
             // set time nghỉ.
             if (spawned.Count == 0 && wave.smallWave.Count == 0)
@@ -117,11 +120,13 @@ namespace Enemy
                 SpawnWave();
                 // tăng số lượng enemy mỗi wave?
             }
+
+            float deltaTime = Time.deltaTime;
             // Check và xóa quái có máu = 0.
             for (int i = 0; i < spawned.Count; i++)
             {
                 var enemy = spawned[i].GetComponent<Enemy01_Base>();
-                enemy.OnUpdate();
+                enemy.OnUpdate(deltaTime);
                 // địch chết do trụ bắn.
                 if (enemy.isDead)
                 {

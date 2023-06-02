@@ -19,7 +19,7 @@ namespace Enemy
             base.Awake();
         }
 
-        public override bool OnUpdate()
+        public override bool OnUpdate(float deltaTime)
         {
             if (Hp < Hp / 2)
             {
@@ -33,7 +33,7 @@ namespace Enemy
                     sheldEnemy.ActivateShield(3f);
                 }
             }
-            return base.OnUpdate();
+            return base.OnUpdate(deltaTime);
         }
 
         public override void TakeDamage(decimal damage)

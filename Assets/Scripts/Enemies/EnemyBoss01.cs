@@ -14,13 +14,13 @@ namespace Enemy
             Money = 50;
             base.Awake();
         }
-        public override bool OnUpdate()
+        public override bool OnUpdate(float deltaTime)
         {
             if (Hp < Hp / 2)
             {
                 Speed = 0.75f;
             }
-            return base.OnUpdate();
+            return base.OnUpdate(deltaTime);
         }
     }
 }

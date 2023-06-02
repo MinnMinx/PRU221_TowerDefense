@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Enemy06_Special2 : Enemy01_Base
 {
@@ -23,9 +24,9 @@ public class Enemy06_Special2 : Enemy01_Base
         sheldEnemy = gameObject.AddComponent<ShieldEnemy>();
     }
 
-    public override bool OnUpdate()
+    public override bool OnUpdate(float deltaTime)
     {
-        timerEachShield -= Time.deltaTime;
+        timerEachShield -= deltaTime; // Time.deltaTime;
         if(timerEachShield <= 0f)
         {
             if (sheldEnemy != null && !sheldEnemy.IsActive)
@@ -35,7 +36,7 @@ public class Enemy06_Special2 : Enemy01_Base
                 // nhận dame thì bullet sẽ check xem active hay không
             }
         }
-        return base.OnUpdate();
+        return base.OnUpdate(deltaTime);
     }
 
     public override void TakeDamage(decimal damage)

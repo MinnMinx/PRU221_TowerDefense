@@ -8,11 +8,13 @@ public class Bullet : MonoBehaviour
 {
     // bullet's properties
     private float speed;
+    private float atk;
     private Transform target;
 
     // bullet's effect
-    public void SetProperties(float speed, Transform target)
+    public void SetProperties(float atk, float speed, Transform target)
     {
+        this.atk = atk;
         this.speed = speed;
         this.target = target;
     }
@@ -28,8 +30,11 @@ public class Bullet : MonoBehaviour
         }
 
         // move bullet to target
-        Vector3 dir = target.position - transform.position;
+        Vector2 dir = target.position - transform.position;
         float distanceThisFrame = speed * Time.deltaTime;
+
+        // rotate toward direction
+        transform.rotation = Quaternion.Euler(0, 0, Quaternion.LookRotation(Vector3.forward, dir).eulerAngles.z + 90);
 
         // if bullet reach target, destroy bullet
         if (dir.magnitude <= distanceThisFrame)
@@ -50,7 +55,7 @@ public class Bullet : MonoBehaviour
         // if target is enemy, damage enemy
         if (enemy != null)
         {
-            enemy.TakeDamage(10);
+            enemy.TakeDamage((decimal)atk);
         }
 
         // destroy bullet
