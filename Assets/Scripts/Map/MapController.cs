@@ -8,9 +8,6 @@ public class MapController : MonoBehaviour
 {
     [SerializeField]
     private Tilemap placeableMap;
-    [SerializeField]
-    private AstarPath enemyPath;
-
     private MapPreviewer previewer;
 
     private void Awake()
@@ -20,9 +17,7 @@ public class MapController : MonoBehaviour
 
     private void Update()
     {
-#if UNITY_EDITOR
         PreviewTile(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-#endif
     }
 
     /// <summary>
@@ -42,7 +37,7 @@ public class MapController : MonoBehaviour
             tileCell = placeableMap.WorldToCell(worldPos);
             PlaceableTile tile = placeableMap.GetTile<PlaceableTile>(tileCell);
             if (tile != null) {
-                tilePos = placeableMap.CellToWorld(tileCell);
+                tilePos = placeableMap.CellToWorld(tileCell) + placeableMap.cellSize / 2f;
                 return true;
             }
         } catch (System.NullReferenceException)
@@ -52,7 +47,7 @@ public class MapController : MonoBehaviour
         return false;
     }
 
-    public void PreviewTile(Vector3 mouseWorldPos)
+    void PreviewTile(Vector3 mouseWorldPos)
     {
         previewer.Update(
             placeableMap.WorldToCell(mouseWorldPos));
