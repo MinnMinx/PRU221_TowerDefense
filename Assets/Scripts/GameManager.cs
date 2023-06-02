@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.UI;
 
@@ -10,7 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private TowerManager towerMng;
 
-    public decimal money;
+    public decimal money = 300;
     public decimal score;
     public decimal playerHp = 100;
 
@@ -61,11 +62,28 @@ public class GameManager : MonoBehaviour
     public void GainMoney(decimal money)
     {
         this.money += money;
+        GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_GAIN, (float)money);
     }
 
     public void GainScore(decimal score)
     {
         this.score += score;
+    }
+
+    public void SpendNewTower(int towerId, Vector3 tilePos, Vector3Int tileCell)
+    {
+        var tower = ConfigurationData.ListTower.FirstOrDefault(tower => tower.id == towerId);
+        if (tower != null && money >= tower.cost)
+        {
+            money -= tower.cost;
+            GameUiEventManager.Instance.Notify(TowerManager.SPAWN_TOWER_EVT, towerId, tilePos, tileCell);
+            GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_UPDATE_VIEW, money);
+        }
+        else if (tower != null)
+        {
+            // not enough money
+            GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_INSUFFICIENT);
+        }
     }
 
     private void OnDestroy()
