@@ -42,7 +42,7 @@ public class SlotChooserManager : MonoBehaviour
                 {
                     if (canPlace)
                     {
-                        GameUiEventManager.Instance.Notify(TowerManager.SPAWN_TOWER_EVT, prevTowerId.Value, tilePos, tileCell);
+                        GameManager.instance.SpendNewTower(prevTowerId.Value, tilePos, tileCell);
                     }
                     DisablePreviewTower();
                 }
