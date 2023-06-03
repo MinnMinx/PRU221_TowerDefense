@@ -2,9 +2,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.UI;
+using UnityEngine.UI;
 using static Enemy.Modifier;
 
 namespace Enemy
@@ -73,16 +75,22 @@ namespace Enemy
 
         // List buff/debuff của quái
         public List<Modifier> modifiers = new List<Modifier>();
-
+        
+        // thanh máu của quái
         HealthBarBehaviour healthBar;
-
+        
+        // A* PathFinding
         AIPath followPathAI;
+
+        // flag quay quái
+        private bool checkflip = true;
 
         protected virtual void Awake()
         {
             maxHp = hp;
             healthBar = GetComponentInChildren<HealthBarBehaviour>();
             followPathAI = GetComponent<AIPath>();
+            // set tốc độ cho quái
             followPathAI.maxSpeed = speed;
         }
 
@@ -102,7 +110,31 @@ namespace Enemy
 
             // tính lại stat
             CalculatorModifier();
+
+            // quay qúai khi di chuyển
+            RotationEnemy();
             return isDead;
+        }
+
+        private void RotationEnemy()
+        {
+            // lấy điểm tiếp theo quái sẽ di chuyển
+            followPathAI.MovementUpdate(Time.deltaTime, out Vector3 pos, out Quaternion rot);
+            // check vị trí hiện tại vs ví trị tiếp theo 
+            float distanceX = transform.position.x - pos.x;
+            if ((distanceX < 0 && !checkflip) || (distanceX > 0 && checkflip))
+            {
+                // quay quái
+                checkflip = !checkflip;
+                Vector3 scale = transform.localScale;
+                scale.x = -scale.x;
+                transform.localScale = scale;
+
+                // giữ nguyên thanh máu
+                Vector3 scale1 = gameObject.GetComponentInChildren<Slider>().transform.localScale;
+                scale1.x = -scale1.x;
+                gameObject.GetComponentInChildren<Slider>().transform.localScale = scale1;
+            }
         }
 
         /// <summary>
