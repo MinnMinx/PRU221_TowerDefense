@@ -11,7 +11,7 @@ namespace Enemy
         {
             Hp = 20;
             Atk = 2;
-            Speed = 1f;
+            Speed = 1.5f;
             Money = 20;
             base.Awake();
         }
