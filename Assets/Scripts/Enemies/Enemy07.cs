@@ -3,14 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy07 : Enemy01_Base
+namespace Enemy
 {
-    protected override void Awake()
+    public class Enemy07 : Enemy01_Base
     {
-        Hp = 10;
-        Atk = 2;
-        Speed = 0.5f;
-        Money = 2;
-        base.Awake();
+        protected override void Awake()
+        {
+            Hp = 20;
+            Atk = 2;
+            Speed = 1f;
+            Money = 20;
+            base.Awake();
+        }
     }
 }
+

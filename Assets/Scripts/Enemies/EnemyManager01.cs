@@ -51,16 +51,13 @@ namespace Enemy
         [SerializeField]
         private Transform basePositon;
 
-        // hard-code spawn position
-        private Vector3 v3;
-
         private Timer timeSpawn;
         private float time = 0;
         private bool checkTime = true;
         private int numberEnemy = 3;
         private int numberWave = 1;
         private bool loadFromFile = false;
-        private double heso = 0.9;
+        private double heso = 0.4;
 
         Queue<SmallWave> largeWave = new Queue<SmallWave>();
 
@@ -83,12 +80,6 @@ namespace Enemy
         // Update is called once per frame
         void Update()
         {
-            // từ wave 7 có 5 quái.
-            if (numberWave >= 7)
-            {
-                numberEnemy = 5;
-            }
-
             // only use in editor
 //#if UNITY_EDITOR
 //            if (Input.GetMouseButtonDown(0))
@@ -114,11 +105,16 @@ namespace Enemy
                 }
             }
 
+            // mỗi khi hết 6 wave tăng 2 quái.
+            if (numberWave % 6 == 0)
+            {
+                numberEnemy +=2;
+            }
+
             // Create wave mới
             if (largeWave.Count == 0)
             {
                 SpawnWave();
-                SaveEnemyData();
                 // tăng số lượng enemy mỗi wave?
             }
 
@@ -133,7 +129,9 @@ namespace Enemy
                 {
                     spawned.Remove(spawned[i]);
                     GameManager.instance.GainMoney(enemy.Money);
-                    GameManager.instance.GainScore(1); // hard-code
+                    
+                    // tăng điểm bằng tiền x wave.
+                    GameManager.instance.GainScore(enemy.Money * numberWave);
                     enemy.OnDespawn();                    
                 }
                 // địch chạm base
@@ -159,7 +157,7 @@ namespace Enemy
             if (wave.smallWave.Count > 0)
             {
                 GameObject enemySpawn = wave.smallWave.Dequeue();
-                GameObject enemy = Instantiate(enemySpawn, spawnPositon.position, Quaternion.identity); // hard-code
+                GameObject enemy = Instantiate(enemySpawn, spawnPositon.position, Quaternion.identity);
                 var enemyStat = enemy.GetComponent<Enemy01_Base>();
                 enemyStat.SetHp(numberWave, heso);
                 spawned.Add(enemy);
@@ -207,6 +205,7 @@ namespace Enemy
 
             // lưu data wave.
             largeWaveData = largeWave;
+            SaveEnemyData();
         }
 
         public void SaveEnemyData()
@@ -214,7 +213,8 @@ namespace Enemy
             //1 7 13 19 
             EnemyData data = new EnemyData()
             {
-                numberWave = (this.numberWave % 6 != 0) ? this.numberWave/6 * 6 + 1 : (this.numberWave - 5),
+                scoreData = GameManager.instance.score,
+                numberWave = this.numberWave,
                 largeWave = new List<List<string>>(),
             };
 
@@ -279,6 +279,7 @@ namespace Enemy
         [System.Serializable]
         public class EnemyData
         {
+            public decimal scoreData { get; set; }
             public int numberWave { get; set; }
             public List<List<string>> largeWave { get; set;}
         }
