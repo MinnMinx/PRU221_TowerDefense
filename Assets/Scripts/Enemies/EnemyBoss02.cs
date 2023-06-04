@@ -21,7 +21,7 @@ namespace Enemy
 
         public override bool OnUpdate(float deltaTime)
         {
-            if (Hp < Hp / 2)
+            if (Hp < MaxHp / 2)
             {
                 Atk += 40;
                 // miễn sát thương 3s

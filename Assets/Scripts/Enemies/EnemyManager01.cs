@@ -53,6 +53,7 @@ namespace Enemy
 
         private Timer timeSpawn;
         private float time = 0;
+        private bool gainEnemy = true;
         private bool checkTime = true;
         private int numberEnemy = 3;
         private int numberWave = 1;
@@ -101,21 +102,28 @@ namespace Enemy
                     checkTime = true;
                     time = 0;
                     wave = largeWave.Dequeue();
+
+                    if (numberWave % 6 == 0 && !gainEnemy)
+                    {
+                        gainEnemy = true;
+                    }
+
                     numberWave++;
                 }
             }
 
             // mỗi khi hết 6 wave tăng 2 quái.
-            if (numberWave % 6 == 0)
+            if (numberWave % 6 == 0 && gainEnemy)
             {
                 numberEnemy +=2;
+                gainEnemy= false;
             }
+
 
             // Create wave mới
             if (largeWave.Count == 0)
             {
                 SpawnWave();
-                // tăng số lượng enemy mỗi wave?
             }
 
             float deltaTime = Time.deltaTime;

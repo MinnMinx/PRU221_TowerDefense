@@ -20,7 +20,7 @@ namespace Enemy
 
         public override bool OnUpdate(float deltaTime)
         {
-            if (Hp >= Hp / 2)
+            if (Hp >= MaxHp / 2)
             {
                 Speed = 2f;
             }
@@ -40,7 +40,9 @@ namespace Enemy
         public override void TakeDamage(decimal damage)
         {
             if (!sheldEnemy.IsActive)
+            {
                 base.TakeDamage(damage);
+            }
         }
     }
 }
