@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,13 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private TowerManager towerMng;
 
+    [SerializeField]
+    private HealthBarBehaviour healthBarBehaviour;
+
     public decimal money = 300;
     public decimal score;
-    public decimal playerHp = 100;
+    public decimal playerHp;
+    public decimal maxPlayerHp = 100;
 
     private static GameManager _instance;
 
@@ -38,6 +43,8 @@ public class GameManager : MonoBehaviour
         if (_instance == null)
         {
             _instance = this;
+            playerHp = maxPlayerHp;
+            healthBarBehaviour.SetHealth(Convert.ToSingle(playerHp), Convert.ToSingle(maxPlayerHp));
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -57,6 +64,7 @@ public class GameManager : MonoBehaviour
     public void TakeDamage(decimal atk)
     {
         playerHp -= atk;
+        healthBarBehaviour.SetHealth(Convert.ToSingle(playerHp), Convert.ToSingle(maxPlayerHp));
     }
 
     public void GainMoney(decimal money)
