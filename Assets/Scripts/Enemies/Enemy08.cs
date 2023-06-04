@@ -9,10 +9,10 @@ namespace Enemy
         // Start is called before the first frame update
         protected override void Awake()
         {
-            Hp = 10;
-            Atk = 1;
-            Speed = 1f;
-            Money = 3;
+            Hp = 20;
+            Atk = 5;
+            Speed = 1.5f;
+            Money = 30;
             base.Awake();
         }
     }

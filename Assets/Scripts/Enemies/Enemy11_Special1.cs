@@ -9,10 +9,10 @@ namespace Enemy
         protected override void Awake()
         {
             canSpeed = true;
-            Hp = 10;
+            Hp = 20;
             Atk = 3;
-            Speed = 1f;
-            Money = 5;
+            Speed = 2.5f;
+            Money = 30;
             base.Awake();
         }
     }

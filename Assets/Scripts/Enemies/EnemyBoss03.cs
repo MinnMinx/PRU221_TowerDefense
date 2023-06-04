@@ -9,10 +9,10 @@ namespace Enemy
         ShieldEnemy sheldEnemy;
         protected override void Awake()
         {
-            Hp = 300;
-            Speed = 0.35f;
+            Hp = 200;
+            Speed = 1f;
             Atk = 30;
-            Money = 150;
+            Money = 100;
 
             sheldEnemy = gameObject.AddComponent<ShieldEnemy>();
             base.Awake();
@@ -22,7 +22,7 @@ namespace Enemy
         {
             if (Hp >= Hp / 2)
             {
-                Speed = 0.75f;
+                Speed = 2f;
             }
             else
             {

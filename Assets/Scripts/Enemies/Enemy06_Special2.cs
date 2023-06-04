@@ -4,44 +4,48 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class Enemy06_Special2 : Enemy01_Base
+namespace Enemy
 {
-    //
-    private float timerEachShield = 5f;
-    protected override void Awake()
+    public class Enemy06_Special2 : Enemy01_Base
     {
-        Hp = 20;
-        Atk = 3;
-        Speed = 0.75f;
-        Money = 2;
-        base.Awake();
-    }
-
-    // shield will enable each 5s
-    ShieldEnemy sheldEnemy;
-    public void Start()
-    {
-        sheldEnemy = gameObject.AddComponent<ShieldEnemy>();
-    }
-
-    public override bool OnUpdate(float deltaTime)
-    {
-        timerEachShield -= deltaTime; // Time.deltaTime;
-        if(timerEachShield <= 0f)
+        //
+        private float timerEachShield = 5f;
+        protected override void Awake()
         {
-            if (sheldEnemy != null && !sheldEnemy.IsActive)
-            {
-                sheldEnemy.ActivateShield(1f);
-                timerEachShield = 5f;
-                // nhận dame thì bullet sẽ check xem active hay không
-            }
+            Hp = 20;
+            Atk = 3;
+            Speed = 1f;
+            Money = 30;
+            base.Awake();
         }
-        return base.OnUpdate(deltaTime);
-    }
 
-    public override void TakeDamage(decimal damage)
-    {
-        if (!sheldEnemy.IsActive)
-            base.TakeDamage(damage);
+        // shield will enable each 5s
+        ShieldEnemy sheldEnemy;
+        public void Start()
+        {
+            sheldEnemy = gameObject.AddComponent<ShieldEnemy>();
+        }
+
+        public override bool OnUpdate(float deltaTime)
+        {
+            timerEachShield -= deltaTime; // Time.deltaTime;
+            if (timerEachShield <= 0f)
+            {
+                if (sheldEnemy != null && !sheldEnemy.IsActive)
+                {
+                    sheldEnemy.ActivateShield(1f);
+                    timerEachShield = 5f;
+                    // nhận dame thì bullet sẽ check xem active hay không
+                }
+            }
+            return base.OnUpdate(deltaTime);
+        }
+
+        public override void TakeDamage(decimal damage)
+        {
+            if (!sheldEnemy.IsActive)
+                base.TakeDamage(damage);
+        }
     }
 }
+

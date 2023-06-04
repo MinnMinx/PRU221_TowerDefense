@@ -10,8 +10,8 @@ namespace Enemy
 
         protected override void Awake()
         {
-            Hp = 200;
-            Speed = 0.35f;
+            Hp = 300;
+            Speed = 1f;
             Atk = 25;
             Money = 100;
 
