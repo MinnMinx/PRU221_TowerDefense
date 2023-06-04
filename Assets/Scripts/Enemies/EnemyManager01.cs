@@ -213,6 +213,7 @@ namespace Enemy
             //1 7 13 19 
             EnemyData data = new EnemyData()
             {
+                playerHp = GameManager.instance.playerHp,
                 scoreData = GameManager.instance.score,
                 numberWave = this.numberWave,
                 largeWave = new List<List<string>>(),
@@ -259,6 +260,9 @@ namespace Enemy
                     largeWave.Enqueue(smWave);
                 }
                 largeWaveData = largeWave;
+
+                GameManager.instance.playerHp = data.playerHp;
+                GameManager.instance.score = data.scoreData;
             }
             catch
             {
@@ -279,6 +283,7 @@ namespace Enemy
         [System.Serializable]
         public class EnemyData
         {
+            public decimal playerHp { get; set; }
             public decimal scoreData { get; set; }
             public int numberWave { get; set; }
             public List<List<string>> largeWave { get; set;}
