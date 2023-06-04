@@ -112,14 +112,14 @@ namespace Enemy
             CalculatorModifier();
 
             // quay qúai khi di chuyển
-            RotationEnemy();
+            RotationEnemy(deltaTime);
             return isDead;
         }
 
-        private void RotationEnemy()
+        private void RotationEnemy(float deltaTime)
         {
             // lấy điểm tiếp theo quái sẽ di chuyển
-            followPathAI.MovementUpdate(Time.deltaTime, out Vector3 pos, out Quaternion rot);
+            followPathAI.MovementUpdate(deltaTime, out Vector3 pos, out Quaternion rot);
             // check vị trí hiện tại vs ví trị tiếp theo 
             float distanceX = transform.position.x - pos.x;
             if ((distanceX < 0 && !checkflip) || (distanceX > 0 && checkflip))

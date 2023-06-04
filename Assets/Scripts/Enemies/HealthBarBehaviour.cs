@@ -3,24 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthBarBehaviour : MonoBehaviour
+namespace Enemy
 {
-    public Slider slider;
-    public Color low;
-    public Color high;
-    public Vector3 offset;
-
-    public void SetHealth(float health, float maxHealth)
+    public class HealthBarBehaviour : MonoBehaviour
     {
-        slider.gameObject.SetActive(true);
-        slider.value = health / maxHealth;
+        public Slider slider;
+        public Color low;
+        public Color high;
+        public Vector3 offset;
 
-        //slider.fillRect.GetComponentInChildren<Image>().color = Color.Lerp(low, high, slider.normalizedValue);
+        public void SetHealth(float health, float maxHealth)
+        {
+            slider.gameObject.SetActive(true);
+            slider.value = health / maxHealth;
+
+            //slider.fillRect.GetComponentInChildren<Image>().color = Color.Lerp(low, high, slider.normalizedValue);
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            //slider.transform.position = Camera.main.WorldToScreenPoint(transform.parent.position + offset);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //slider.transform.position = Camera.main.WorldToScreenPoint(transform.parent.position + offset);
-    }
 }

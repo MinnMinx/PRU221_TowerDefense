@@ -8,17 +8,17 @@ namespace Enemy
     {
         protected override void Awake()
         {
-            Hp = 100;
-            Atk = 20;
-            Speed = 0.35f;
-            Money = 50;
+            Hp = 300;
+            Atk = 30;
+            Speed = 1f;
+            Money = 100;
             base.Awake();
         }
         public override bool OnUpdate(float deltaTime)
         {
             if (Hp < Hp / 2)
             {
-                Speed = 0.75f;
+                Speed = 1f;
             }
             return base.OnUpdate(deltaTime);
         }
