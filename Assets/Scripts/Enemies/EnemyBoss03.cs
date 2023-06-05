@@ -26,7 +26,7 @@ namespace Enemy
             }
             else
             {
-                Atk += 40;
+                Atk = 40;
 
                 // miễn sát thương 3s
                 if (sheldEnemy != null && !sheldEnemy.IsActive)
