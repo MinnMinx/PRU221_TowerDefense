@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class HighScoreManager : MonoBehaviour
@@ -9,22 +10,31 @@ public class HighScoreManager : MonoBehaviour
 
     private Transform _highScoreTemplate;
     private Transform _highScoreTemplateContainer;
-    private List<string> _scoreList = new List<string>();
+    private List<string> _scoreList;
+    private GameObject _noPlayedTextGameObject;
 
 
     // Start is called before the first frame update
     void Start()
     {
+
+
         _highScoreTemplateContainer = transform.Find("ScoreTemplateContainer");
         _highScoreTemplate = _highScoreTemplateContainer.Find("ScoreTemplate");
         _highScoreTemplate.gameObject.SetActive(false);
+        _noPlayedTextGameObject = GameObject.Find("NoPlayedText");
 
+        _scoreList = new List<string>();
 
         LoadScoresFromPlayerPrefs();
 
+
+
         // Display score at least 1 score in list
-        if (this._scoreList.Count > 0)
+        if (this._scoreList != null && this._scoreList.Count > 0)
         {
+            _noPlayedTextGameObject.SetActive(false);
+
             SortScoresDescending();
 
 
@@ -75,5 +85,26 @@ public class HighScoreManager : MonoBehaviour
     private void SortScoresDescending()
     {
         this._scoreList.Sort((a, b) => Convert.ToInt32(b).CompareTo(Convert.ToInt32(a)));
+    }
+
+
+
+
+    public void BackToMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+
+
+    public void QuitGame()
+    {
+#if UNITY_STANDALONE
+        Application.Quit();
+#endif
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        print("Exiting game");
     }
 }
