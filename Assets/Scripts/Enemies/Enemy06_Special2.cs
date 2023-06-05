@@ -10,21 +10,19 @@ namespace Enemy
     {
         //
         private float timerEachShield = 5f;
+
+        // shield will enable each 5s
+        ShieldEnemy sheldEnemy;
         protected override void Awake()
         {
             Hp = 20;
             Atk = 3;
             Speed = 1f;
             Money = 30;
+            sheldEnemy = gameObject.AddComponent<ShieldEnemy>();
             base.Awake();
         }
 
-        // shield will enable each 5s
-        ShieldEnemy sheldEnemy;
-        public void Start()
-        {
-            sheldEnemy = gameObject.AddComponent<ShieldEnemy>();
-        }
 
         public override bool OnUpdate(float deltaTime)
         {
