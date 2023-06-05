@@ -50,7 +50,7 @@ namespace Enemy
             set
             {
                 speed = value;
-                isSpeed = false;
+                speedBase = value;
             }
         }
 
@@ -67,8 +67,8 @@ namespace Enemy
         // check theo máu quái
         public bool isDead => hp <= 0;
 
-        // check xem quái đã bị làm chậm chưa
-        public bool isSpeed = false;
+        // tốc độ trước khi bị làm chậm của quái.
+        public float speedBase;
 
         // check xem quái có miễn làm trận.
         public bool canSpeed = false;
@@ -188,7 +188,7 @@ namespace Enemy
             if (spdModifiers != null && spdModifiers.timeLeft <= 0)
             {
                 //set lại speed.
-                speed = speed / (1 - spdModifiers.multipler);
+                speed = speedBase;
             }
 
             // xóa modifer có timeleft <= 0.
@@ -200,11 +200,10 @@ namespace Enemy
             // modifier speed.
             var spdModifiers = modifiers.Where(modifier => modifier.type == ModifierType.Spd).OrderByDescending(modifier => modifier.multipler).FirstOrDefault();
 
-            if (spdModifiers != null && !isSpeed && !canSpeed)
+            if (spdModifiers != null && !canSpeed)
             {
-                speed = speed * (1 - spdModifiers.multipler);
-                isSpeed = true;
-            }          
+                speed = speedBase * (1 - spdModifiers.multipler);
+            }
         }
     }
 }
