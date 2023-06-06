@@ -23,7 +23,7 @@ namespace Enemy
         {
             if (Hp < MaxHp / 2)
             {
-                Atk += 40;
+                Atk = 40;
                 // miễn sát thương 3s
                 // nên tạo lớp sheld
                 // check sheld đã active chưa
