@@ -29,7 +29,7 @@ namespace Enemy
                 Atk = 40;
                 Speed = 1f;
                 // miễn sát thương 3s
-                if (sheldEnemy != null && !sheldEnemy.IsActive)
+                if (sheldEnemy != null && !sheldEnemy.IsActive && !sheldEnemy.IsActivedEnable)
                 {
                     sheldEnemy.ActivateShield(3f);
                 }

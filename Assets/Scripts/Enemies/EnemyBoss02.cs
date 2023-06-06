@@ -7,6 +7,7 @@ namespace Enemy
     public class EnemyBoss02 : Enemy01_Base
     {
         ShieldEnemy sheldEnemy;
+        private bool isActivedEnable = false;
 
         protected override void Awake()
         {
@@ -28,7 +29,7 @@ namespace Enemy
                 // nên tạo lớp sheld
                 // check sheld đã active chưa
                 // actived -> ..
-                if (sheldEnemy != null && !sheldEnemy.IsActive)
+                if (sheldEnemy != null && !sheldEnemy.IsActive && !sheldEnemy.IsActivedEnable)
                 {
                     sheldEnemy.ActivateShield(3f);
                 }

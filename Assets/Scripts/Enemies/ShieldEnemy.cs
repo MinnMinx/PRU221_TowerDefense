@@ -7,13 +7,19 @@ namespace Enemy
     public class ShieldEnemy : MonoBehaviour
     {
         public bool IsActive { get; private set; }
+        public bool IsActivedEnable { get; set; }
 
         private float duration;
+        private void Awake()
+        {
+            IsActivedEnable = false;
+        }
 
         public void ActivateShield(float duration)
         {
             IsActive = true;
             this.duration = duration;
+            IsActivedEnable = true;
             // Các thao tác để kích hoạt Shield
         }
 
