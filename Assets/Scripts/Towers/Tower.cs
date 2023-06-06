@@ -87,7 +87,7 @@ public class Tower : MonoBehaviour
     /// <summary>
     /// Run when tower is spawned.
     /// </summary>
-    public void OnSpawn()
+    private void OnSpawn()
     {
 
     }
@@ -97,7 +97,7 @@ public class Tower : MonoBehaviour
     /// </summary>
     /// <param name="deltaTime"></param>
     /// <returns></returns>
-    public bool OnUpdate(float deltaTime)
+    private bool OnUpdate(float deltaTime)
     {
         return true;
     }
@@ -105,7 +105,7 @@ public class Tower : MonoBehaviour
     /// <summary>
     /// Run when tower is destroyed.
     /// </summary>
-    public void Despawn()
+    private void Despawn()
     {
         Destroy(gameObject);
     }
@@ -113,7 +113,7 @@ public class Tower : MonoBehaviour
     /// <summary>
     /// Run when tower is upgraded.
     /// </summary>
-    public void OnLevelUp()
+    private void OnLevelUp()
     {
         // check if game object was clicked, then upgrade tower
         if (Input.GetMouseButtonDown(0))
