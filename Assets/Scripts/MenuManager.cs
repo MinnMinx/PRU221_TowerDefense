@@ -3,16 +3,14 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
+
+    private GameObject _highScoreTable;
+
     // Start is called before the first frame update
     void Start()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        _highScoreTable = GameObject.Find("HighScoreTable");
+        _highScoreTable.SetActive(false);
     }
 
 
@@ -36,7 +34,7 @@ public class MenuManager : MonoBehaviour
 
     public void HighScore()
     {
-        SceneManager.LoadScene("HighScore");
+        _highScoreTable.SetActive(true);
     }
 
 

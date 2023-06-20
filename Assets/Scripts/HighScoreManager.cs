@@ -97,14 +97,8 @@ public class HighScoreManager : MonoBehaviour
 
 
 
-    public void QuitGame()
+    public void QuitToMainMenu()
     {
-#if UNITY_STANDALONE
-        Application.Quit();
-#endif
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#endif
-        print("Exiting game");
+        gameObject.SetActive(false);
     }
 }
