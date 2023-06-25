@@ -7,8 +7,6 @@ namespace Enemy
     public class EnemyBoss02 : Enemy01_Base
     {
         ShieldEnemy sheldEnemy;
-        private bool isActivedEnable = false;
-
         protected override void Awake()
         {
             Hp = 300;
