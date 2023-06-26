@@ -15,6 +15,8 @@ namespace Enemy
     {
         private Color slow;       
         private SpriteRenderer sprite;
+
+        public GameObject Explosion;
         /// <summary>
         /// Health of enemy.
         /// </summary>
@@ -147,6 +149,7 @@ namespace Enemy
         /// </summary>
         public virtual void OnDespawn()
         {
+            Instantiate(Explosion, transform.position, Quaternion.identity);
             Destroy(this.gameObject);
         }
 
