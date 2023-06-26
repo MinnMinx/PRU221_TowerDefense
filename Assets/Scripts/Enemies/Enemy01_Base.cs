@@ -13,6 +13,8 @@ namespace Enemy
 {
     public class Enemy01_Base : MonoBehaviour
     {
+        private Color slow;       
+        private SpriteRenderer sprite;
         /// <summary>
         /// Health of enemy.
         /// </summary>
@@ -87,6 +89,7 @@ namespace Enemy
 
         protected virtual void Awake()
         {
+            ColorUtility.TryParseHtmlString("#" + "4E73FF", out slow);
             maxHp = hp;
             healthBar = GetComponentInChildren<HealthBarBehaviour>();
             followPathAI = GetComponent<AIPath>();
@@ -96,6 +99,8 @@ namespace Enemy
 
         public virtual bool OnUpdate(float deltaTime)
         {
+            sprite = gameObject.GetComponent<SpriteRenderer>();
+
             // giảm time modifier.
             if (modifiers.Count > 0)
             {
@@ -202,7 +207,12 @@ namespace Enemy
 
             if (spdModifiers != null && !canSpeed)
             {
+                sprite.color = slow;
                 speed = speedBase * (1 - spdModifiers.multipler);
+            }
+            else
+            {
+                sprite.color = Color.white;
             }
         }
     }
