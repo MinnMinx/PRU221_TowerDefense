@@ -41,7 +41,7 @@ namespace Enemy
         /// <summary>
         /// Spawned enemies.
         /// </summary>
-        public static List<GameObject> spawned = new List<GameObject>();
+        public List<GameObject> spawned = new List<GameObject>();
 
         // vi tri spawn.
         [SerializeField]

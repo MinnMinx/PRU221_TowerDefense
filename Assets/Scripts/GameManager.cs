@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     public decimal money = 300;
     public decimal score;
     public decimal playerHp;
-    public decimal maxPlayerHp = 100;
+    public decimal maxPlayerHp = 50;
 
     private static GameManager _instance;
 
@@ -93,10 +93,5 @@ public class GameManager : MonoBehaviour
             // not enough money
             GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_INSUFFICIENT);
         }
-    }
-
-    private void OnDestroy()
-    {
-        GameUiEventManager.Instance.Clear();
     }
 }
