@@ -47,6 +47,21 @@ public class MapController : MonoBehaviour
         return false;
     }
 
+    public bool IsPlaceableTile(Vector3Int tilePos, out Vector3 worldPos)
+    {
+        worldPos = Vector3.zero;
+        if (placeableMap == null)
+            return false;
+
+        PlaceableTile tile = placeableMap.GetTile<PlaceableTile>(tilePos);
+        if (tile != null)
+        {
+            worldPos = placeableMap.CellToWorld(tilePos) + placeableMap.cellSize / 2f;
+            return true;
+        }
+        return false;
+    }
+
     void PreviewTile(Vector3 mouseWorldPos)
     {
         previewer.Update(

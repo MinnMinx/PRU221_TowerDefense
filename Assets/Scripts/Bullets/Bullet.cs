@@ -55,6 +55,12 @@ public class Bullet : MonoBehaviour
         // if target is enemy, damage enemy
         if (enemy != null)
         {
+            //enemy.AddModifier(new Modifier()
+            //{
+            //    type = ModifierType.Spd,
+            //    timeLeft = 1f,
+            //    multipler = 0.3f,
+            //});
             enemy.TakeDamage((decimal)atk);
         }
 
