@@ -17,7 +17,8 @@ public class MapController : MonoBehaviour
 
     private void Update()
     {
-        PreviewTile(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        if (Time.timeScale > 0)
+            PreviewTile(Camera.main.ScreenToWorldPoint(Input.mousePosition));
     }
 
     /// <summary>

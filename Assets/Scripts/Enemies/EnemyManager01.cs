@@ -68,6 +68,10 @@ namespace Enemy
         Queue<SmallWave> largeWaveData = new Queue<SmallWave>();
 
         SmallWave wave = new SmallWave();
+
+        public static string SAVE_ENEMY_EVT = "SAVE_ENEMY_EVT";
+        public static string LOAD_ENEMY_EVT = "LOAD_ENEMY_EVT";
+
         // Start is called before the first frame update
         void Start()
         {
@@ -80,19 +84,14 @@ namespace Enemy
                 SpawnWave();
             }
             wave = largeWave.Dequeue();
+
+            GameUiEventManager.Instance.RegisterEvent(SAVE_ENEMY_EVT, (s, o) => SaveEnemyData());
+            GameUiEventManager.Instance.RegisterEvent(LOAD_ENEMY_EVT, (s, o) => LoadEnemyData());
         }
 
         // Update is called once per frame
         void Update()
         {
-            // only use in editor
-//#if UNITY_EDITOR
-//            if (Input.GetMouseButtonDown(0))
-//            {
-//                SaveEnemyData();
-//            }
-//#endif
-
             // set time nghỉ.
             if (spawned.Count == 0 && wave.smallWave.Count == 0)
             {
@@ -219,7 +218,7 @@ namespace Enemy
 
             // lưu data wave.
             largeWaveData = largeWave;
-            SaveEnemyData();
+            // SaveEnemyData();
         }
 
         public void SaveEnemyData()

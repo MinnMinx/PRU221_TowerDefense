@@ -16,6 +16,6 @@ public class ScoreController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        scoreView.text = "" + GameManager.instance.score;
+        scoreView.text = GameManager.instance.score.ToString("000000");
     }
 }

@@ -127,6 +127,7 @@ public class Tower : MonoBehaviour
             // check if mouse position is in range of tower
             if (circleCollider2D.OverlapPoint(mousePosition) && Vector2.Distance(mousePosition, transform.position) < 0.5f)
             {
+                GameUiEventManager.Instance.Notify(CameraMovement.CAMERA_SET_MOVEMENT, false);
                 // check if tower is not max level
                 if (level < 3)
                 {

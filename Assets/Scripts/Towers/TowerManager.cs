@@ -22,6 +22,7 @@ public class TowerManager : MonoBehaviour
     public static string SPAWN_TOWER_EVT = "SPAWN_TOWER_EVT";
     public static string SAVE_TOWER_EVT = "SAVE_TOWER_EVT";
     public static string LOAD_TOWER_EVT = "LOAD_TOWER_EVT";
+    public static string PLAYERPREF_SAVEDATA = "saved_tower";
 
     // Start is called before the first frame update
     void Start()
@@ -111,9 +112,6 @@ public class TowerManager : MonoBehaviour
 
     void SaveTower(string evt, params object[] args)
     {
-        if (!evt.Equals(SAVE_TOWER_EVT))
-            return;
-
         List<RuntimeTowerData> saveData = new List<RuntimeTowerData>(placedTower.Count);
         foreach(var tower in placedTower)
         {
@@ -123,21 +121,16 @@ public class TowerManager : MonoBehaviour
                 towerId = tower.Value.Id
             });
         }
-
-        PlayerPrefs.SetString("saved_tower", JsonConvert.SerializeObject(saveData));
+        PlayerPrefs.SetString(PLAYERPREF_SAVEDATA, JsonConvert.SerializeObject(saveData));
+        PlayerPrefs.Save();
     }
 
     void LoadTower(string evt, params object[] args)
     {
-        if (!evt.Equals(LOAD_TOWER_EVT))
-            return;
-
-
-        if (PlayerPrefs.HasKey("saved_tower"))
+        if (PlayerPrefs.HasKey(PLAYERPREF_SAVEDATA))
         {
-
-            var savedTower = JsonConvert.DeserializeObject<RuntimeTowerData[]>(PlayerPrefs.GetString("saved_tower"));
-            if (savedTower != null)
+            var savedTower = JsonConvert.DeserializeObject<RuntimeTowerData[]>(PlayerPrefs.GetString(PLAYERPREF_SAVEDATA));
+            if (savedTower != null && savedTower.Length > 0)
             {
                 if (placedTower.Count > 0)
                 {

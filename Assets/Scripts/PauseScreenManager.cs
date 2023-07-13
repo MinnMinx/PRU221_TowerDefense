@@ -1,3 +1,4 @@
+using Enemy;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,13 +19,17 @@ public class PauseScreenManager : MonoBehaviour
     {
         pauseBtn.onClick.AddListener(OnClickPauseBtn);
         resumeBtn.onClick.AddListener(OnResumeGame);
-        loadSaveBtn.onClick.AddListener(() => GameUiEventManager.Instance.Notify(TowerManager.LOAD_TOWER_EVT));
+        loadSaveBtn.onClick.AddListener(GameManager.LoadGame);
         quitBtn.onClick.AddListener(OnQuitGame);
     }
 
     void OnClickPauseBtn()
     {
         parent.SetActive(true);
+        loadSaveBtn.interactable = GameManager.ExistSaveData();
+        bool allowSave = GameManager.instance.score > 0;
+        saveProgressToggle.isOn = allowSave;
+        saveProgressToggle.interactable = allowSave;
         Time.timeScale = 0f;
     }
 
@@ -40,8 +45,7 @@ public class PauseScreenManager : MonoBehaviour
         if (saveProgressToggle.isOn)
         {
             // Save game
-            GameUiEventManager.Instance.Notify(TowerManager.SAVE_TOWER_EVT);
-            Debug.Log("SaveGame");
+            GameManager.SaveGame();
         }
         GameUiEventManager.Instance.Clear();
         Destroy(GameManager.instance.gameObject);

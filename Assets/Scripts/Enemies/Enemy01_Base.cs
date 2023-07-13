@@ -160,7 +160,7 @@ namespace Enemy
         public virtual void TakeDamage(decimal damage)
         {
             hp = hp - damage;
-            healthBar.SetHealth(Convert.ToSingle(hp), Convert.ToSingle(maxHp));
+            healthBar.SetHealth(Convert.ToSingle(hp/maxHp));
         }
 
         public bool DealDamage(Vector3 vector3)
@@ -177,7 +177,7 @@ namespace Enemy
             decimal a = (decimal)Math.Pow(wave, heso);
             maxHp = maxHp * a;
             hp = maxHp;
-            healthBar.SetHealth(Convert.ToSingle(hp), Convert.ToSingle(maxHp));
+            healthBar.SetHealth(Convert.ToSingle(hp/maxHp));
             return maxHp;
         }
 
