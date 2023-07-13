@@ -144,7 +144,8 @@ namespace Enemy
                     
                     // tăng điểm bằng tiền x wave.
                     GameManager.instance.GainScore(enemy.Money * numberWave);
-                    enemy.OnDespawn(enemyDead);                    
+                    enemy.OnDespawn();
+                    enemyDead.Play();
                 }
                 // địch chạm base
                 else if (enemy.DealDamage(basePositon.position))
@@ -152,7 +153,8 @@ namespace Enemy
                     // tru` mau cua player
                     spawned.Remove(spawned[i]);
                     GameManager.instance.TakeDamage(enemy.Atk);
-                    enemy.OnDespawn(enemyDead);
+                    enemy.OnDespawn();
+                    enemyDead.Play();
                 }
             }
 

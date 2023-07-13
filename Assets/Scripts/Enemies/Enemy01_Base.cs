@@ -147,10 +147,9 @@ namespace Enemy
         /// <summary>
         /// Destroy enemy.
         /// </summary>
-        public virtual void OnDespawn(AudioSource audio)
+        public virtual void OnDespawn()
         {
             Instantiate(Explosion, transform.position, Quaternion.identity);
-            audio.Play();
             Destroy(this.gameObject);
         }
 
