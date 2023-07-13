@@ -44,6 +44,7 @@ public class PauseScreenManager : MonoBehaviour
             Debug.Log("SaveGame");
         }
         GameUiEventManager.Instance.Clear();
+        Destroy(GameManager.instance.gameObject);
         SceneManager.LoadScene("MainMenu");
     }
 }
