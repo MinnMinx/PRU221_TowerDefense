@@ -1,15 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using UnityEditor.SceneManagement;
-using UnityEditor.Search;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Newtonsoft.Json;
-using System.Xml.Linq;
-using static UnityEngine.Rendering.DebugUI;
 
 namespace Enemy
 {
@@ -239,7 +232,7 @@ namespace Enemy
                 data.largeWave.Add(list.Select(enemy => enemy.name).ToList());
             }
 
-            string filePath = "Assets/Resources/EnemyData.json";
+            string filePath = Application.streamingAssetsPath + "/EnemyData.json";
             string jsonData = JsonConvert.SerializeObject(data);
 
             // Ghi dữ liệu vào tệp tin
@@ -256,7 +249,7 @@ namespace Enemy
                 allEnemy.AddRange(special);
                 allEnemy.AddRange(bosses);
 
-                string filePath = "Assets/Resources/EnemyData.json";
+                string filePath = Application.streamingAssetsPath + "/EnemyData.json";
                 string jsonContent = File.ReadAllText(filePath);
 
                 EnemyData data = JsonConvert.DeserializeObject<EnemyData>(jsonContent);
