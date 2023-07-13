@@ -15,11 +15,12 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private HealthBarBehaviour healthBarBehaviour;
+    public static decimal STARTING_MONEY = 300;
 
-    public decimal money = 300;
+    public decimal money = STARTING_MONEY;
     public decimal score;
     public decimal playerHp;
-    public decimal maxPlayerHp = 50;
+    public static decimal MAX_HP = 50;
 
     private static GameManager _instance;
 
@@ -44,28 +45,35 @@ public class GameManager : MonoBehaviour
         if (_instance == null)
         {
             _instance = this;
-            playerHp = maxPlayerHp;
-            healthBarBehaviour.SetHealth(Convert.ToSingle(playerHp), Convert.ToSingle(maxPlayerHp));
             DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(_instance.gameObject);
+            _instance = this;
         }
     }
 
-    private void Update()
+    private void Start()
     {
-        if (playerHp <= 0)
+
+        if (PlayerPrefs.HasKey("load"))
         {
-            Debug.Log("you lose");
+            LoadGame();
+            PlayerPrefs.DeleteKey("load");
+            PlayerPrefs.Save();
+        }
+        else
+        {
+            playerHp = MAX_HP;
+            healthBarBehaviour.SetHealth(Convert.ToSingle(playerHp / MAX_HP));
         }
     }
 
     public void TakeDamage(decimal atk)
     {
         playerHp -= atk;
-        healthBarBehaviour.SetHealth(Convert.ToSingle(playerHp), Convert.ToSingle(maxPlayerHp));
+        healthBarBehaviour.SetHealth(Convert.ToSingle(playerHp / MAX_HP));
     }
 
     public void GainMoney(decimal money)
@@ -93,5 +101,35 @@ public class GameManager : MonoBehaviour
             // not enough money
             GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_INSUFFICIENT);
         }
+    }
+
+    public static void LoadGame()
+    {
+        GameUiEventManager.Instance.Notify(TowerManager.LOAD_TOWER_EVT);
+        GameUiEventManager.Instance.Notify(EnemyManager01.LOAD_ENEMY_EVT);
+        instance.score = PlayerPrefs.HasKey("saved_score") ? (decimal)PlayerPrefs.GetFloat("saved_score") : 0;
+        instance.money = PlayerPrefs.HasKey("saved_money") ? (decimal)PlayerPrefs.GetFloat("saved_money") : STARTING_MONEY;
+        GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_UPDATE_VIEW, instance.money);
+        instance.playerHp = PlayerPrefs.HasKey("saved_hp") ? (decimal)PlayerPrefs.GetFloat("saved_hp") : MAX_HP;
+        instance.healthBarBehaviour.SetHealth(Convert.ToSingle(instance.playerHp / MAX_HP));
+    }
+
+    public static void SaveGame()
+    {
+        GameUiEventManager.Instance.Notify(TowerManager.SAVE_TOWER_EVT);
+        GameUiEventManager.Instance.Notify(EnemyManager01.SAVE_ENEMY_EVT);
+        PlayerPrefs.SetFloat("saved_score", (float)instance.score);
+        PlayerPrefs.SetFloat("saved_money", (float)instance.money);
+        PlayerPrefs.SetFloat("saved_hp", (float)instance.playerHp);
+        PlayerPrefs.Save();
+    }
+
+    public static bool ExistSaveData()
+    {
+        return PlayerPrefs.HasKey("saved_score") &&
+                PlayerPrefs.HasKey("saved_money") &&
+                PlayerPrefs.HasKey("saved_hp") &&
+                PlayerPrefs.HasKey(TowerManager.PLAYERPREF_SAVEDATA) &&
+                System.IO.File.Exists("Assets/Resources/EnemyData.json");
     }
 }

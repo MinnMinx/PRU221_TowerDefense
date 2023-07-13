@@ -12,18 +12,9 @@ namespace Enemy
         public Color high;
         public Vector3 offset;
 
-        public void SetHealth(float health, float maxHealth)
+        public void SetHealth(float healthPercent)
         {
-            slider.gameObject.SetActive(true);
-            slider.value = health / maxHealth;
-
-            //slider.fillRect.GetComponentInChildren<Image>().color = Color.Lerp(low, high, slider.normalizedValue);
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            //slider.transform.position = Camera.main.WorldToScreenPoint(transform.parent.position + offset);
+            slider.value = healthPercent;
         }
     }
 
