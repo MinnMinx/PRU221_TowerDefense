@@ -19,7 +19,7 @@ public class PauseScreenManager : MonoBehaviour
     {
         pauseBtn.onClick.AddListener(OnClickPauseBtn);
         resumeBtn.onClick.AddListener(OnResumeGame);
-        loadSaveBtn.onClick.AddListener(GameManager.LoadGame);
+        loadSaveBtn.onClick.AddListener(OnLoadGame);
         quitBtn.onClick.AddListener(OnQuitGame);
     }
 
@@ -39,6 +39,14 @@ public class PauseScreenManager : MonoBehaviour
         Time.timeScale = 1f;
     }
 
+    void OnLoadGame()
+    {
+        GameManager.LoadGame();
+        bool allowSave = GameManager.instance.score > 0;
+        saveProgressToggle.isOn = allowSave;
+        saveProgressToggle.interactable = allowSave;
+    }
+
     void OnQuitGame()
     {
         OnResumeGame();
@@ -46,9 +54,15 @@ public class PauseScreenManager : MonoBehaviour
         {
             // Save game
             GameManager.SaveGame();
+            GameUiEventManager.Instance.Clear();
+            Destroy(GameManager.instance.gameObject);
+            SceneManager.LoadScene("MainMenu");
         }
-        GameUiEventManager.Instance.Clear();
-        Destroy(GameManager.instance.gameObject);
-        SceneManager.LoadScene("MainMenu");
+        else
+        {
+            GameUiEventManager.Instance.Clear();
+            Destroy(GameManager.instance.gameObject);
+            GameManager.instance.GoToScoreScreen();
+        }
     }
 }

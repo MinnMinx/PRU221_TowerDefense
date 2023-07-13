@@ -17,8 +17,6 @@ public class HighScoreManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-
         _highScoreTemplateContainer = transform.Find("ScoreTemplateContainer");
         _highScoreTemplate = _highScoreTemplateContainer.Find("ScoreTemplate");
         _highScoreTemplate.gameObject.SetActive(false);

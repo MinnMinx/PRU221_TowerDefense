@@ -1,10 +1,12 @@
 using Enemy;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +17,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private HealthBarBehaviour healthBarBehaviour;
+    [SerializeField]
+    private CanvasGroup GameOverPanel;
     public static decimal STARTING_MONEY = 300;
 
     public decimal money = STARTING_MONEY;
@@ -56,22 +60,31 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-
         if (PlayerPrefs.HasKey("load"))
         {
             LoadGame();
             PlayerPrefs.DeleteKey("load");
-            PlayerPrefs.Save();
         }
         else
         {
             playerHp = MAX_HP;
             healthBarBehaviour.SetHealth(Convert.ToSingle(playerHp / MAX_HP));
         }
+        GameOverPanel.alpha = 0;
+        GameOverPanel.blocksRaycasts = false;
     }
 
     public void TakeDamage(decimal atk)
     {
+        if (playerHp < 0)
+            return;
+        else if (playerHp <= atk)
+        {
+            playerHp -= atk;
+            healthBarBehaviour.SetHealth(0);
+            GameOver();
+            return;
+        }
         playerHp -= atk;
         healthBarBehaviour.SetHealth(Convert.ToSingle(playerHp / MAX_HP));
     }
@@ -131,5 +144,25 @@ public class GameManager : MonoBehaviour
                 PlayerPrefs.HasKey("saved_hp") &&
                 PlayerPrefs.HasKey(TowerManager.PLAYERPREF_SAVEDATA) &&
                 System.IO.File.Exists(Application.streamingAssetsPath + "/EnemyData.json");
+    }
+
+    public void GameOver()
+    {
+        GameOverPanel.alpha = 1;
+        GameOverPanel.blocksRaycasts = true;
+        GoToScoreScreen();
+    }
+    public void GoToScoreScreen()
+    {
+        if (this.score > 0)
+        {
+            List<string> score = JsonConvert.DeserializeObject<List<string>>(PlayerPrefs.GetString("ScoreList"));
+            if (score == null)
+                score = new List<string>();
+            score.Add(this.score.ToString("000000"));
+            PlayerPrefs.SetString("ScoreList", JsonConvert.SerializeObject(score));
+        }
+        var asyncOp = SceneManager.LoadSceneAsync("HighScore");
+        asyncOp.allowSceneActivation = true;
     }
 }
