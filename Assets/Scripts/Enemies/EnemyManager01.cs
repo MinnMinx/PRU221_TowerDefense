@@ -47,6 +47,9 @@ namespace Enemy
         [SerializeField]
         private Transform spawnPositon;
 
+        // audio enemy die
+        AudioSource enemyDead;
+
         // vi tri base.
         [SerializeField]
         private Transform basePositon;
@@ -68,6 +71,7 @@ namespace Enemy
         // Start is called before the first frame update
         void Start()
         {
+            enemyDead = gameObject.GetComponent<AudioSource>();
             timeSpawn = gameObject.AddComponent<Timer>();
             timeSpawn.Duration = 1f;
             timeSpawn.Run();
@@ -140,7 +144,7 @@ namespace Enemy
                     
                     // tăng điểm bằng tiền x wave.
                     GameManager.instance.GainScore(enemy.Money * numberWave);
-                    enemy.OnDespawn();                    
+                    enemy.OnDespawn(enemyDead);                    
                 }
                 // địch chạm base
                 else if (enemy.DealDamage(basePositon.position))
@@ -148,7 +152,7 @@ namespace Enemy
                     // tru` mau cua player
                     spawned.Remove(spawned[i]);
                     GameManager.instance.TakeDamage(enemy.Atk);
-                    enemy.OnDespawn();
+                    enemy.OnDespawn(enemyDead);
                 }
             }
 
