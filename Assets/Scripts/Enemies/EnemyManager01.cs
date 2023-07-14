@@ -215,6 +215,7 @@ namespace Enemy
             //1 7 13 19 
             EnemyData data = new EnemyData()
             {
+                numberEnemySaved = this.numberEnemy,
                 numberWave = this.numberWave,
                 largeWave = new List<List<string>>(),
             };
