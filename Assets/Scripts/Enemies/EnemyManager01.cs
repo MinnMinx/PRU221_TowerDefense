@@ -220,7 +220,9 @@ namespace Enemy
                 largeWave = new List<List<string>>(),
             };
 
-            if (!largeWave.First().smallWave.Select(x => x.name).Contains("Boss") && largeWave.First().smallWave.Count > 0 && largeWave.First().smallWave.Count < numberEnemy)
+            if (!largeWave.First().smallWave.Select(x => x.name).Contains("Boss")
+                && largeWave.First().smallWave.Count > 0
+                && largeWave.First().smallWave.Count < numberEnemy)
             {
                 List<string> string1 = new List<string>();
                 string1.AddRange(spawned.Select(x => x.name));
@@ -264,6 +266,9 @@ namespace Enemy
                 string filePath = Application.streamingAssetsPath + "/EnemyData.json";
                 string jsonContent = File.ReadAllText(filePath);
                 largeWave.Clear();
+                spawned.ForEach(x => Destroy(x));
+                spawned.Clear();
+                loadFromFile = true;
                 EnemyData data = JsonConvert.DeserializeObject<EnemyData>(jsonContent);
                 this.numberWave = data.numberWave;
                 this.numberEnemy = data.numberEnemySaved;
