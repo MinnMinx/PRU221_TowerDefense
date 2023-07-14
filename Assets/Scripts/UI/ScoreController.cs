@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class ScoreController : MonoBehaviour
 {
-    TextMeshProUGUI scoreView; 
+    TextMeshProUGUI scoreView;
+    public static string SCORE_FORMAT = "000000000";
     // Start is called before the first frame update
     void Start()
     {
@@ -16,6 +17,7 @@ public class ScoreController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        scoreView.text = GameManager.instance.score.ToString("000000");
+        if (scoreView != null && GameManager.instance != null)
+            scoreView.text = GameManager.instance.score.ToString(SCORE_FORMAT);
     }
 }

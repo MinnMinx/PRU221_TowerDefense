@@ -11,7 +11,7 @@ namespace Enemy
         {
             Hp = 300;
             Speed = 1f;
-            Atk = 25;
+            Atk = 15;
             Money = 100;
 
             sheldEnemy = gameObject.AddComponent<ShieldEnemy>();

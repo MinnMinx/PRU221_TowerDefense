@@ -11,13 +11,15 @@ public class Bullet : MonoBehaviour
     private float atk;
     private Transform target;
     private const float HIT_DISTANCE = 0.1f;
+    private float slowDur = 0;
 
     // bullet's effect
-    public void SetProperties(float atk, float speed, Transform target)
+    public void SetProperties(float atk, float speed, Transform target, float slowDur = 0)
     {
         this.atk = atk;
         this.speed = speed;
         this.target = target;
+        this.slowDur = slowDur;
     }
 
     // Update is called once per frame
@@ -55,12 +57,15 @@ public class Bullet : MonoBehaviour
         // if target is enemy, damage enemy
         if (enemy != null)
         {
-            //enemy.AddModifier(new Modifier()
-            //{
-            //    type = ModifierType.Spd,
-            //    timeLeft = 1f,
-            //    multipler = 0.3f,
-            //});
+            if (slowDur > 0)
+            {
+                enemy.AddModifier(new Modifier()
+                {
+                    type = Modifier.ModifierType.Spd,
+                    timeLeft = slowDur,
+                    multipler = 0.3f,
+                });
+            }
             enemy.TakeDamage((decimal)atk);
         }
 

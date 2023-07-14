@@ -12,7 +12,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField]
     private Slider loadingSlider;
     [SerializeField, Range(0, 1)]
-    private float lerpMultipler;
+    private float lerpMultipler = 0.5f;
 
     private void Start()
     {
@@ -53,11 +53,13 @@ public class MenuManager : MonoBehaviour
         loadingGroup.alpha = 1f;
         loadingGroup.blocksRaycasts = true;
         loadingSlider.value = 0;
+        Time.fixedDeltaTime = 0.02f;
         AsyncOperation asyncOp = SceneManager.LoadSceneAsync(sceneName);
-        while (!asyncOp.isDone)
+        asyncOp.allowSceneActivation = false;
+        while (loadingSlider.value < 1f)
         {
             yield return null;
-            loadingSlider.value = Mathf.MoveTowards(loadingSlider.value, asyncOp.progress / 0.9f, lerpMultipler * Time.deltaTime);
+            loadingSlider.value = Mathf.MoveTowards(loadingSlider.value, asyncOp.isDone ? 1f : asyncOp.progress / 0.9f, lerpMultipler * Time.deltaTime);
         }
         asyncOp.allowSceneActivation = true;
         loadingGroup.alpha = 0f;

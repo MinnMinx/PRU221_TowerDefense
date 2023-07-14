@@ -7,6 +7,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.UI;
 using UnityEngine.SceneManagement;
+using static ConfigurationData;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class GameManager : MonoBehaviour
     private HealthBarBehaviour healthBarBehaviour;
     [SerializeField]
     private CanvasGroup GameOverPanel;
-    public static decimal STARTING_MONEY = 300;
+    public static decimal STARTING_MONEY = 250;
 
     public decimal money = STARTING_MONEY;
     public decimal score;
@@ -38,7 +39,8 @@ public class GameManager : MonoBehaviour
             if (_instance == null)
             {
                 _instance = FindObjectOfType<GameManager>();
-                DontDestroyOnLoad(_instance.gameObject);
+                if (_instance != null)
+                    DontDestroyOnLoad(_instance.gameObject);
             }
             return _instance;
         }
@@ -87,6 +89,7 @@ public class GameManager : MonoBehaviour
         }
         playerHp -= atk;
         healthBarBehaviour.SetHealth(Convert.ToSingle(playerHp / MAX_HP));
+        GameOverPanel.alpha = Mathf.Lerp(0, 1, (float)(playerHp / MAX_HP));
     }
 
     public void GainMoney(decimal money)
@@ -103,16 +106,25 @@ public class GameManager : MonoBehaviour
     public void SpendNewTower(int towerId, Vector3 tilePos, Vector3Int tileCell)
     {
         var tower = ConfigurationData.ListTower.FirstOrDefault(tower => tower.id == towerId);
-        if (tower != null && money >= tower.cost)
+        if (tower != null && SpendMoney(tower.cost))
         {
-            money -= tower.cost;
             GameUiEventManager.Instance.Notify(TowerManager.SPAWN_TOWER_EVT, towerId, tilePos, tileCell);
-            GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_UPDATE_VIEW, money);
         }
-        else if (tower != null)
+    }
+
+    public bool SpendMoney(int count)
+    {
+        if (money >= count)
+        {
+            money -= count;
+            GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_UPDATE_VIEW, money);
+            return true;
+        }
+        else
         {
             // not enough money
             GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_INSUFFICIENT);
+            return false;
         }
     }
 
@@ -159,7 +171,7 @@ public class GameManager : MonoBehaviour
             List<string> score = JsonConvert.DeserializeObject<List<string>>(PlayerPrefs.GetString("ScoreList"));
             if (score == null)
                 score = new List<string>();
-            score.Add(this.score.ToString("000000"));
+            score.Add(this.score.ToString(ScoreController.SCORE_FORMAT));
             PlayerPrefs.SetString("ScoreList", JsonConvert.SerializeObject(score));
         }
         var asyncOp = SceneManager.LoadSceneAsync("HighScore");

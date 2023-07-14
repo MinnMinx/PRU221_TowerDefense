@@ -51,10 +51,10 @@ namespace Enemy
         private float time = 0;
         private bool gainEnemy = true;
         private bool checkTime = true;
-        private int numberEnemy = 3;
+        private int numberEnemy = 4;
         private int numberWave = 1;
         private bool loadFromFile = false;
-        private double heso = 0.4;
+        private double heso = 1;
 
         Queue<SmallWave> largeWave = new Queue<SmallWave>();
 
@@ -108,11 +108,11 @@ namespace Enemy
                 }
             }
 
-            // mỗi khi hết 6 wave tăng 2 quái.
-            if (numberWave % 6 == 0 && gainEnemy)
+            // mỗi khi hết 5 wave tăng 3 quái.
+            if (numberWave % 5 == 0 && gainEnemy)
             {
-                numberEnemy +=2;
-                gainEnemy= false;
+                numberEnemy += 3;
+                gainEnemy = false;
             }
 
 
