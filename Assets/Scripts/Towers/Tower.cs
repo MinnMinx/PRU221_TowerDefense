@@ -1,10 +1,6 @@
 ﻿using Enemy;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using static UnityEngine.GraphicsBuffer;
 
 /// <summary>
 /// This is a base class of all towers.
@@ -24,12 +20,6 @@ public class Tower : MonoBehaviour
     protected bool lv3Slow = false;
     [SerializeField]
     protected bool lv2Slow = false;
-    [SerializeField]
-    protected Canvas upgradeLevel;
-    [SerializeField]
-    protected Button btnChecked;
-    [SerializeField]
-    protected Button btnCancel;
 
     // list of enemies in range
     private List<GameObject> targetInRange;
@@ -125,37 +115,7 @@ public class Tower : MonoBehaviour
         Destroy(gameObject);
     }
 
-    /// <summary>
-    /// Run when tower is upgraded.
-    /// </summary>
-    private void OnLevelUp()
-    {
-        // check if game object was clicked, then upgrade tower
-        if (Input.GetMouseButtonDown(0))
-        {
-            // get mouse position
-            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-            // check if mouse position is in range of tower
-            if (upgradeCollider.OverlapPoint(mousePosition) && GameManager.instance.EnoughMoney(level * 100))
-            {
-                DisplayCanvasUpgrade();
-            }
-        }
-    }
-
-    // Display canvas upgrade
-    private void DisplayCanvasUpgrade()
-    {
-        // pause game
-        Time.timeScale = 0f;
-        // display canvas upgrade
-        upgradeLevel.gameObject.SetActive(true);
-        // set movement of camera
-        GameUiEventManager.Instance.Notify(CameraMovement.CAMERA_SET_MOVEMENT, false);
-    }
-
-    private void UpgradeTower()
+    public void UpgradeTower()
     {
         // take money from player
         GameManager.instance.TakeMoney(level * 100);
@@ -184,9 +144,6 @@ public class Tower : MonoBehaviour
             // instantiate effect at position of tower
             Destroy(Instantiate(effectLevel3.gameObject, position, Quaternion.identity), 0.82f);
         }
-
-        // unpause game
-        UnPauseGame();
     }
 
     public void LoadOldData(int level, int damage, float range, float cooldownTime)
@@ -199,16 +156,6 @@ public class Tower : MonoBehaviour
             this.range = range;
         if (cooldownTime > 0)
             coolDownTime = cooldownTime;
-    }
-
-    private void UnPauseGame()
-    {
-        // unpause game
-        Time.timeScale = 1f;
-        // hide canvas upgrade
-        upgradeLevel.gameObject.SetActive(false);
-        // set movement of camera
-        GameUiEventManager.Instance.Notify(CameraMovement.CAMERA_SET_MOVEMENT, true);
     }
 
     /// <summary>
@@ -295,12 +242,6 @@ public class Tower : MonoBehaviour
 
         // set radius of collider
         circleCollider2D.radius = range;
-
-        // check if user click button checked to upgrade tower
-        btnChecked.onClick.AddListener(UpgradeTower);
-
-        // check if user click button cancel to unpause game
-        btnCancel.onClick.AddListener(UnPauseGame);
     }
 
     /// <summary>
@@ -343,9 +284,6 @@ public class Tower : MonoBehaviour
             // start animation 
             animIdle.enabled = true;
         }
-
-        // check if game object was clicked, then upgrade tower
-        OnLevelUp();
     }
 
     #endregion
