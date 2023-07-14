@@ -1,7 +1,9 @@
 ﻿using Enemy;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 
 /// <summary>
@@ -22,6 +24,12 @@ public class Tower : MonoBehaviour
     protected bool lv3Slow = false;
     [SerializeField]
     protected bool lv2Slow = false;
+    [SerializeField]
+    protected Canvas upgradeLevel;
+    [SerializeField]
+    protected Button btnChecked;
+    [SerializeField]
+    protected Button btnCancel;
 
     // list of enemies in range
     private List<GameObject> targetInRange;
@@ -128,45 +136,78 @@ public class Tower : MonoBehaviour
             // get mouse position
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            // get collider of game object
-            //CircleCollider2D circleCollider2D = gameObject.GetComponent<CircleCollider2D>();
-
             // check if mouse position is in range of tower
-            if (upgradeCollider.OverlapPoint(mousePosition) && Vector2.Distance(mousePosition, transform.position) < 0.5f
-                && GameManager.instance.SpendMoney(100 * level))
+            if (upgradeCollider.OverlapPoint(mousePosition) && Vector2.Distance(mousePosition, transform.position) < 0.5f && GameManager.instance.EnoughMoney(cost * (level + 1) / 4))
             {
-                GameUiEventManager.Instance.Notify(CameraMovement.CAMERA_SET_MOVEMENT, false);
-                // check if tower is not max level
-                //if (level < 3)
-                //{
-                    // upgrade tower
-                    level++;
-                    cost += level > 3 ? 200 : 100;
-                    damage += 10;
-                    range += level > 3 ? 0 : 0.5f;
-                    muzzleSpeed += level > 3 ? 0 : 5f;
-                    // Debug.Log(gameObject.name + " Lv" + level);
-                    //coolDownTime += 10f;
-                    // add effect to tower after upgrade
-                    if (level == 2)
-                    {
-                        // get position of spawn effect higher than tower 0.5f
-                        Vector3 position = (Vector3)transform.position + new Vector3(-0.04f,0.15f,0);
-                        
-                        // start effect level 2 at position of tower
-                        Destroy(Instantiate(effectLevel2.gameObject, position, Quaternion.identity),0.52f);
-                    }
-                    else if (level >= 3)
-                    {
-                        // get position of tower
-                        Vector3 position = (Vector3)transform.position + new Vector3(-0.01f, 0.1f, 0);
+                DisplayCanvasUpgrade();
 
-                        // instantiate effect at position of tower
-                        Destroy(Instantiate(effectLevel3.gameObject, position, Quaternion.identity),0.68f);
-                    }
-                //}
+                // check if user click button checked to upgrade tower
+                btnChecked.onClick.AddListener(() => UpgradeTower());
+
+                // check if user click button cancel to unpause game
+                btnCancel.onClick.AddListener(() => UnPauseGame());
+
+
+
             }
         }
+    }
+
+    // Display canvas upgrade
+    private void DisplayCanvasUpgrade()
+    {
+        // pause game
+        Time.timeScale = 0f;
+        // display canvas upgrade
+        upgradeLevel.gameObject.SetActive(true);
+        // set movement of camera
+        GameUiEventManager.Instance.Notify(CameraMovement.CAMERA_SET_MOVEMENT, false);
+    }
+
+    private void UpgradeTower()
+    {
+        // take money from player
+        GameManager.instance.TakeMoney(cost * (level + 1) / 4);
+        // upgrade tower
+        level++;
+        cost += cost * level / 4;
+        damage += 10;
+        damage += 10;
+        range += level > 3 ? 0 : 0.5f;
+        muzzleSpeed += level > 3 ? 0 : 5f;
+
+        // add effect to tower after upgrade
+        if (level == 2)
+        {
+            // get position of spawn effect higher than tower 0.5f
+            Vector3 position = (Vector3)transform.position + new Vector3(-0.04f, 0.4f, 0);
+
+            // start effect level 2 at position of tower
+            Destroy(Instantiate(effectLevel2.gameObject, position, Quaternion.identity), 0.68f);
+        }
+        else if (level >= 3)
+        {
+            // get position of tower
+            Vector3 position = (Vector3)transform.position + new Vector3(-0.01f, 0.6f, 0);
+
+            // instantiate effect at position of tower
+            Destroy(Instantiate(effectLevel3.gameObject, position, Quaternion.identity), 0.82f);
+        }
+
+        // unpause game
+        UnPauseGame();
+
+    }
+    private void UnPauseGame()
+    {
+        // unpause game
+        Time.timeScale = 1f;
+        // hide canvas upgrade
+        upgradeLevel.gameObject.SetActive(false);
+        // remove listener
+        btnChecked.onClick.RemoveAllListeners();
+        // set movement of camera
+        GameUiEventManager.Instance.Notify(CameraMovement.CAMERA_SET_MOVEMENT, true);
     }
 
     /// <summary>
@@ -265,7 +306,7 @@ public class Tower : MonoBehaviour
         {
             canShoot = true;
         }
-        
+
         if (targetInRange.Count > 0 && canShoot)
         {
             // start cooldown timer
