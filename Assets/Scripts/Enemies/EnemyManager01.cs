@@ -53,7 +53,6 @@ namespace Enemy
         private bool checkTime = true;
         private int numberEnemy = 4;
         private int numberWave = 1;
-        private bool loadFromFile = false;
         private double heso = 1;
 
         Queue<SmallWave> largeWave = new Queue<SmallWave>();
@@ -70,10 +69,7 @@ namespace Enemy
             timeSpawn = gameObject.AddComponent<Timer>();
             timeSpawn.Duration = 1f;
             timeSpawn.Run();
-            if (!loadFromFile)
-            {
-                SpawnWave();
-            }
+            SpawnWave();
             wave = largeWave.Dequeue();
 
             GameUiEventManager.Instance.RegisterEvent(SAVE_ENEMY_EVT, (s, o) => SaveEnemyData());
@@ -268,7 +264,6 @@ namespace Enemy
                 largeWave.Clear();
                 spawned.ForEach(x => Destroy(x));
                 spawned.Clear();
-                loadFromFile = true;
                 EnemyData data = JsonConvert.DeserializeObject<EnemyData>(jsonContent);
                 this.numberWave = data.numberWave;
                 this.numberEnemy = data.numberEnemySaved;
