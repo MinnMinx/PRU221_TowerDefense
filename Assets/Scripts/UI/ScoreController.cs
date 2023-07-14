@@ -17,7 +17,7 @@ public class ScoreController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (scoreView != null && GameManager.instance != null)
+        if (scoreView != null && !GameManager.HasNoInstance)
             scoreView.text = GameManager.instance.score.ToString(SCORE_FORMAT);
     }
 }

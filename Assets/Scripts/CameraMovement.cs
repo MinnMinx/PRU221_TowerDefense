@@ -11,7 +11,7 @@ public class CameraMovement : MonoBehaviour
     private float lerpVal = 0.5f;
     private Camera mainCam;
     private Vector3 lastFramePos, curMousePose, velocity;
-    private bool _allowScroll = false;
+    //private bool _allowScroll = false;
     private int holdFrame = 0;
 
     public static string CAMERA_SET_MOVEMENT = "CAMERA_SET_MOVEMENT";
@@ -19,7 +19,7 @@ public class CameraMovement : MonoBehaviour
     private void Start()
     {
         mainCam = Camera.main;
-        _allowScroll = false;
+        //_allowScroll = false;
         GameUiEventManager.Instance.RegisterEvent(CAMERA_SET_MOVEMENT, SetMovementEvent);
     }
 
@@ -27,10 +27,12 @@ public class CameraMovement : MonoBehaviour
     {
         float delta = Time.deltaTime;
         curMousePose = mainCam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, mainCam.orthographicSize * 2));
+        if (GameManager.HasNoInstance)
+            return;
 
         if (GameManager.instance.IsPlacingTower || GameManager.instance.IsRemovingTower)
         {
-            _allowScroll = false;
+            //_allowScroll = false;
             holdFrame = 0;
         }
         if (holdFrame > 0 && Input.GetMouseButton(0))
@@ -41,12 +43,6 @@ public class CameraMovement : MonoBehaviour
                 velocity = (lastFramePos - curMousePose) / delta;
                 lastFramePos = curMousePose;
             }
-            //transform.position = new Vector3
-            //{
-            //    x = Mathf.Clamp(lastMove.x, minMaxOffsetX.x, minMaxOffsetX.y),
-            //    y = Mathf.Clamp(lastMove.y, minMaxOffsetY.x, minMaxOffsetY.y),
-            //    z = transform.position.z,
-            //};
         }
         if (Input.GetMouseButtonUp(0))
         {
@@ -67,7 +63,12 @@ public class CameraMovement : MonoBehaviour
 
     public void SetScrolling(bool scrolling = true)
     {
-        _allowScroll = scrolling;
+        //_allowScroll = scrolling;
+        if (!scrolling)
+        {
+            holdFrame = 0;
+            return;
+        }
         holdFrame = 1;
         lastFramePos = curMousePose;
         clickFx.transform.position = curMousePose;

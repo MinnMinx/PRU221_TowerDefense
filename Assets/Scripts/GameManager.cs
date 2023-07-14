@@ -1,14 +1,12 @@
 using Enemy;
 using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering.UI;
 using UnityEngine.SceneManagement;
-using static ConfigurationData;
 
+[DefaultExecutionOrder(200)]
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
@@ -31,6 +29,8 @@ public class GameManager : MonoBehaviour
 
     public bool IsPlacingTower => slotChoseMng.isPlacingTower;
     public bool IsRemovingTower => towerMng.IsRemovingTower;
+
+    public static bool HasNoInstance => _instance == null;
 
     public static GameManager instance
     {
