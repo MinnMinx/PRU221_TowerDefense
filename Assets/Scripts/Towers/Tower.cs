@@ -84,6 +84,7 @@ public class Tower : MonoBehaviour
         set { coolDownTime = value; }
     }
 
+    private TowerSavedData savedData = null;
 
     #endregion
 
@@ -146,16 +147,15 @@ public class Tower : MonoBehaviour
         }
     }
 
-    public void LoadOldData(int level, int damage, float range, float cooldownTime)
+    public void AssignOldData(int level, int damage, float range, float cooldownTime)
     {
-        if (level > 0)
-            this.level = level;
-        if (damage > 0)
-            this.damage = damage;
-        if (range > 0)
-            this.range = range;
-        if (cooldownTime > 0)
-            coolDownTime = cooldownTime;
+        savedData = new TowerSavedData
+        {
+            level = level,
+            damage = damage,
+            range = range,
+            cd = cooldownTime,
+        };
     }
 
     /// <summary>
@@ -183,7 +183,7 @@ public class Tower : MonoBehaviour
         {
             bullet = Instantiate(bulletLevel2, transform.position, Quaternion.identity);
         }
-        else if (level == 3)
+        else if (level >= 3)
         {
             bullet = Instantiate(bulletLevel3, transform.position, Quaternion.identity);
         }
@@ -240,6 +240,18 @@ public class Tower : MonoBehaviour
         // get components collider of game object
         CircleCollider2D circleCollider2D = gameObject.GetComponent<CircleCollider2D>();
 
+        if (savedData != null)
+        {
+            if (savedData.level > 0)
+                level = savedData.level;
+            if (savedData.damage > 0)
+                damage = savedData.damage;
+            if (savedData.range > 0)
+                range = savedData.range;
+            if (savedData.cd > 0)
+                coolDownTime = savedData.cd;
+        }
+
         // set radius of collider
         circleCollider2D.radius = range;
     }
@@ -284,6 +296,14 @@ public class Tower : MonoBehaviour
             // start animation 
             animIdle.enabled = true;
         }
+    }
+
+    public class TowerSavedData
+    {
+        public int level { get; set; }
+        public int damage { get; set; }
+        public float range { get; set; }
+        public float cd { get; set; }
     }
 
     #endregion
