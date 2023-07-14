@@ -192,15 +192,16 @@ public class TowerManager : MonoBehaviour
         List<RuntimeTowerData> saveData = new List<RuntimeTowerData>(placedTower.Count);
         foreach(var tower in placedTower)
         {
-            saveData.Add(new RuntimeTowerData
-            {
-                tile = tower.Key,
-                towerId = tower.Value.Id,
-                level = tower.Value.Level,
-                range = tower.Value.Range,
-                cd = tower.Value.CoolDownTime,
-                damage = tower.Value.Damage,
-            });
+            if (tower.Value != null && tower.Value.gameObject != null)
+                saveData.Add(new RuntimeTowerData
+                {
+                    tile = tower.Key,
+                    towerId = tower.Value.Id,
+                    level = tower.Value.Level,
+                    range = tower.Value.Range,
+                    cd = tower.Value.CoolDownTime,
+                    damage = tower.Value.Damage,
+                });
         }
         PlayerPrefs.SetString(PLAYERPREF_SAVEDATA, JsonConvert.SerializeObject(saveData));
         PlayerPrefs.Save();
@@ -210,6 +211,7 @@ public class TowerManager : MonoBehaviour
     {
         if (PlayerPrefs.HasKey(PLAYERPREF_SAVEDATA))
         {
+            Debug.Log(PlayerPrefs.GetString(PLAYERPREF_SAVEDATA));
             var savedTower = JsonConvert.DeserializeObject<RuntimeTowerData[]>(PlayerPrefs.GetString(PLAYERPREF_SAVEDATA));
             if (savedTower != null && savedTower.Length > 0)
             {
@@ -228,13 +230,14 @@ public class TowerManager : MonoBehaviour
                     if (mapController.IsPlaceableTile(tower.tile, out Vector3 spawnPos))
                     {
                         var gameObj = Instantiate(TowerResources.Instance.PrefabList.GetTowerPrefab(tower.towerId), spawnPos, Quaternion.identity);
-                        if (gameObj.GetComponent<Tower>() == null)
+                        var towerComponent = gameObj.GetComponent<Tower>();
+                        if (towerComponent == null)
                         {
                             Destroy(gameObj);
                             continue;
                         }
-                        gameObj.GetComponent<Tower>().LoadOldData(tower.level, tower.damage, tower.range, tower.cd);
-                        placedTower.Add(tower.tile, gameObj.GetComponent<Tower>());
+                        towerComponent.LoadOldData(tower.level, tower.damage, tower.range, tower.cd);
+                        placedTower.Add(tower.tile, towerComponent);
                     }
                 }
             }

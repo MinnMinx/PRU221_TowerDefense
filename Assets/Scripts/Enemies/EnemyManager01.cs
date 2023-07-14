@@ -58,8 +58,6 @@ namespace Enemy
 
         Queue<SmallWave> largeWave = new Queue<SmallWave>();
 
-        Queue<SmallWave> largeWaveData = new Queue<SmallWave>();
-
         SmallWave wave = new SmallWave();
 
         public static string SAVE_ENEMY_EVT = "SAVE_ENEMY_EVT";
@@ -108,8 +106,8 @@ namespace Enemy
                 }
             }
 
-            // mỗi khi hết 5 wave tăng 3 quái.
-            if (numberWave % 5 == 0 && gainEnemy)
+            // mỗi khi hết 6 wave tăng 3 quái.
+            if (numberWave % 6 == 0 && gainEnemy)
             {
                 numberEnemy += 3;
                 gainEnemy = false;
@@ -209,8 +207,6 @@ namespace Enemy
             bossWave.smallWave.Enqueue(boss);
             this.largeWave.Enqueue(bossWave);
 
-            // lưu data wave.
-            largeWaveData = largeWave;
             //SaveEnemyData();
         }
 
@@ -219,17 +215,33 @@ namespace Enemy
             //1 7 13 19 
             EnemyData data = new EnemyData()
             {
-                playerHp = GameManager.instance.playerHp,
-                scoreData = GameManager.instance.score,
+                numberEnemySaved = this.numberEnemy,
                 numberWave = this.numberWave,
                 largeWave = new List<List<string>>(),
             };
 
-            foreach (var item in largeWaveData)
+            if (!largeWave.First().smallWave.Select(x => x.name).Contains("Boss") && largeWave.First().smallWave.Count > 0 && largeWave.First().smallWave.Count < numberEnemy)
             {
-                List<GameObject> list = new List<GameObject>();
-                list = item.smallWave.ToList();
-                data.largeWave.Add(list.Select(enemy => enemy.name).ToList());
+                List<string> string1 = new List<string>();
+                string1.AddRange(spawned.Select(x => x.name));
+                foreach (var item in largeWave.Dequeue().smallWave)
+                {
+                    string1.Add(item.name);
+                }
+                data.largeWave.Add(string1);
+            }
+            else
+            {
+                List<string> string1 = new List<string>();
+                string1.AddRange(spawned.Select(x => x.name));
+                data.largeWave.Add(string1);
+            }
+
+            foreach (var item in largeWave)
+            {                
+                List<GameObject> list2 = new List<GameObject>();
+                list2 = item.smallWave.ToList();
+                data.largeWave.Add(list2.Select(enemy => enemy.name).ToList());
             }
 
             string filePath = Application.streamingAssetsPath + "/EnemyData.json";
@@ -254,21 +266,20 @@ namespace Enemy
                 largeWave.Clear();
                 EnemyData data = JsonConvert.DeserializeObject<EnemyData>(jsonContent);
                 this.numberWave = data.numberWave;
+                this.numberEnemy = data.numberEnemySaved;
                 foreach (var wave in data.largeWave)
                 {
                     SmallWave smWave = new SmallWave();
 
                     foreach (var enemy in wave)
                     {
-                        var enemyInWave = allEnemy.FirstOrDefault(gameobject => gameobject.name.Equals(enemy));
+                        var enemyInWave = allEnemy.FirstOrDefault(gameobject => gameobject.name.Equals(enemy.Replace("(Clone)", "")));
                         smWave.smallWave.Enqueue(enemyInWave);
                     }
                     largeWave.Enqueue(smWave);
                 }
-                largeWaveData = largeWave;
 
-                GameManager.instance.playerHp = data.playerHp;
-                GameManager.instance.score = data.scoreData;
+                wave = largeWave.Dequeue();
             }
             catch
             {
@@ -289,8 +300,7 @@ namespace Enemy
         [System.Serializable]
         public class EnemyData
         {
-            public decimal playerHp { get; set; }
-            public decimal scoreData { get; set; }
+            public int numberEnemySaved { get; set; }
             public int numberWave { get; set; }
             public List<List<string>> largeWave { get; set;}
         }
