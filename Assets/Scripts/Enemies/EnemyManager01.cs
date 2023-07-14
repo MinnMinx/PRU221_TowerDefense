@@ -211,7 +211,7 @@ namespace Enemy
 
             // lưu data wave.
             largeWaveData = largeWave;
-            // SaveEnemyData();
+            //SaveEnemyData();
         }
 
         public void SaveEnemyData()
@@ -251,7 +251,7 @@ namespace Enemy
 
                 string filePath = Application.streamingAssetsPath + "/EnemyData.json";
                 string jsonContent = File.ReadAllText(filePath);
-
+                largeWave.Clear();
                 EnemyData data = JsonConvert.DeserializeObject<EnemyData>(jsonContent);
                 this.numberWave = data.numberWave;
                 foreach (var wave in data.largeWave)
