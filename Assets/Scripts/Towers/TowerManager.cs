@@ -211,7 +211,6 @@ public class TowerManager : MonoBehaviour
     {
         if (PlayerPrefs.HasKey(PLAYERPREF_SAVEDATA))
         {
-            Debug.Log(PlayerPrefs.GetString(PLAYERPREF_SAVEDATA));
             var savedTower = JsonConvert.DeserializeObject<RuntimeTowerData[]>(PlayerPrefs.GetString(PLAYERPREF_SAVEDATA));
             if (savedTower != null && savedTower.Length > 0)
             {
@@ -236,7 +235,7 @@ public class TowerManager : MonoBehaviour
                             Destroy(gameObj);
                             continue;
                         }
-                        towerComponent.LoadOldData(tower.level, tower.damage, tower.range, tower.cd);
+                        towerComponent.AssignOldData(tower.level, tower.damage, tower.range, tower.cd);
                         placedTower.Add(tower.tile, towerComponent);
                     }
                 }
