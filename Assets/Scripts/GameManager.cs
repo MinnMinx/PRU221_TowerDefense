@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
         }
         playerHp -= atk;
         healthBarBehaviour.SetHealth(Convert.ToSingle(playerHp / MAX_HP));
-        GameOverPanel.alpha = Mathf.Lerp(0, 1, (float)(playerHp / MAX_HP));
+        GameOverPanel.alpha = Mathf.Lerp(0.75f, 0, (float)(playerHp / MAX_HP));
     }
 
     public void GainMoney(decimal money)
