@@ -9,7 +9,7 @@ namespace Enemy
         protected override void Awake()
         {
             Hp = 300;
-            Atk = 30;
+            Atk = 15;
             Speed = 1f;
             Money = 100;
             base.Awake();

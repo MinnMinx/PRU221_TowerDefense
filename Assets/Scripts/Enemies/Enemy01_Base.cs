@@ -120,6 +120,9 @@ namespace Enemy
 
             // quay qúai khi di chuyển
             RotationEnemy(deltaTime);
+            var pos = transform.position;
+            pos.z = 0;
+            transform.position = pos;
             return isDead;
         }
 
@@ -196,7 +199,7 @@ namespace Enemy
             if (spdModifiers != null && spdModifiers.timeLeft <= 0)
             {
                 //set lại speed.
-                speed = speedBase;
+                followPathAI.maxSpeed = speedBase;
             }
 
             // xóa modifer có timeleft <= 0.
@@ -211,7 +214,7 @@ namespace Enemy
             if (spdModifiers != null && !canSpeed)
             {
                 sprite.color = slow;
-                speed = speedBase * (1 - spdModifiers.multipler);
+                followPathAI.maxSpeed = speedBase * (1 - spdModifiers.multipler);
             }
             else
             {

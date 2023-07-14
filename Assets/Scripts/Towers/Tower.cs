@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 /// <summary>
 /// This is a base class of all towers.
@@ -15,6 +16,12 @@ public class Tower : MonoBehaviour
     protected GameObject bulletLevel2; // bullet prefab
     [SerializeField]
     protected GameObject bulletLevel3; // bullet prefab
+    [SerializeField]
+    private CircleCollider2D upgradeCollider;
+    [SerializeField]
+    protected bool lv3Slow = false;
+    [SerializeField]
+    protected bool lv2Slow = false;
 
     // list of enemies in range
     private List<GameObject> targetInRange;
@@ -122,22 +129,24 @@ public class Tower : MonoBehaviour
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             // get collider of game object
-            CircleCollider2D circleCollider2D = gameObject.GetComponent<CircleCollider2D>();
+            //CircleCollider2D circleCollider2D = gameObject.GetComponent<CircleCollider2D>();
 
             // check if mouse position is in range of tower
-            if (circleCollider2D.OverlapPoint(mousePosition) && Vector2.Distance(mousePosition, transform.position) < 0.5f)
+            if (upgradeCollider.OverlapPoint(mousePosition) && Vector2.Distance(mousePosition, transform.position) < 0.5f
+                && GameManager.instance.SpendMoney(100 * level))
             {
                 GameUiEventManager.Instance.Notify(CameraMovement.CAMERA_SET_MOVEMENT, false);
                 // check if tower is not max level
-                if (level < 3)
-                {
+                //if (level < 3)
+                //{
                     // upgrade tower
                     level++;
-                    cost += 100;
+                    cost += level > 3 ? 200 : 100;
                     damage += 10;
-                    range += 0.5f;
-                    muzzleSpeed += 500f;
-                    coolDownTime += 10f;
+                    range += level > 3 ? 0 : 0.5f;
+                    muzzleSpeed += level > 3 ? 0 : 5f;
+                    // Debug.Log(gameObject.name + " Lv" + level);
+                    //coolDownTime += 10f;
                     // add effect to tower after upgrade
                     if (level == 2)
                     {
@@ -145,17 +154,17 @@ public class Tower : MonoBehaviour
                         Vector3 position = (Vector3)transform.position + new Vector3(-0.04f,0.15f,0);
                         
                         // start effect level 2 at position of tower
-                        Destroy(Instantiate(effectLevel2.gameObject, position, Quaternion.identity),5);
+                        Destroy(Instantiate(effectLevel2.gameObject, position, Quaternion.identity),0.52f);
                     }
-                    else if (level == 3)
+                    else if (level >= 3)
                     {
                         // get position of tower
                         Vector3 position = (Vector3)transform.position + new Vector3(-0.01f, 0.1f, 0);
 
                         // instantiate effect at position of tower
-                        Destroy(Instantiate(effectLevel3.gameObject, position, Quaternion.identity),5);
+                        Destroy(Instantiate(effectLevel3.gameObject, position, Quaternion.identity),0.68f);
                     }
-                }
+                //}
             }
         }
     }
@@ -197,7 +206,7 @@ public class Tower : MonoBehaviour
         var bulletBehavior = bullet.GetComponent<Bullet>();
         if (bulletBehavior != null)
         {
-            bulletBehavior.SetProperties(damage, muzzleSpeed, target);
+            bulletBehavior.SetProperties(damage, muzzleSpeed, target, (lv2Slow && level >= 2 ? 0.75f : lv3Slow && level >= 3 ? 1.5f : 0));
         }
 
         // rotate the tower to the left if the enemy is on the left if there is an enemy, otherwise keep the tower facing the right
@@ -264,12 +273,29 @@ public class Tower : MonoBehaviour
             cooldownTimer.Run();
 
             // get first enemy in range
-            GameObject target = targetInRange[0];
-            if (target != null)
+            //GameObject target = targetInRange[0];
+            //if (target != null)
+            //{
+            //    // stop animation
+            //    animIdle.Play("Idle", 0, 0);
+            //    FireAt(target.transform);
+            //}
+            Transform nearestTarget = null;
+            for (int i = 0; i < targetInRange.Count; i++)
+            {
+                if (targetInRange[i] != null)
+                {
+                    if (nearestTarget == null ||
+                        Vector3.Distance(nearestTarget.position, MapController.DestinationPoint) >=
+                            Vector3.Distance(targetInRange[i].transform.position, MapController.DestinationPoint))
+                        nearestTarget = targetInRange[i].transform;
+                }
+            }
+            if (nearestTarget != null)
             {
                 // stop animation
                 animIdle.Play("Idle", 0, 0);
-                FireAt(target.transform);
+                FireAt(nearestTarget);
             }
         }
         else

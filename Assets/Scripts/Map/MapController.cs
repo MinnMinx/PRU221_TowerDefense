@@ -9,9 +9,13 @@ public class MapController : MonoBehaviour
     [SerializeField]
     private Tilemap placeableMap;
     private MapPreviewer previewer;
+    [SerializeField]
+    private Vector3 _destinationPoint;
+    public static Vector3 DestinationPoint;
 
     private void Awake()
     {
+        DestinationPoint = _destinationPoint;
         previewer = new MapPreviewer(placeableMap);
     }
 

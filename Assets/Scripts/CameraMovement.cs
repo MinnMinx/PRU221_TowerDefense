@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -11,57 +7,71 @@ public class CameraMovement : MonoBehaviour
     [SerializeField]
     private Vector2 minMaxOffsetY;
     [SerializeField]
-    private float moveSpeed = 5f;
+    private ParticleSystem clickFx;
+    private float lerpVal = 0.5f;
     private Camera mainCam;
-    private Vector3 originalPos, centerScreenPos;
-    private static Vector2 CENTER_VIEWPORT_POS = new Vector2(0.5f, 0.5f);
-    private Vector2 mouseStartPos;
+    private Vector3 lastFramePos, curMousePose, velocity;
     private bool _allowScroll = false;
+    private int holdFrame = 0;
 
     public static string CAMERA_SET_MOVEMENT = "CAMERA_SET_MOVEMENT";
 
     private void Start()
     {
         mainCam = Camera.main;
-        originalPos = transform.position;
         _allowScroll = false;
         GameUiEventManager.Instance.RegisterEvent(CAMERA_SET_MOVEMENT, SetMovementEvent);
     }
 
     private void Update()
     {
-        if (_allowScroll)
+        float delta = Time.deltaTime;
+        curMousePose = mainCam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, mainCam.orthographicSize * 2));
+
+        if (GameManager.instance.IsPlacingTower || GameManager.instance.IsRemovingTower)
         {
-            if (GameManager.instance.IsPlacingTower || GameManager.instance.IsRemovingTower)
+            _allowScroll = false;
+            holdFrame = 0;
+        }
+        if (holdFrame > 0 && Input.GetMouseButton(0))
+        {
+            holdFrame++;
+            if (Vector3.Distance(curMousePose, lastFramePos) > 0.001f)
             {
-                _allowScroll = false;
-                return;
+                velocity = (lastFramePos - curMousePose) / delta;
+                lastFramePos = curMousePose;
             }
-            Vector3 mouseWorldPos = mainCam.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 distance = mouseWorldPos - centerScreenPos;
-            distance = new Vector3
+            //transform.position = new Vector3
+            //{
+            //    x = Mathf.Clamp(lastMove.x, minMaxOffsetX.x, minMaxOffsetX.y),
+            //    y = Mathf.Clamp(lastMove.y, minMaxOffsetY.x, minMaxOffsetY.y),
+            //    z = transform.position.z,
+            //};
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            holdFrame = 0;
+        }
+
+        if (Vector3.Distance(velocity, Vector3.zero) > 0.01f)
+        {
+            velocity = Vector3.Lerp(velocity, Vector3.zero, lerpVal);
+            transform.position = new Vector3
             {
-                x = Mathf.Clamp(distance.x, minMaxOffsetX.x, minMaxOffsetX.y),
-                y = Mathf.Clamp(distance.y, minMaxOffsetY.x, minMaxOffsetY.y),
-                z = 0,
+                x = Mathf.Clamp(transform.position.x + velocity.x * delta, minMaxOffsetX.x, minMaxOffsetX.y),
+                y = Mathf.Clamp(transform.position.y + velocity.y * delta, minMaxOffsetY.x, minMaxOffsetY.y),
+                z = transform.position.z,
             };
-            transform.position = Vector3.Lerp(transform.position, originalPos + distance, Time.deltaTime * moveSpeed);
         }
     }
 
     public void SetScrolling(bool scrolling = true)
     {
         _allowScroll = scrolling;
-        if (_allowScroll)
-        {
-            mouseStartPos = mainCam.ScreenToWorldPoint(mouseStartPos);
-            centerScreenPos = mainCam.ViewportToWorldPoint(CENTER_VIEWPORT_POS);
-        }
-    }
-
-    public void InvertScrolling()
-    {
-        SetScrolling(!_allowScroll);
+        holdFrame = 1;
+        lastFramePos = curMousePose;
+        clickFx.transform.position = curMousePose;
+        clickFx.Play(true);
     }
 
     void SetMovementEvent(string evt, params object[] args)

@@ -36,7 +36,7 @@ public class ConfigurationData
     private static void LoadData()
     {
         // load all tower data from ConfigurationData.json
-        string json = System.IO.File.ReadAllText(Application.dataPath + "/Scripts/ConfigurationData.json");
+        string json = System.IO.File.ReadAllText(Application.streamingAssetsPath + "/ConfigurationData.json");
 
         try
         {

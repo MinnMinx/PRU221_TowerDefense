@@ -13,14 +13,20 @@ public class PauseScreenManager : MonoBehaviour
     private Button resumeBtn, loadSaveBtn, quitBtn, pauseBtn;
     [SerializeField]
     private Toggle saveProgressToggle;
+    [SerializeField]
+    private Slider volumeSlider;
+    [SerializeField]
+    private AudioSource bgmSrc;
 
     // Start is called before the first frame update
     void Start()
     {
         pauseBtn.onClick.AddListener(OnClickPauseBtn);
         resumeBtn.onClick.AddListener(OnResumeGame);
-        loadSaveBtn.onClick.AddListener(GameManager.LoadGame);
+        loadSaveBtn.onClick.AddListener(OnLoadGame);
         quitBtn.onClick.AddListener(OnQuitGame);
+        volumeSlider.value = bgmSrc.volume;
+        volumeSlider.onValueChanged.AddListener(f => bgmSrc.volume = f);
     }
 
     void OnClickPauseBtn()
@@ -31,12 +37,22 @@ public class PauseScreenManager : MonoBehaviour
         saveProgressToggle.isOn = allowSave;
         saveProgressToggle.interactable = allowSave;
         Time.timeScale = 0f;
+        bgmSrc.Pause();
     }
 
     void OnResumeGame()
     {
         parent.SetActive(false);
         Time.timeScale = 1f;
+        bgmSrc.Play();
+    }
+
+    void OnLoadGame()
+    {
+        GameManager.LoadGame();
+        bool allowSave = GameManager.instance.score > 0;
+        saveProgressToggle.isOn = allowSave;
+        saveProgressToggle.interactable = allowSave;
     }
 
     void OnQuitGame()
@@ -46,9 +62,21 @@ public class PauseScreenManager : MonoBehaviour
         {
             // Save game
             GameManager.SaveGame();
+            GameUiEventManager.Instance.Clear();
+            Destroy(GameManager.instance.gameObject);
+            SceneManager.LoadScene("MainMenu");
         }
-        GameUiEventManager.Instance.Clear();
-        Destroy(GameManager.instance.gameObject);
-        SceneManager.LoadScene("MainMenu");
+        else
+        {
+            GameUiEventManager.Instance.Clear();
+            Destroy(GameManager.instance.gameObject);
+            GameManager.instance.GoToScoreScreen();
+        }
+    }
+
+    private void OnApplicationFocus(bool focus)
+    {
+        if (!focus)
+            OnClickPauseBtn();
     }
 }
