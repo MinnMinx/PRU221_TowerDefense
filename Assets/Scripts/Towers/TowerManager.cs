@@ -118,7 +118,11 @@ public class TowerManager : MonoBehaviour
             saveData.Add(new RuntimeTowerData
             {
                 tile = tower.Key,
-                towerId = tower.Value.Id
+                towerId = tower.Value.Id,
+                level = tower.Value.Level,
+                range = tower.Value.Range,
+                cd = tower.Value.CoolDownTime,
+                damage = tower.Value.Damage,
             });
         }
         PlayerPrefs.SetString(PLAYERPREF_SAVEDATA, JsonConvert.SerializeObject(saveData));
@@ -147,6 +151,12 @@ public class TowerManager : MonoBehaviour
                     if (mapController.IsPlaceableTile(tower.tile, out Vector3 spawnPos))
                     {
                         var gameObj = Instantiate(TowerResources.Instance.PrefabList.GetTowerPrefab(tower.towerId), spawnPos, Quaternion.identity);
+                        if (gameObj.GetComponent<Tower>() == null)
+                        {
+                            Destroy(gameObj);
+                            continue;
+                        }
+                        gameObj.GetComponent<Tower>().LoadOldData(tower.level, tower.damage, tower.range, tower.cd);
                         placedTower.Add(tower.tile, gameObj.GetComponent<Tower>());
                     }
                 }
@@ -158,5 +168,9 @@ public class TowerManager : MonoBehaviour
     {
         public Vector3Int tile { get; set; }
         public int towerId { get; set; }
+        public int level { get; set; }
+        public int damage { get; set; }
+        public float cd { get; set; }
+        public float range { get; set; }
     }
 }

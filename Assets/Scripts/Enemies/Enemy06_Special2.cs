@@ -8,10 +8,10 @@ namespace Enemy
 {
     public class Enemy06_Special2 : Enemy01_Base
     {
-        //
         private float timerEachShield = 5f;
 
         // shield will enable each 5s
+        [SerializeField] ParticleSystem shieldFx;
         ShieldEnemy sheldEnemy;
         protected override void Awake()
         {
@@ -20,6 +20,7 @@ namespace Enemy
             Speed = 1.2f;
             Money = 30;
             sheldEnemy = gameObject.AddComponent<ShieldEnemy>();
+            sheldEnemy.shieldFx = shieldFx;
             base.Awake();
         }
 

@@ -7,52 +7,51 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     // bullet's properties
-    private float speed;
     private float atk;
-    private Transform target;
-    private const float HIT_DISTANCE = 0.1f;
+    private Vector3 velocity;
     private float slowDur = 0;
+    private static Collider2D[] cacheCollider = new Collider2D[1];
+    private Collider2D selfCollider;
+    private static ContactFilter2D enemyColliderFilter;
+
+    private void Awake()
+    {
+        selfCollider = GetComponent<Collider2D>();
+        enemyColliderFilter.SetLayerMask(LayerMask.GetMask("Enemy"));
+        enemyColliderFilter.SetDepth(float.NegativeInfinity, float.PositiveInfinity);
+    }
 
     // bullet's effect
     public void SetProperties(float atk, float speed, Transform target, float slowDur = 0)
     {
         this.atk = atk;
-        this.speed = speed;
-        this.target = target;
+        //this.speed = speed;
+        var distance = target.position - transform.position;
+        distance.z = 0;
+        this.velocity = distance.normalized * speed * 2;
         this.slowDur = slowDur;
+        // rotate toward direction
+        transform.rotation = Quaternion.Euler(0, 0, Quaternion.LookRotation(Vector3.forward, velocity).eulerAngles.z + 90);
     }
 
     // Update is called once per frame
     void Update()
     {
-        // if target is null, destroy bullet
-        if (target == null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        // move bullet to target
-        Vector3 dir = target.position - transform.position;
-        float distanceThisFrame = speed * Time.deltaTime;
-
-        // if bullet reach target, destroy bullet
-        if (dir.magnitude <= HIT_DISTANCE)
-        {
-            HitTarget();
-            return;
-        }
-
         // move bullet
-        transform.position = Vector3.MoveTowards(transform.position, target.position, distanceThisFrame);
-        // rotate toward direction
-        transform.rotation = Quaternion.Euler(0, 0, Quaternion.LookRotation(Vector3.forward, dir).eulerAngles.z + 90);
+        transform.position += velocity * Time.deltaTime;
+        if (Physics2D.OverlapCollider(selfCollider, enemyColliderFilter, cacheCollider) > 0)
+            HitTarget();
     }
 
     private void HitTarget()
     {
+        if (cacheCollider[0] == null || cacheCollider[0].gameObject == null)
+        {
+            cacheCollider[0] = null;
+            return;
+        }
         // get components of target
-        Enemy01_Base enemy = target.GetComponent<Enemy01_Base>();
+        Enemy01_Base enemy = cacheCollider[0].GetComponent<Enemy01_Base>();
 
         // if target is enemy, damage enemy
         if (enemy != null)

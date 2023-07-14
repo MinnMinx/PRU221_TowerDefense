@@ -69,6 +69,10 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            if (Debug.isDebugBuild) {
+                money = 9999;
+            }
+
             playerHp = MAX_HP;
             healthBarBehaviour.SetHealth(Convert.ToSingle(playerHp / MAX_HP));
         }
