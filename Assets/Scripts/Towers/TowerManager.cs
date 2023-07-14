@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static ConfigurationData;
 
+[DefaultExecutionOrder(50)]
 public class TowerManager : MonoBehaviour
 {
     [SerializeField]
@@ -13,10 +13,22 @@ public class TowerManager : MonoBehaviour
     private Canvas parentCanvas;
     [SerializeField]
     private MapController mapController;
-    private Dictionary<Vector3Int, Tower> placedTower;
-    private bool isRemoving;
-    private Vector3Int lastSelectCell;
+    [SerializeField]
+    private GameObject upgradeGroup;
+    [SerializeField]
+    private Button btnChecked;
+    [SerializeField]
+    private Button btnCancel;
+    [SerializeField]
+    private SlotChooserManager slotChooser;
 
+
+    private Dictionary<Vector3Int, Tower> placedTower;
+    private Vector3Int lastSelectCell;
+    private Vector3Int? levelingUpTowerTile;
+    private bool isUpgrading = false;
+    public bool IsTowerUpgrading => isUpgrading;
+    private bool isRemoving;
     public bool IsRemovingTower => isRemoving;
 
     public static string SPAWN_TOWER_EVT = "SPAWN_TOWER_EVT";
@@ -36,6 +48,18 @@ public class TowerManager : MonoBehaviour
             DisableRemoving();
         });
         DisableRemoving();
+        levelingUpTowerTile = null;
+
+        // check if user click button checked to upgrade tower
+        btnChecked.onClick.AddListener(() =>
+        {
+            if (levelingUpTowerTile.HasValue && placedTower.TryGetValue(levelingUpTowerTile.Value, out var tower))
+                tower.UpgradeTower();
+            FinishLevelingUp();
+        });
+
+        // check if user click button cancel to unpause game
+        btnCancel.onClick.AddListener(FinishLevelingUp);
     }
 
     private void Update()
@@ -70,6 +94,38 @@ public class TowerManager : MonoBehaviour
                     }
                 }
             }
+        }
+        else if (Input.GetMouseButtonDown(0) && isUpgrading && !levelingUpTowerTile.HasValue)
+        {
+            var mousePos = Input.mousePosition;
+            mousePos.z = parentCanvas.worldCamera.orthographicSize * 2;
+            if (!slotChooser.isPlacingTower &&
+                mapController.IsPlaceableTile(
+                parentCanvas.worldCamera.ScreenToWorldPoint(mousePos), out _, out var tile) &&
+                placedTower.ContainsKey(tile))
+            {
+                levelingUpTowerTile = tile;
+            }
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (Input.GetMouseButtonUp(0) && levelingUpTowerTile.HasValue && !upgradeGroup.activeInHierarchy)
+        {
+            var mousePos = Input.mousePosition;
+            mousePos.z = parentCanvas.worldCamera.orthographicSize * 2;
+            if (!slotChooser.isPlacingTower &&
+                mapController.IsPlaceableTile(
+                parentCanvas.worldCamera.ScreenToWorldPoint(mousePos), out _, out var tile) &&
+                placedTower.TryGetValue(tile, out var towerData) &&
+                !GameManager.HasNoInstance && GameManager.instance.EnoughMoney(towerData.Level * 100))
+                DisplayCanvasUpgrade();
+        } else if (isUpgrading && !levelingUpTowerTile.HasValue) {
+            levelingUpTowerTile = null;
+            isUpgrading = false;
+            if (upgradeGroup.activeInHierarchy)
+                upgradeGroup.SetActive(false);
         }
     }
 
@@ -110,20 +166,42 @@ public class TowerManager : MonoBehaviour
         previewImg.enabled = false;
     }
 
+    public void OnLevelingClick(bool allow = true) => isUpgrading = allow;
+
+    // Display canvas upgrade
+    private void DisplayCanvasUpgrade()
+    {
+        // pause game
+        Time.timeScale = 0f;
+        // display canvas upgrade
+        upgradeGroup.SetActive(true);
+    }
+
+    public void FinishLevelingUp()
+    {
+        isUpgrading = false;
+        // unpause game
+        Time.timeScale = 1f;
+        levelingUpTowerTile = null;
+        // hide canvas upgrade
+        upgradeGroup.SetActive(false);
+    }
+
     void SaveTower(string evt, params object[] args)
     {
         List<RuntimeTowerData> saveData = new List<RuntimeTowerData>(placedTower.Count);
         foreach(var tower in placedTower)
         {
-            saveData.Add(new RuntimeTowerData
-            {
-                tile = tower.Key,
-                towerId = tower.Value.Id,
-                level = tower.Value.Level,
-                range = tower.Value.Range,
-                cd = tower.Value.CoolDownTime,
-                damage = tower.Value.Damage,
-            });
+            if (tower.Value != null && tower.Value.gameObject != null)
+                saveData.Add(new RuntimeTowerData
+                {
+                    tile = tower.Key,
+                    towerId = tower.Value.Id,
+                    level = tower.Value.Level,
+                    range = tower.Value.Range,
+                    cd = tower.Value.CoolDownTime,
+                    damage = tower.Value.Damage,
+                });
         }
         PlayerPrefs.SetString(PLAYERPREF_SAVEDATA, JsonConvert.SerializeObject(saveData));
         PlayerPrefs.Save();
@@ -133,6 +211,7 @@ public class TowerManager : MonoBehaviour
     {
         if (PlayerPrefs.HasKey(PLAYERPREF_SAVEDATA))
         {
+            Debug.Log(PlayerPrefs.GetString(PLAYERPREF_SAVEDATA));
             var savedTower = JsonConvert.DeserializeObject<RuntimeTowerData[]>(PlayerPrefs.GetString(PLAYERPREF_SAVEDATA));
             if (savedTower != null && savedTower.Length > 0)
             {
@@ -151,13 +230,14 @@ public class TowerManager : MonoBehaviour
                     if (mapController.IsPlaceableTile(tower.tile, out Vector3 spawnPos))
                     {
                         var gameObj = Instantiate(TowerResources.Instance.PrefabList.GetTowerPrefab(tower.towerId), spawnPos, Quaternion.identity);
-                        if (gameObj.GetComponent<Tower>() == null)
+                        var towerComponent = gameObj.GetComponent<Tower>();
+                        if (towerComponent == null)
                         {
                             Destroy(gameObj);
                             continue;
                         }
-                        gameObj.GetComponent<Tower>().LoadOldData(tower.level, tower.damage, tower.range, tower.cd);
-                        placedTower.Add(tower.tile, gameObj.GetComponent<Tower>());
+                        towerComponent.LoadOldData(tower.level, tower.damage, tower.range, tower.cd);
+                        placedTower.Add(tower.tile, towerComponent);
                     }
                 }
             }

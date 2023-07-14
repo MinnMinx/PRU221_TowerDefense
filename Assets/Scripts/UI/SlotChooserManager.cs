@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
+[DefaultExecutionOrder(60)]
 public class SlotChooserManager : MonoBehaviour
 {
     [SerializeField]
@@ -15,12 +16,14 @@ public class SlotChooserManager : MonoBehaviour
     [SerializeField]
     private Canvas parentCanvas;
     private int? prevTowerId;
+    private bool allowSpawn = false;
 
     private const float PREVIEW_ALPHA = 0.4f;
 
     // Start is called before the first frame update
     void Start()
     {
+        prevTowerId = null;
         GameUiEventManager.Instance.RegisterEvent(SlotData.SLOT_CLICK_EVT, OnSlotClick);
         DisablePreviewTower();
         SpawnSlots();
@@ -38,16 +41,21 @@ public class SlotChooserManager : MonoBehaviour
                 Color prevColor = canPlace ? Color.white : Color.red;
                 prevColor.a = canPlace ? PREVIEW_ALPHA : PREVIEW_ALPHA / 2;
                 previewImage.color = prevColor;
-                if (Input.GetMouseButtonDown(0))
+                if (allowSpawn && canPlace)
                 {
-                    if (canPlace)
-                    {
-                        GameManager.instance.SpendNewTower(prevTowerId.Value, tilePos, tileCell);
-                    }
+                    GameManager.instance.SpendNewTower(prevTowerId.Value, tilePos, tileCell);
                     DisablePreviewTower();
                 }
+                else if (allowSpawn)
+                    DisablePreviewTower();
             }
         }
+    }
+
+    private void LateUpdate()
+    {
+        if (allowSpawn)
+            allowSpawn = false;
     }
 
     void SpawnSlots()
@@ -62,7 +70,8 @@ public class SlotChooserManager : MonoBehaviour
                 var tower = ConfigurationData.ListTower.FirstOrDefault(tower => tower.id == towerPrevData[i].towerId);
                 slotData.Init(towerPrevData[i].towerId,
                                 towerPrevData[i].prevSprite,
-                                tower == null ? 0 : tower.cost);
+                                tower == null ? 0 : tower.cost,
+                                this);
             }
         }
     }
@@ -71,6 +80,7 @@ public class SlotChooserManager : MonoBehaviour
     {
         if (!evt.Equals(SlotData.SLOT_CLICK_EVT) || args == null || args.Length < 4)
             return;
+
 
         if (prevTowerId.HasValue)
         {
@@ -89,11 +99,14 @@ public class SlotChooserManager : MonoBehaviour
         previewImage.preserveAspect = true;
     }
 
-    void DisablePreviewTower()
+    public void DisablePreviewTower()
     {
         previewImage.enabled = false;
         prevTowerId = null;
+        allowSpawn = false;
     }
 
     public bool isPlacingTower => prevTowerId.HasValue;
+
+    public void OnSlotChooserClick(bool allowSpawn = true) => this.allowSpawn = allowSpawn;
 }

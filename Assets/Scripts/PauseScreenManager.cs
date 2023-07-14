@@ -17,6 +17,8 @@ public class PauseScreenManager : MonoBehaviour
     private Slider volumeSlider;
     [SerializeField]
     private AudioSource bgmSrc;
+    [SerializeField]
+    private TowerManager towerMng;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +33,7 @@ public class PauseScreenManager : MonoBehaviour
 
     void OnClickPauseBtn()
     {
+        towerMng.FinishLevelingUp();
         parent.SetActive(true);
         loadSaveBtn.interactable = GameManager.ExistSaveData();
         bool allowSave = GameManager.instance.score > 0;
@@ -77,6 +80,8 @@ public class PauseScreenManager : MonoBehaviour
     private void OnApplicationFocus(bool focus)
     {
         if (!focus)
+        {
             OnClickPauseBtn();
+        }
     }
 }
