@@ -137,18 +137,9 @@ public class Tower : MonoBehaviour
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             // check if mouse position is in range of tower
-            if (upgradeCollider.OverlapPoint(mousePosition) && Vector2.Distance(mousePosition, transform.position) < 0.5f && GameManager.instance.EnoughMoney(cost * (level + 1) / 4))
+            if (upgradeCollider.OverlapPoint(mousePosition) && GameManager.instance.EnoughMoney(level * 100))
             {
                 DisplayCanvasUpgrade();
-
-                // check if user click button checked to upgrade tower
-                btnChecked.onClick.AddListener(() => UpgradeTower());
-
-                // check if user click button cancel to unpause game
-                btnCancel.onClick.AddListener(() => UnPauseGame());
-
-
-
             }
         }
     }
@@ -167,14 +158,14 @@ public class Tower : MonoBehaviour
     private void UpgradeTower()
     {
         // take money from player
-        GameManager.instance.TakeMoney(cost * (level + 1) / 4);
+        GameManager.instance.TakeMoney(level * 100);
         // upgrade tower
         level++;
-        cost += cost * level / 4;
-        damage += 10;
-        damage += 10;
+        //cost += 100;
+        damage += 20;
         range += level > 3 ? 0 : 0.5f;
-        muzzleSpeed += level > 3 ? 0 : 5f;
+        GetComponent<CircleCollider2D>().radius = range;
+        coolDownTime *= coolDownTime <= 0.8f ? 1f : 0.7f;
 
         // add effect to tower after upgrade
         if (level == 2)
@@ -196,16 +187,26 @@ public class Tower : MonoBehaviour
 
         // unpause game
         UnPauseGame();
-
     }
+
+    public void LoadOldData(int level, int damage, float range, float cooldownTime)
+    {
+        if (level > 0)
+            this.level = level;
+        if (damage > 0)
+            this.damage = damage;
+        if (range > 0)
+            this.range = range;
+        if (cooldownTime > 0)
+            coolDownTime = cooldownTime;
+    }
+
     private void UnPauseGame()
     {
         // unpause game
         Time.timeScale = 1f;
         // hide canvas upgrade
         upgradeLevel.gameObject.SetActive(false);
-        // remove listener
-        btnChecked.onClick.RemoveAllListeners();
         // set movement of camera
         GameUiEventManager.Instance.Notify(CameraMovement.CAMERA_SET_MOVEMENT, true);
     }
@@ -294,6 +295,12 @@ public class Tower : MonoBehaviour
 
         // set radius of collider
         circleCollider2D.radius = range;
+
+        // check if user click button checked to upgrade tower
+        btnChecked.onClick.AddListener(UpgradeTower);
+
+        // check if user click button cancel to unpause game
+        btnCancel.onClick.AddListener(UnPauseGame);
     }
 
     /// <summary>
@@ -313,14 +320,6 @@ public class Tower : MonoBehaviour
             canShoot = false;
             cooldownTimer.Run();
 
-            // get first enemy in range
-            //GameObject target = targetInRange[0];
-            //if (target != null)
-            //{
-            //    // stop animation
-            //    animIdle.Play("Idle", 0, 0);
-            //    FireAt(target.transform);
-            //}
             Transform nearestTarget = null;
             for (int i = 0; i < targetInRange.Count; i++)
             {

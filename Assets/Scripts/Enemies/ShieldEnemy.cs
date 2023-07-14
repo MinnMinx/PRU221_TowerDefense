@@ -8,6 +8,7 @@ namespace Enemy
     {
         public bool IsActive { get; private set; }
         public bool IsActivedEnable { get; set; }
+        public ParticleSystem shieldFx;
 
         private float duration;
         private void Awake()
@@ -20,6 +21,8 @@ namespace Enemy
             IsActive = true;
             this.duration = duration;
             IsActivedEnable = true;
+            if (shieldFx != null)
+                shieldFx.Play();
             // Các thao tác để kích hoạt Shield
         }
 
@@ -39,6 +42,8 @@ namespace Enemy
         {
             IsActive = false;
             duration = 0f;
+            if (shieldFx != null)
+                shieldFx.Stop(true, ParticleSystemStopBehavior.StopEmitting);
             // Các thao tác để huỷ kích hoạt Shield
         }
     }

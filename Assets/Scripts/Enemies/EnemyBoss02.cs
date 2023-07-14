@@ -6,6 +6,8 @@ namespace Enemy
 {
     public class EnemyBoss02 : Enemy01_Base
     {
+        [SerializeField]
+        ParticleSystem shieldFx;
         ShieldEnemy sheldEnemy;
         protected override void Awake()
         {
@@ -15,6 +17,7 @@ namespace Enemy
             Money = 100;
 
             sheldEnemy = gameObject.AddComponent<ShieldEnemy>();
+            sheldEnemy.shieldFx = shieldFx;
             base.Awake();
         }
 
