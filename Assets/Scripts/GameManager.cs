@@ -112,6 +112,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public decimal GetMoney()
+    {
+        return money;
+    }
+
     public bool SpendMoney(int count)
     {
         if (money >= count)
@@ -126,6 +131,27 @@ public class GameManager : MonoBehaviour
             GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_INSUFFICIENT);
             return false;
         }
+    }
+
+    public bool EnoughMoney(int count)
+    {
+        if (money >= count)
+        {
+            GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_UPDATE_VIEW, money);
+            return true;
+        }
+        else
+        {
+            // not enough money
+            GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_INSUFFICIENT);
+            return false;
+        }
+    }
+
+    public void TakeMoney(int count)
+    {
+        money -= count;
+        GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_UPDATE_VIEW, money);
     }
 
     public static void LoadGame()
