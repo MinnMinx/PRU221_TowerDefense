@@ -216,13 +216,13 @@ namespace Enemy
                 largeWave = new List<List<string>>(),
             };
 
-            if (!largeWave.First().smallWave.Select(x => x.name).Contains("Boss")
-                && largeWave.First().smallWave.Count > 0
-                && largeWave.First().smallWave.Count < numberEnemy)
+            if (!wave.smallWave.Select(x => x.name).Contains("Boss")
+                && wave.smallWave.Count > 0
+                && wave.smallWave.Count < numberEnemy)
             {
                 List<string> string1 = new List<string>();
                 string1.AddRange(spawned.Select(x => x.name));
-                foreach (var item in largeWave.Dequeue().smallWave)
+                foreach (var item in wave.smallWave)
                 {
                     string1.Add(item.name);
                 }
