@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class SlotData : MonoBehaviour, IPointerClickHandler
 {
-    private SlotChooserManager manager;
     private int towerId;
     private Sprite previewSpr;
     private int cost;
@@ -20,12 +19,11 @@ public class SlotData : MonoBehaviour, IPointerClickHandler
     public static string SLOT_CLICK_EVT = "SLOT_CLICK_EVT";
 
     // Start is called before the first frame update
-    public void Init(int towerId, Sprite previewSpr, int cost, SlotChooserManager manager)
+    public void Init(int towerId, Sprite previewSpr, int cost)
     {
         this.towerId = towerId;
         this.previewSpr = previewSpr;
         this.cost = cost;
-        this.manager = manager;
         try
         {
             prevImage.sprite = previewSpr;
@@ -39,6 +37,6 @@ public class SlotData : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        GameUiEventManager.Instance.Notify(SLOT_CLICK_EVT, towerId, cost, previewSpr, eventData);
+        GameEventManager.Instance.Notify(SLOT_CLICK_EVT, towerId, cost, previewSpr, eventData);
     }
 }

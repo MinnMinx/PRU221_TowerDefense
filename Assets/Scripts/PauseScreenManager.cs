@@ -65,7 +65,7 @@ public class PauseScreenManager : MonoBehaviour
         {
             // Save game
             GameManager.SaveGame();
-            GameUiEventManager.Instance.Clear();
+            GameEventManager.Instance.Clear();
             Destroy(GameManager.instance.gameObject);
             SceneManager.LoadScene("MainMenu");
         }
