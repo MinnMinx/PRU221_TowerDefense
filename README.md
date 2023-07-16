@@ -45,6 +45,5 @@ This project was developed as part of the PRU221 course at FPT University. Speci
 
 ## Contact
 For any inquiries or questions, please contact the project maintainer:
-
-Name: Nguyen Thien Minh
-Email: minhnthe163336@fpt.edu.vn
+- Name: Nguyen Thien Minh
+- Email: minhnthe163336@fpt.edu.vn
