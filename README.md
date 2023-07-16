@@ -36,7 +36,7 @@ git clone https://github.com/MinnMinx/PRU221_TowerDefense.git
 - Earn money by defeating enemies, and use it to purchase new towers or upgrade existing ones.
 - Survive waves of enemies and protect your base to win the game.
 
-##Used Assets
+## Used Assets
 - DungeonTilesetII by 0x72 (https://0x72.itch.io/dungeontileset-ii)
 - Free Effect and Bullet 16x16 by BDragon1727 (https://bdragon1727.itch.io/free-effect-and-bullet-16x16)
 - SmallBurg - Village Pack by almostApixel (https://almostapixel.itch.io/small-burg-village-pack)
