@@ -16,7 +16,6 @@ PRU221 Tower Defense is a Tower Defense game developed using Unity 2D. It is a c
 - Game over screen with score display
 
 # Getting Started
-
 ## Prerequisites
 To run and modify the project, you need to have the following software installed:
 - Unity 2019.4 or later
@@ -49,4 +48,3 @@ For any inquiries or questions, please contact the project maintainer:
 
 Name: Nguyen Thien Minh
 Email: minhnthe163336@fpt.edu.vn
-Feel free to reach out with any questions or feedback regarding the project.
