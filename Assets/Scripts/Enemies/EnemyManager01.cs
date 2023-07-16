@@ -132,6 +132,7 @@ namespace Enemy
                     GameManager.instance.GainScore(enemy.Money * numberWave);
                     enemy.OnDespawn();
                     enemyDead.Play();
+                    enemyDead.volume = 0.25f;
                 }
                 // địch chạm base
                 else if (enemy.DealDamage(basePositon.position))
@@ -141,6 +142,7 @@ namespace Enemy
                     GameManager.instance.TakeDamage(enemy.Atk);
                     enemy.OnDespawn();
                     enemyDead.Play();
+                    enemyDead.volume = 0.25f;
                 }
             }
 

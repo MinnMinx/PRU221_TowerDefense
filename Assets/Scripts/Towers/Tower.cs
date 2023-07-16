@@ -20,6 +20,7 @@ public class Tower : MonoBehaviour
     protected bool lv3Slow = false;
     [SerializeField]
     protected bool lv2Slow = false;
+    
 
     // list of enemies in range
     private List<GameObject> targetInRange;
@@ -31,6 +32,9 @@ public class Tower : MonoBehaviour
 
     public GameObject effectLevel2;
     public GameObject effectLevel3;
+    public AudioClip shootLv1;
+    public AudioClip shootLv2;
+    public AudioClip shootLv3;
     #endregion
 
     #region Properties
@@ -177,18 +181,25 @@ public class Tower : MonoBehaviour
     /// <param name="target"></param>
     private void FireAt(Transform target)
     {
+        
         // Instantiate bullet base on each level and follow direction
         GameObject bullet;
         if (level == 2)
         {
+            // Play audio
+            AudioSource.PlayClipAtPoint(shootLv2, transform.position);
             bullet = Instantiate(bulletLevel2, transform.position, Quaternion.identity);
         }
         else if (level >= 3)
         {
+            // Play audio
+            AudioSource.PlayClipAtPoint(shootLv3, transform.position);
             bullet = Instantiate(bulletLevel3, transform.position, Quaternion.identity);
         }
         else
         {
+            // Play audio
+            AudioSource.PlayClipAtPoint(shootLv1, transform.position);
             bullet = Instantiate(bulletLevel1, transform.position, Quaternion.identity);
         }
 
