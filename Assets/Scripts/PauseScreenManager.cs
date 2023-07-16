@@ -71,7 +71,6 @@ public class PauseScreenManager : MonoBehaviour
         }
         else
         {
-            GameUiEventManager.Instance.Clear();
             Destroy(GameManager.instance.gameObject);
             GameManager.instance.GoToScoreScreen();
         }

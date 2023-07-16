@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class TowerManager : MonoBehaviour
 {
     [SerializeField]
-    private Image previewImg;
+    private GameObject previewImg;
     [SerializeField]
     private Canvas parentCanvas;
     [SerializeField]
@@ -28,7 +28,7 @@ public class TowerManager : MonoBehaviour
     private Vector3Int? levelingUpTowerTile;
     private bool isUpgrading = false;
     public bool IsTowerUpgrading => isUpgrading;
-    private bool isRemoving;
+    private bool isRemoving = false;
     public bool IsRemovingTower => isRemoving;
 
     public static string SPAWN_TOWER_EVT = "SPAWN_TOWER_EVT";
@@ -47,7 +47,6 @@ public class TowerManager : MonoBehaviour
         {
             DisableRemoving();
         });
-        DisableRemoving();
         levelingUpTowerTile = null;
 
         // check if user click button checked to upgrade tower
@@ -156,14 +155,15 @@ public class TowerManager : MonoBehaviour
         else
         {
             isRemoving = true;
-            previewImg.enabled = true;
+            previewImg.SetActive(true);
         }
     }
 
     void DisableRemoving()
     {
         isRemoving = false;
-        previewImg.enabled = false;
+        //if (previewImg != null)
+            previewImg.SetActive(false);
     }
 
     public void OnLevelingClick(bool allow = true) => isUpgrading = allow;
