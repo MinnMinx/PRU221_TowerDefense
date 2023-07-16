@@ -40,10 +40,10 @@ public class TowerManager : MonoBehaviour
     void Start()
     {
         placedTower = new Dictionary<Vector3Int, Tower>();
-        GameUiEventManager.Instance.RegisterEvent(SPAWN_TOWER_EVT, SpawnTower);
-        GameUiEventManager.Instance.RegisterEvent(SAVE_TOWER_EVT, SaveTower);
-        GameUiEventManager.Instance.RegisterEvent(LOAD_TOWER_EVT, LoadTower);
-        GameUiEventManager.Instance.RegisterEvent(SlotData.SLOT_CLICK_EVT, delegate
+        GameEventManager.Instance.RegisterEvent(SPAWN_TOWER_EVT, SpawnTower);
+        GameEventManager.Instance.RegisterEvent(SAVE_TOWER_EVT, SaveTower);
+        GameEventManager.Instance.RegisterEvent(LOAD_TOWER_EVT, LoadTower);
+        GameEventManager.Instance.RegisterEvent(SlotData.SLOT_CLICK_EVT, delegate
         {
             DisableRemoving();
         });

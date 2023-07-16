@@ -72,8 +72,8 @@ namespace Enemy
             SpawnWave();
             wave = largeWave.Dequeue();
 
-            GameUiEventManager.Instance.RegisterEvent(SAVE_ENEMY_EVT, (s, o) => SaveEnemyData());
-            GameUiEventManager.Instance.RegisterEvent(LOAD_ENEMY_EVT, (s, o) => LoadEnemyData());
+            GameEventManager.Instance.RegisterEvent(SAVE_ENEMY_EVT, (s, o) => SaveEnemyData());
+            GameEventManager.Instance.RegisterEvent(LOAD_ENEMY_EVT, (s, o) => LoadEnemyData());
         }
 
         // Update is called once per frame
