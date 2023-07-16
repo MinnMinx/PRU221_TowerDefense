@@ -196,6 +196,7 @@ public class GameManager : MonoBehaviour
     }
     public void GoToScoreScreen()
     {
+        GameUiEventManager.Instance.Clear();
         if (this.score > 0)
         {
             List<string> score = JsonConvert.DeserializeObject<List<string>>(PlayerPrefs.GetString("ScoreList"));
