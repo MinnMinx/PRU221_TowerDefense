@@ -37,6 +37,11 @@ public class MenuManager : MonoBehaviour
         StartCoroutine(LoadToScreen("HighScore"));
     }
 
+    public void About()
+    {
+         
+    }
+
     public void QuitGame()
     {
 #if UNITY_STANDALONE
