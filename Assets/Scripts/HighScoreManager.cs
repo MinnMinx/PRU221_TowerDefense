@@ -44,7 +44,7 @@ public class HighScoreManager : MonoBehaviour
                 Transform entryTransform = Instantiate(_highScoreTemplate, _highScoreTemplateContainer);
                 RectTransform entryRectTransform = entryTransform.GetComponent<RectTransform>();
 
-                entryRectTransform.anchoredPosition = new Vector2(0, -25.5f * i);
+                entryRectTransform.anchoredPosition = new Vector2(0, -50f * i);
                 entryTransform.gameObject.SetActive(true);
 
 
