@@ -1,17 +1,15 @@
+using UnityEngine.Networking;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class ConfigurationData
+public class ConfigurationData : MonoBehaviour
 {
-    // List of towers
     private static List<Towers> towersList;
+    private const string configurationFileName = "ConfigurationData.json";
 
-    /// <summary>
-    /// If the inner list isn't load, load data
-    /// </summary>
     public static List<Towers> ListTower
     {
         get
@@ -22,34 +20,64 @@ public class ConfigurationData
         }
     }
 
-    /// <summary>
-    /// Load the configuration tower data to the list
-    /// </summary>
-    //public static void Initialize()
-    //{
-    //    LoadData();
-    //}
-
-    /// <summary>
-    /// Load the configuration tower data from the json file
-    /// </summary>
     private static void LoadData()
     {
-        // load all tower data from ConfigurationData.json
-        string json = System.IO.File.ReadAllText(Application.streamingAssetsPath + "/ConfigurationData.json");
+#if UNITY_EDITOR
+        string path = "Assets/StreamingAssets/" + configurationFileName;
+#else
+        string path = Path.Combine(Application.streamingAssetsPath, configurationFileName);
+#endif
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+        UnityWebRequest www = UnityWebRequest.Get(path);
+        www.SendWebRequest().completed += operation =>
+        {
+            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.LogError("Error loading data: " + www.error);
+            }
+            else
+            {
+                try
+                {
+                    string json = www.downloadHandler.text;
+                    towersList = JsonUtility.FromJson<Serialization<Towers>>(json)?.listTower;
+
+                    if (towersList == null)
+                    {
+                        Debug.LogError("Error deserializing data: Unable to parse JSON or missing required fields.");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("Error loading data: " + e.Message);
+                }
+            }
+        };
+#else
+        LoadDataFromFile(path);
+#endif
+    }
+
+    private static void LoadDataFromFile(string path)
+    {
         try
         {
-            towersList = JsonUtility.FromJson<Serialization<Towers>>(json).ToList();
+            string json = File.ReadAllText(path);
+            towersList = JsonUtility.FromJson<Serialization<Towers>>(json)?.listTower;
+
+            if (towersList == null)
+            {
+                Debug.LogError("Error deserializing data: Unable to parse JSON or missing required fields.");
+            }
         }
         catch (Exception e)
         {
-            Debug.Log("Error loading data: " + e.Message);
+            Debug.LogError("Error loading data: " + e.Message);
         }
     }
 
-    // A generic wrapper class to help with JSON serialization
-    [System.Serializable]
+    [Serializable]
     private class Serialization<T>
     {
         public List<T> listTower;
@@ -57,16 +85,6 @@ public class ConfigurationData
         public Serialization()
         {
             listTower = new List<T>();
-        }
-
-        public Serialization(List<T> list)
-        {
-            this.listTower = list;
-        }
-
-        public List<T> ToList()
-        {
-            return listTower;
         }
     }
 
