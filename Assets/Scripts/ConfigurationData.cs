@@ -23,26 +23,22 @@ public class ConfigurationData : MonoBehaviour
     private static void LoadData()
     {
         string path = Path.Combine(Application.streamingAssetsPath, configurationFileName);
-
         if (path.Contains("://"))
         {
             UnityWebRequest www = UnityWebRequest.Get(path);
             www.downloadHandler = new DownloadHandlerBuffer();
             www.timeout = 180;
             var asyncOp = www.SendWebRequest();
-            asyncOp.completed += operation =>
-            {
-                if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
-                {
-                    Debug.LogError("Error loading data: " + www.error);
-                }
-                else
-                {
-                    LoadData(www.downloadHandler.text);
-                }
-            };
             while (!asyncOp.isDone) ;
-            www.Dispose();
+            if (asyncOp.webRequest.result == UnityWebRequest.Result.ConnectionError ||
+                asyncOp.webRequest.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.LogError("Error loading data: " + www.error);
+                UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+                return;
+            }
+            LoadData(asyncOp.webRequest.downloadHandler.text);
+            asyncOp.webRequest.Dispose();
         }
         else
         {
