@@ -24,13 +24,9 @@ To run and modify the project, you need to have the following software installed
 Installation
 ------------
 
-Use go get.
+Use git clone.
 
 	git clone https://github.com/MinnMinx/PRU221_TowerDefense.git
-
-Then import the form package into your own code.
-
-	import "github.com/go-playground/form/v4"
 
 ## How to Play
 - Open the project in Unity.
