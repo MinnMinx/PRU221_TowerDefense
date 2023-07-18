@@ -20,11 +20,11 @@ PRU221 Tower Defense is a Tower Defense game developed using Unity 2D. It is a c
 To run and modify the project, you need to have the following software installed:
 - Unity 2019.4 or later
 - Git (optional, for cloning the repository)
-  
+
 ## Installation
 - Clone the repository using Git or download the ZIP file: 
 
-    git clone https://github.com/MinnMinx/PRU221_TowerDefense.git
+	go get github.com/go-playground/form
 
 - Open Unity Hub and click on "Add" to select the cloned repository's folder.
 - Select the added project from the Unity Hub and click "Open" to launch it in Unity.
