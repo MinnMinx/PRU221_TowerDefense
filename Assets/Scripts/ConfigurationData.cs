@@ -9,49 +9,22 @@ using UnityEngine.AddressableAssets;
 public class ConfigurationData : MonoBehaviour
 {
     private static List<Towers> towersList;
-    private const string configurationFileName = "ConfigurationData.json";
-    public const string ADDRESSABLE_KEY = "TowerConfiguration";
+    private const string CONFIG_NAME = "ConfigurationData";
 
     public static List<Towers> ListTower
     {
         get
         {
             if (towersList == null)
-                LoadData();
+            {
+                var textAsset = Resources.Load<TextAsset>(CONFIG_NAME);
+                LoadData(textAsset.text);
+            }
             return towersList;
         }
     }
 
-    private static void LoadData()
-    {
-        string path = Path.Combine(Application.streamingAssetsPath, configurationFileName);
-        if (path.Contains("://"))
-        {
-            //UnityWebRequest www = UnityWebRequest.Get(path);
-            //www.downloadHandler = new DownloadHandlerBuffer();
-            //www.timeout = 180;
-            //var asyncOp = www.SendWebRequest();
-            //while (!asyncOp.isDone) ;
-            //if (asyncOp.webRequest.result == UnityWebRequest.Result.ConnectionError ||
-            //    asyncOp.webRequest.result == UnityWebRequest.Result.ProtocolError)
-            //{
-            //    Debug.LogError("Error loading data: " + www.error);
-            //    UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
-            //    return;
-            //}
-            //LoadData(asyncOp.webRequest.downloadHandler.text);
-            //asyncOp.webRequest.Dispose();
-
-            LoadData(PlayerPrefs.GetString(ADDRESSABLE_KEY));
-            PlayerPrefs.DeleteKey(ADDRESSABLE_KEY);
-        }
-        else
-        {
-            LoadData(File.ReadAllText(path));
-        }
-    }
-
-    private static void LoadData(string json)
+    public static void LoadData(string json)
     {
         try
         {

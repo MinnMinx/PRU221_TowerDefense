@@ -66,22 +66,6 @@ public class MenuManager : MonoBehaviour
             yield return null;
             loadingSlider.value = Mathf.MoveTowards(loadingSlider.value, asyncOp.isDone ? 1f : asyncOp.progress / 0.9f, lerpMultipler * Time.deltaTime);
         }
-#if UNITY_WEBGL
-        if (sceneName.Equals("Gameplay"))
-        {
-            var opHandle = Addressables.LoadAssetAsync<TextAsset>(ConfigurationData.ADDRESSABLE_KEY);
-            yield return opHandle;
-            if (opHandle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
-            {
-                PlayerPrefs.SetString(ConfigurationData.ADDRESSABLE_KEY, opHandle.Result.text);
-            }
-            else
-            {
-                Debug.LogError("Cannot load Addressable");
-                yield break;
-            }
-        }
-#endif
         asyncOp.allowSceneActivation = true;
         loadingGroup.alpha = 0f;
         loadingGroup.blocksRaycasts = false;
