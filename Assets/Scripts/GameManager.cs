@@ -99,7 +99,7 @@ public class GameManager : MonoBehaviour
     public void GainMoney(decimal money)
     {
         this.money += money;
-        GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_GAIN, (float)money);
+        GameEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_GAIN, (float)money);
     }
 
     public void GainScore(decimal score)
@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour
         var tower = ConfigurationData.ListTower.FirstOrDefault(tower => tower.id == towerId);
         if (tower != null && SpendMoney(tower.cost))
         {
-            GameUiEventManager.Instance.Notify(TowerManager.SPAWN_TOWER_EVT, towerId, tilePos, tileCell);
+            GameEventManager.Instance.Notify(TowerManager.SPAWN_TOWER_EVT, towerId, tilePos, tileCell);
         }
     }
 
@@ -126,13 +126,13 @@ public class GameManager : MonoBehaviour
         if (money >= count)
         {
             money -= count;
-            GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_UPDATE_VIEW, money);
+            GameEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_UPDATE_VIEW, money);
             return true;
         }
         else
         {
             // not enough money
-            GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_INSUFFICIENT);
+            GameEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_INSUFFICIENT);
             return false;
         }
     }
@@ -141,13 +141,13 @@ public class GameManager : MonoBehaviour
     {
         if (money >= count)
         {
-            GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_UPDATE_VIEW, money);
+            GameEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_UPDATE_VIEW, money);
             return true;
         }
         else
         {
             // not enough money
-            GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_INSUFFICIENT);
+            GameEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_INSUFFICIENT);
             return false;
         }
     }
@@ -155,24 +155,24 @@ public class GameManager : MonoBehaviour
     public void TakeMoney(int count)
     {
         money -= count;
-        GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_UPDATE_VIEW, money);
+        GameEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_UPDATE_VIEW, money);
     }
 
     public static void LoadGame()
     {
-        GameUiEventManager.Instance.Notify(TowerManager.LOAD_TOWER_EVT);
-        GameUiEventManager.Instance.Notify(EnemyManager01.LOAD_ENEMY_EVT);
+        GameEventManager.Instance.Notify(TowerManager.LOAD_TOWER_EVT);
+        GameEventManager.Instance.Notify(EnemyManager01.LOAD_ENEMY_EVT);
         instance.score = PlayerPrefs.HasKey("saved_score") ? (decimal)PlayerPrefs.GetFloat("saved_score") : 0;
         instance.money = PlayerPrefs.HasKey("saved_money") ? (decimal)PlayerPrefs.GetFloat("saved_money") : STARTING_MONEY;
-        GameUiEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_UPDATE_VIEW, instance.money);
+        GameEventManager.Instance.Notify(MoneyViewBehavior.EVT_MONEY_UPDATE_VIEW, instance.money);
         instance.playerHp = PlayerPrefs.HasKey("saved_hp") ? (decimal)PlayerPrefs.GetFloat("saved_hp") : MAX_HP;
         instance.healthBarBehaviour.SetHealth(Convert.ToSingle(instance.playerHp / MAX_HP));
     }
 
     public static void SaveGame()
     {
-        GameUiEventManager.Instance.Notify(TowerManager.SAVE_TOWER_EVT);
-        GameUiEventManager.Instance.Notify(EnemyManager01.SAVE_ENEMY_EVT);
+        GameEventManager.Instance.Notify(TowerManager.SAVE_TOWER_EVT);
+        GameEventManager.Instance.Notify(EnemyManager01.SAVE_ENEMY_EVT);
         PlayerPrefs.SetFloat("saved_score", (float)instance.score);
         PlayerPrefs.SetFloat("saved_money", (float)instance.money);
         PlayerPrefs.SetFloat("saved_hp", (float)instance.playerHp);
@@ -196,7 +196,7 @@ public class GameManager : MonoBehaviour
     }
     public void GoToScoreScreen()
     {
-        GameUiEventManager.Instance.Clear();
+        GameEventManager.Instance.Clear();
         if (this.score > 0)
         {
             List<string> score = JsonConvert.DeserializeObject<List<string>>(PlayerPrefs.GetString("ScoreList"));

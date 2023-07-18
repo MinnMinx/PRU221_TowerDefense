@@ -22,9 +22,9 @@ public class MoneyViewBehavior : MonoBehaviour
     {
         moneyLbl.text = GameManager.instance.money.ToString();
         gainFxBurst = gainMoneyEffect.emission.GetBurst(0);
-        GameUiEventManager.Instance.RegisterEvent(EVT_MONEY_GAIN, OnGainMoney);
-        GameUiEventManager.Instance.RegisterEvent(EVT_MONEY_INSUFFICIENT, OnNotifyMoneyInsufficient);
-        GameUiEventManager.Instance.RegisterEvent(EVT_MONEY_UPDATE_VIEW, OnUpdateLabel);
+        GameEventManager.Instance.RegisterEvent(EVT_MONEY_GAIN, OnGainMoney);
+        GameEventManager.Instance.RegisterEvent(EVT_MONEY_INSUFFICIENT, OnNotifyMoneyInsufficient);
+        GameEventManager.Instance.RegisterEvent(EVT_MONEY_UPDATE_VIEW, OnUpdateLabel);
     }
 
     void OnNotifyMoneyInsufficient(string evt, params object[] args)

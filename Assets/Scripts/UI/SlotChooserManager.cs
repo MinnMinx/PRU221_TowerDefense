@@ -24,7 +24,7 @@ public class SlotChooserManager : MonoBehaviour
     void Start()
     {
         prevTowerId = null;
-        GameUiEventManager.Instance.RegisterEvent(SlotData.SLOT_CLICK_EVT, OnSlotClick);
+        GameEventManager.Instance.RegisterEvent(SlotData.SLOT_CLICK_EVT, OnSlotClick);
         DisablePreviewTower();
         SpawnSlots();
     }
@@ -70,8 +70,7 @@ public class SlotChooserManager : MonoBehaviour
                 var tower = ConfigurationData.ListTower.FirstOrDefault(tower => tower.id == towerPrevData[i].towerId);
                 slotData.Init(towerPrevData[i].towerId,
                                 towerPrevData[i].prevSprite,
-                                tower == null ? 0 : tower.cost,
-                                this);
+                                tower == null ? 0 : tower.cost);
             }
         }
     }
@@ -92,7 +91,7 @@ public class SlotChooserManager : MonoBehaviour
         int cost = (int)args[1];
         Sprite prevImg = (Sprite)args[2];
 
-        GameUiEventManager.Instance.Notify(CameraMovement.CAMERA_SET_MOVEMENT, false);
+        GameEventManager.Instance.Notify(CameraMovement.CAMERA_SET_MOVEMENT, false);
         prevTowerId = towerId;
         previewImage.enabled = true;
         previewImage.sprite = prevImg;

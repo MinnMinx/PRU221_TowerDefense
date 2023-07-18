@@ -20,7 +20,7 @@ public class CameraMovement : MonoBehaviour
     {
         mainCam = Camera.main;
         //_allowScroll = false;
-        GameUiEventManager.Instance.RegisterEvent(CAMERA_SET_MOVEMENT, SetMovementEvent);
+        GameEventManager.Instance.RegisterEvent(CAMERA_SET_MOVEMENT, SetMovementEvent);
     }
 
     private void Update()

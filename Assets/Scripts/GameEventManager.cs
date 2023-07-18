@@ -3,16 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameUiEventManager
+public class GameEventManager
 {
-    private static GameUiEventManager instance;
-    public static GameUiEventManager Instance
+    private static GameEventManager instance;
+    public static GameEventManager Instance
     {
         get
         {
             if (instance == null)
             {
-                instance = new GameUiEventManager();
+                instance = new GameEventManager();
             }
             return instance;
         }

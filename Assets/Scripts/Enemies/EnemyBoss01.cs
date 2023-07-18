@@ -18,7 +18,7 @@ namespace Enemy
         {
             if (Hp < Hp / 2)
             {
-                Speed = 1f;
+                Speed = 2f;
             }
             return base.OnUpdate(deltaTime);
         }
