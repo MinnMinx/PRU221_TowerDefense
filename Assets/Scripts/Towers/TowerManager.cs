@@ -159,7 +159,7 @@ public class TowerManager : MonoBehaviour
         }
     }
 
-    void DisableRemoving()
+    public void DisableRemoving()
     {
         isRemoving = false;
         //if (previewImg != null)

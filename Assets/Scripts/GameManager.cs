@@ -185,7 +185,7 @@ public class GameManager : MonoBehaviour
                 PlayerPrefs.HasKey("saved_money") &&
                 PlayerPrefs.HasKey("saved_hp") &&
                 PlayerPrefs.HasKey(TowerManager.PLAYERPREF_SAVEDATA) &&
-                System.IO.File.Exists(Application.streamingAssetsPath + "/EnemyData.json");
+                PlayerPrefs.HasKey(EnemyManager01.PLAYER_PREF_NAME);
     }
 
     public void GameOver()

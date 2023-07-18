@@ -1,55 +1,47 @@
+using UnityEngine.Networking;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
-public class ConfigurationData
+public class ConfigurationData : MonoBehaviour
 {
-    // List of towers
     private static List<Towers> towersList;
+    private const string CONFIG_NAME = "ConfigurationData";
 
-    /// <summary>
-    /// If the inner list isn't load, load data
-    /// </summary>
     public static List<Towers> ListTower
     {
         get
         {
             if (towersList == null)
-                LoadData();
+            {
+                var textAsset = Resources.Load<TextAsset>(CONFIG_NAME);
+                LoadData(textAsset.text);
+            }
             return towersList;
         }
     }
 
-    /// <summary>
-    /// Load the configuration tower data to the list
-    /// </summary>
-    //public static void Initialize()
-    //{
-    //    LoadData();
-    //}
-
-    /// <summary>
-    /// Load the configuration tower data from the json file
-    /// </summary>
-    private static void LoadData()
+    public static void LoadData(string json)
     {
-        // load all tower data from ConfigurationData.json
-        string json = System.IO.File.ReadAllText(Application.streamingAssetsPath + "/ConfigurationData.json");
-
         try
         {
-            towersList = JsonUtility.FromJson<Serialization<Towers>>(json).ToList();
+            towersList = JsonUtility.FromJson<Serialization<Towers>>(json)?.listTower;
+
+            if (towersList == null)
+            {
+                Debug.LogError("Error deserializing data: Unable to parse JSON or missing required fields.");
+            }
         }
         catch (Exception e)
         {
-            Debug.Log("Error loading data: " + e.Message);
+            Debug.LogError("Error loading data: " + e.Message);
         }
     }
 
-    // A generic wrapper class to help with JSON serialization
-    [System.Serializable]
+    [Serializable]
     private class Serialization<T>
     {
         public List<T> listTower;
@@ -57,16 +49,6 @@ public class ConfigurationData
         public Serialization()
         {
             listTower = new List<T>();
-        }
-
-        public Serialization(List<T> list)
-        {
-            this.listTower = list;
-        }
-
-        public List<T> ToList()
-        {
-            return listTower;
         }
     }
 

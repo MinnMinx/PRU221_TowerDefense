@@ -61,6 +61,7 @@ namespace Enemy
 
         public static string SAVE_ENEMY_EVT = "SAVE_ENEMY_EVT";
         public static string LOAD_ENEMY_EVT = "LOAD_ENEMY_EVT";
+        public static string PLAYER_PREF_NAME = "saved_enemy";
 
         // Start is called before the first frame update
         void Start()
@@ -244,13 +245,14 @@ namespace Enemy
                 data.largeWave.Add(list2.Select(enemy => enemy.name).ToList());
             }
 
-            string filePath = Application.streamingAssetsPath + "/EnemyData.json";
+            //string filePath = Application.streamingAssetsPath + "/EnemyData.json";
             string jsonData = JsonConvert.SerializeObject(data);
 
             // Ghi dữ liệu vào tệp tin
-            StreamWriter sw = new StreamWriter(filePath);
-            sw.Write(jsonData);
-            sw.Close();
+            //StreamWriter sw = new StreamWriter(filePath);
+            //sw.Write(jsonData);
+            //sw.Close();
+            PlayerPrefs.SetString(PLAYER_PREF_NAME, jsonData);
         }
 
         public void LoadEnemyData()
@@ -261,8 +263,9 @@ namespace Enemy
                 allEnemy.AddRange(special);
                 allEnemy.AddRange(bosses);
 
-                string filePath = Application.streamingAssetsPath + "/EnemyData.json";
-                string jsonContent = File.ReadAllText(filePath);
+                //string filePath = Application.streamingAssetsPath + "/EnemyData.json";
+                //string jsonContent = File.ReadAllText(filePath);
+                string jsonContent = PlayerPrefs.GetString(PLAYER_PREF_NAME);
                 largeWave.Clear();
                 spawned.ForEach(x => Destroy(x));
                 spawned.Clear();
