@@ -21,21 +21,11 @@ To run and modify the project, you need to have the following software installed
 - Unity 2019.4 or later
 - Git (optional, for cloning the repository)
   
-Installation
-------------
-
-Use go get.
-
-	go get github.com/go-playground/form
-
-Then import the form package into your own code.
-
-	import "github.com/go-playground/form/v4"
-    
-      
 ## Installation
 - Clone the repository using Git or download the ZIP file: 
+
     git clone https://github.com/MinnMinx/PRU221_TowerDefense.git
+
 - Open Unity Hub and click on "Add" to select the cloned repository's folder.
 - Select the added project from the Unity Hub and click "Open" to launch it in Unity.
 
