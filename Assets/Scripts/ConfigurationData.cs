@@ -4,11 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class ConfigurationData : MonoBehaviour
 {
     private static List<Towers> towersList;
     private const string configurationFileName = "ConfigurationData.json";
+    public const string ADDRESSABLE_KEY = "TowerConfiguration";
 
     public static List<Towers> ListTower
     {
@@ -25,20 +27,23 @@ public class ConfigurationData : MonoBehaviour
         string path = Path.Combine(Application.streamingAssetsPath, configurationFileName);
         if (path.Contains("://"))
         {
-            UnityWebRequest www = UnityWebRequest.Get(path);
-            www.downloadHandler = new DownloadHandlerBuffer();
-            www.timeout = 180;
-            var asyncOp = www.SendWebRequest();
-            while (!asyncOp.isDone) ;
-            if (asyncOp.webRequest.result == UnityWebRequest.Result.ConnectionError ||
-                asyncOp.webRequest.result == UnityWebRequest.Result.ProtocolError)
-            {
-                Debug.LogError("Error loading data: " + www.error);
-                UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
-                return;
-            }
-            LoadData(asyncOp.webRequest.downloadHandler.text);
-            asyncOp.webRequest.Dispose();
+            //UnityWebRequest www = UnityWebRequest.Get(path);
+            //www.downloadHandler = new DownloadHandlerBuffer();
+            //www.timeout = 180;
+            //var asyncOp = www.SendWebRequest();
+            //while (!asyncOp.isDone) ;
+            //if (asyncOp.webRequest.result == UnityWebRequest.Result.ConnectionError ||
+            //    asyncOp.webRequest.result == UnityWebRequest.Result.ProtocolError)
+            //{
+            //    Debug.LogError("Error loading data: " + www.error);
+            //    UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+            //    return;
+            //}
+            //LoadData(asyncOp.webRequest.downloadHandler.text);
+            //asyncOp.webRequest.Dispose();
+
+            LoadData(PlayerPrefs.GetString(ADDRESSABLE_KEY));
+            PlayerPrefs.DeleteKey(ADDRESSABLE_KEY);
         }
         else
         {
