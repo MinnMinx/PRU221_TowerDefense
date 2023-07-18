@@ -22,48 +22,38 @@ public class ConfigurationData : MonoBehaviour
 
     private static void LoadData()
     {
-#if UNITY_EDITOR
-        string path = "Assets/StreamingAssets/" + configurationFileName;
-#else
         string path = Path.Combine(Application.streamingAssetsPath, configurationFileName);
-#endif
 
-#if UNITY_WEBGL && !UNITY_EDITOR
-        UnityWebRequest www = UnityWebRequest.Get(path);
-        www.SendWebRequest().completed += operation =>
+        if (path.Contains("://"))
         {
-            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+            UnityWebRequest www = UnityWebRequest.Get(path);
+            www.downloadHandler = new DownloadHandlerBuffer();
+            www.timeout = 180;
+            var asyncOp = www.SendWebRequest();
+            asyncOp.completed += operation =>
             {
-                Debug.LogError("Error loading data: " + www.error);
-            }
-            else
-            {
-                try
+                if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
                 {
-                    string json = www.downloadHandler.text;
-                    towersList = JsonUtility.FromJson<Serialization<Towers>>(json)?.listTower;
-
-                    if (towersList == null)
-                    {
-                        Debug.LogError("Error deserializing data: Unable to parse JSON or missing required fields.");
-                    }
+                    Debug.LogError("Error loading data: " + www.error);
                 }
-                catch (Exception e)
+                else
                 {
-                    Debug.LogError("Error loading data: " + e.Message);
+                    LoadData(www.downloadHandler.text);
                 }
-            }
-        };
-#else
-        LoadDataFromFile(path);
-#endif
+            };
+            while (!asyncOp.isDone) ;
+            www.Dispose();
+        }
+        else
+        {
+            LoadData(File.ReadAllText(path));
+        }
     }
 
-    private static void LoadDataFromFile(string path)
+    private static void LoadData(string json)
     {
         try
         {
-            string json = File.ReadAllText(path);
             towersList = JsonUtility.FromJson<Serialization<Towers>>(json)?.listTower;
 
             if (towersList == null)
